@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "planning_revision": 3,
+  "plan_ref": "docs/plan.md",
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Foundation",
+      "status": "in_progress",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M1",
+      "title": "Working slice",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M2",
+      "title": "Clinical alpha",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M3",
+      "title": "Sample workflow",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M4",
+      "title": "User interface",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M5",
+      "title": "Distribution",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M6",
+      "title": "v0.1",
+      "status": "pending",
+      "acceptance_criteria_ref": "docs/plan.md",
+      "evidence_refs": [],
+      "blockers": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "M0-01",
+      "milestone_id": "M0",
+      "title": "Check local development environment",
+      "status": "done",
+      "acceptance_criteria": [
+        "Local tool availability and setup blockers are reported without exposing credentials."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [
+        "E1"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "M0-02",
+      "milestone_id": "M0",
+      "title": "Create repository foundation",
+      "status": "done",
+      "acceptance_criteria": [
+        "Repository on main contains README.md, AGENTS.md, .gitignore, and .gitattributes with verified whitespace and ignore behaviour."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [
+        "E2"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "M0-03",
+      "milestone_id": "M0",
+      "title": "Import plan and establish progress tracking",
+      "status": "review",
+      "acceptance_criteria": [
+        "Complete plan imported as planning revision 3 with protected criteria preserved.",
+        "Progress JSON parses with unique task IDs, valid references/statuses, and ten initially unverified gates.",
+        "README and agent instructions link the maintained documents; root source copy is removed after verification."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [
+        "E3"
+      ],
+      "blockers": []
+    },
+    {
+      "id": "M0-04",
+      "milestone_id": "M0",
+      "title": "Specify recipe and core/domain boundary",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Recipe outline and core/domain boundary are recorded; recipe schema versioning is explicit."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M0-05",
+      "milestone_id": "M0",
+      "title": "Specify baseline and review three tiny cases",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Baseline specification records eligibility, units, dose/date/tie handling, and independently established expected results for three tiny reviewed cases."
+      ],
+      "release_gate_ids": [
+        "R1"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M0-06",
+      "milestone_id": "M0",
+      "title": "Evaluate environment, packaging, and UI",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Supported Python minor version and locked environment are selected.",
+        "Exact Windows/Linux/macOS targets including Apple silicon, reference benchmark hardware, and frozen workload are recorded.",
+        "Offline launch, keyboard-use, and packaging experiment informs UI and installer/signing choices; fresh checkout runs a meaningful smoke test."
+      ],
+      "release_gate_ids": [
+        "R6",
+        "R7",
+        "R9",
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M0-07",
+      "milestone_id": "M0",
+      "title": "Establish contributor and release rules",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Concise contributor/release rules include real runnable setup/check commands when available.",
+        "Resolve license choice with dependency review before public alpha."
+      ],
+      "release_gate_ids": [
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M1-01",
+      "milestone_id": "M1",
+      "title": "Implement linked clinical CLI slice",
+      "status": "pending",
+      "acceptance_criteria": [
+        "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output."
+      ],
+      "release_gate_ids": [
+        "R2"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M1-02",
+      "milestone_id": "M1",
+      "title": "Verify repeatability and actionable errors",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Repeat runs reproduce content; infeasible requests fail clearly without silent relaxation or partial success.",
+        "Stable entity/field random streams support independent-field addition."
+      ],
+      "release_gate_ids": [
+        "R2",
+        "R3"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M2-01",
+      "milestone_id": "M2",
+      "title": "Establish twelve cases and selected mappings",
+      "status": "pending",
+      "acceptance_criteria": [
+        "All twelve specified cases have independently established expected results and valid/invalid classification.",
+        "Selected source-to-analysis mappings record exact standard versions and limitations."
+      ],
+      "release_gate_ids": [
+        "R1"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M2-02",
+      "milestone_id": "M2",
+      "title": "Verify derivations independently in R",
+      "status": "pending",
+      "acceptance_criteria": [
+        "R comparisons agree with expected results and targeted checks detect all specified wrong derivations.",
+        "One example table and figure are reproducible; unexecuted SAS companion work is labelled if present."
+      ],
+      "release_gate_ids": [
+        "R1"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M2-03",
+      "milestone_id": "M2",
+      "title": "Prepare reproducible public alpha",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Tagged alpha quickstart reproduces its declared scope with license, installation instructions, limitations, and checks ready."
+      ],
+      "release_gate_ids": [
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M3-01",
+      "milestone_id": "M3",
+      "title": "Profile sample and edit assumptions",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Invented CSV profiling exposes editable estimates, excludes identifiers by default, and reports unsupported fields and overrides.",
+        "Requested categories, quotas, missingness, ranges, and supported dependencies are explicit."
+      ],
+      "release_gate_ids": [
+        "R2",
+        "R4"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M3-02",
+      "milestone_id": "M3",
+      "title": "Verify both sample expansion workflows",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Generated-only and retain-and-extend pass R4 with retained values and row origins checked; uniqueness and infeasible requests are explicit."
+      ],
+      "release_gate_ids": [
+        "R2",
+        "R4"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M4-01",
+      "milestone_id": "M4",
+      "title": "Implement Guided and Advanced recipe views",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Both views share the engine and preserve canonical settings through switching, preview, save, and reload."
+      ],
+      "release_gate_ids": [
+        "R9"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M4-02",
+      "milestone_id": "M4",
+      "title": "Verify accessible workflow and recovery",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Both principal workflows are keyboard-completable with labelled controls, readable errors, and invalid-input recovery."
+      ],
+      "release_gate_ids": [
+        "R9"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M5-01",
+      "milestone_id": "M5",
+      "title": "Verify native offline installation bundles",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Clean-machine installation and offline generation pass on all selected platforms with explicit prerequisites, network observations, and bundle checksums."
+      ],
+      "release_gate_ids": [
+        "R7",
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M5-02",
+      "milestone_id": "M5",
+      "title": "Verify statistical, performance, and reproducibility gates",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Collect evidence for R3, R5, and R6 under their unchanged criteria in docs/plan.md, recording pinned environments and raw measurements."
+      ],
+      "release_gate_ids": [
+        "R3",
+        "R5",
+        "R6"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M5-03",
+      "milestone_id": "M5",
+      "title": "Verify update and reinstall workflow",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Manual offline-capable update/reinstall instructions pass smoke checks; preceding-alpha recipes load or receive clear migration/error messages."
+      ],
+      "release_gate_ids": [
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M6-01",
+      "milestone_id": "M6",
+      "title": "Run usability exercise and fix blockers",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Usability exercise meets R8; fixes are checked and no release-blocking defects remain."
+      ],
+      "release_gate_ids": [
+        "R8",
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    },
+    {
+      "id": "M6-02",
+      "milestone_id": "M6",
+      "title": "Complete validation report and release",
+      "status": "pending",
+      "acceptance_criteria": [
+        "Every R1–R10 gate has evidence against the release commit; supported-platform core checks and clean-checkout quickstart pass.",
+        "Concise documentation, limitations, license/dependency notices, tag, release notes, artifacts/checksums, and tested update instructions are ready."
+      ],
+      "release_gate_ids": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10"
+      ],
+      "evidence_refs": [],
+      "blockers": []
+    }
+  ],
+  "release_gates": [
+    {
+      "id": "R1",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R2",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R3",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R4",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R5",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R6",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R7",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R8",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R9",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    },
+    {
+      "id": "R10",
+      "criterion_ref": "docs/plan.md",
+      "status": "unverified",
+      "evidence_refs": []
+    }
+  ],
+  "evidence": [
+    {
+      "id": "E1",
+      "reference": "User-supplied successful local environment-check report in task context",
+      "scope": "Local environment setup only; not cross-platform or release evidence."
+    },
+    {
+      "id": "E2",
+      "reference": "git:a92d2ebafb09e0439ba9bd025bd9090cfd55c950",
+      "scope": "Repository foundation only."
+    },
+    {
+      "id": "E3",
+      "reference": "Local planning-document checks for this task",
+      "scope": "UTF-8 import protected sections compared exactly; JSON parsing, unique IDs, valid milestone/status/gate/evidence references checked; Git whitespace check passed. Documentation evidence only."
+    }
+  ],
+  "blockers": [],
+  "next_action": "Review and accept M0-03 planning documents, then establish the M0 recipe outline and clinical baseline specification before implementation."
+}
