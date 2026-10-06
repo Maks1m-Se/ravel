@@ -16,9 +16,21 @@
   will be generated from progress.json. Issues support discussion, defects, and
   linked tasks without a duplicate status board.
 
+## Naming decision
+
+- Display name: **Ravel**.
+- Repository and folder name: `ravel`.
+- Intended Python import and CLI command: `ravel`.
+- Tagline: “Ravel — Compose the data you need.”
+- Rationale: musical composition/orchestration and examining structure before
+  generating controlled data.
+- Public PyPI distribution name remains unresolved. Branding, local folder
+  renaming, and GitHub connection are deferred to the next session.
+
 ## Unresolved
 
-- Product name and license (MIT is proposed, subject to dependency review).
+- Public PyPI distribution name and license (MIT is proposed, subject to
+  dependency review).
 - Supported Python minor version, locked dependencies, and UI framework.
 - Exact platform environments, including macOS version on Apple silicon.
 - Installer/signing choices and benchmark reference hardware/frozen workload.

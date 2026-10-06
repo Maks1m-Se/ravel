@@ -463,5 +463,5 @@
     }
   ],
   "blockers": [],
-  "next_action": "Review and accept M0-03 planning documents, then establish the M0 recipe outline and clinical baseline specification before implementation."
+  "next_action": "Review the planning documents, apply Ravel branding, rename the local folder, and connect the repository to GitHub."
 }
