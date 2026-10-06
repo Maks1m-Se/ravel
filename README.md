@@ -7,8 +7,16 @@ general-purpose generation engine.
 ## Current status
 
 **Planning and repository setup.** This repository contains foundation
-documentation and Git configuration only. No application functionality,
-dependencies, or runnable setup/check commands exist yet.
+documentation, planning records, and Git configuration only. No application
+functionality, dependencies, or runnable setup/check commands exist yet.
+
+## Project documents
+
+- [Project plan](docs/plan.md): scope, milestones, and measurable release gates.
+- [Progress record](docs/progress.json): authoritative status, evidence, and next action.
+- [Decisions](docs/decisions.md): agreed direction and unresolved choices.
+
+A dashboard generated from the progress record is planned; it does not exist yet.
 
 ## Planned direction
 
