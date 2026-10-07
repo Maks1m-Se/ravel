@@ -28,8 +28,13 @@
 - Public PyPI distribution name remains unresolved.
 - The naming decision was recorded in `acc430b`, after the planning commit
   `f73dba524838f1c72925b70f13f6ed5153864df3`. At that point branding, local folder
-  renaming, and GitHub connection were deferred. This dashboard task applies
-  branding; folder renaming and GitHub connection remain separate tasks.
+  renaming, and GitHub connection were deferred. The dashboard work applied
+  branding and was accepted in `25ed3ae`. The local folder has since moved to
+  `C:\Git\ravel`. On 7 October 2026, `main` was fast-forwarded to that accepted
+  commit and pushed to the newly created private
+  [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository through
+  `origin`. Python import and CLI names remain intended; PyPI and license
+  choices remain unresolved.
 
 ## Dashboard implementation
 

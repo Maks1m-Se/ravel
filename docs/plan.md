@@ -6,8 +6,10 @@ Planning revision 3 · 6 October 2026 · Target release v0.1 · Display name: Ra
 
 Synthetic test data from examples, assumptions and explicit rules.
 
-Intended repository, folder, Python import, and CLI names: `ravel`. Public PyPI
-distribution name remains unresolved; the current working folder is unchanged.
+Repository and folder names: `ravel`; intended Python import and CLI names:
+`ravel`. The local working folder is `C:\Git\ravel`, connected to the private
+[Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository. Public
+PyPI distribution name remains unresolved.
 
 Build a free, open-source, offline application for creating clinical test scenarios with verifiable expected results. Keep a general data-generation engine underneath it. The first demonstration is baseline and change from baseline in a fictional longitudinal study.
 
