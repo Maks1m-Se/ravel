@@ -110,12 +110,14 @@
       "id": "M0-04",
       "milestone_id": "M0",
       "title": "Specify recipe and core/domain boundary",
-      "status": "pending",
+      "status": "review",
       "acceptance_criteria": [
         "Recipe outline and core/domain boundary are recorded; recipe schema versioning is explicit."
       ],
       "release_gate_ids": [],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E7"
+      ],
       "blockers": []
     },
     {
@@ -494,8 +496,13 @@
       "id": "E6",
       "reference": "Maintainer browser review supplied through the Hub, 7 October 2026; git:b30b7853f06f405a366d0272586a252aaad505ee",
       "scope": "Maintainer confirmed manual browser checks passed for Review filtering, milestone filtering, search/reset, keyboard expansion and visible focus; screenshots showed correct totals and readable layout. Subsequent maintainer inspection satisfies dashboard visual acceptance; E4 retains the earlier automated-browser initialization failure and its then-pending inspection as historical evidence. Project-dashboard checks only; application release gates remain unverified."
+    },
+    {
+      "id": "E7",
+      "reference": "docs/specification.md; branch:docs/recipe-boundary; git:4544ee706738749b4e36085e719c54897a7a9c4a; local specification and tracking checks, 7 October 2026",
+      "scope": "M0-04 proposal only, pending maintainer review: shared JSON-compatible recipe, separate schema versioning and ownership boundary recorded. Invented structural example hand-checked independently as two subjects, two exposures and four measurements (eight records), with unique keys, one exposure and two measurements per subject and no orphan links. Python JSON parsing and table assertions confirmed counts, relationships, slots, values, constants and field assignments. Six existing tracking tests, dashboard freshness and Git whitespace checks passed. No generator execution, clinical derivation, schema implementation, browser review or application/release-gate validation; M0-05 clinical choices and M2 mappings remain deferred."
     }
   ],
   "blockers": [],
-  "next_action": "M0-04: specify the recipe outline and general-engine/clinical-domain boundary."
+  "next_action": "Maintainer review of the M0-04 proposed recipe outline and general-engine/clinical-domain boundary on docs/recipe-boundary."
 }
