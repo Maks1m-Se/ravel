@@ -20,7 +20,7 @@ dependencies or application setup commands exist yet.
 - [Project plan](docs/plan.md): scope, milestones, and measurable release gates.
 - [Progress record](docs/progress.json): authoritative status, evidence, and next action.
 - [Decisions](docs/decisions.md): agreed direction and unresolved choices.
-- [Proposed specification](docs/specification.md): M0-04 recipe outline and ownership boundary for review.
+- [Specification](docs/specification.md): accepted recipe architecture and ownership boundary; field notation and clinical details remain illustrative or deferred.
 
 - [Progress dashboard](docs/dashboard.html): generated, read-only offline snapshot.
 
