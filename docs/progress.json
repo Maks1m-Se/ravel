@@ -166,6 +166,23 @@
       "blockers": []
     },
     {
+      "id": "M0-08",
+      "milestone_id": "M0",
+      "title": "Apply Ravel branding and build the progress dashboard",
+      "status": "review",
+      "acceptance_criteria": [
+        "Current documentation uses Ravel, the agreed tagline and subtitle, and intended ravel names; PyPI remains unresolved and application features remain planned.",
+        "A standard-library generator creates a deterministic offline, read-only HTML snapshot with status counts, M0-M6 task criteria/blockers/evidence, search and filters, next action, project blockers, and all ten gates using plan criterion text.",
+        "Input validation, reference/status consistency, totals, escaping, deterministic output, external-resource isolation, and Git whitespace checks pass; browser checks are reported with limitations.",
+        "Actual generation/check commands and regeneration rules are documented; existing statuses and gate criteria are preserved; maintainer visual inspection remains pending."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [
+        "E4"
+      ],
+      "blockers": []
+    },
+    {
       "id": "M1-01",
       "milestone_id": "M1",
       "title": "Implement linked clinical CLI slice",
@@ -460,8 +477,13 @@
       "id": "E3",
       "reference": "Local planning-document checks for this task",
       "scope": "UTF-8 import protected sections compared exactly; JSON parsing, unique IDs, valid milestone/status/gate/evidence references checked; Git whitespace check passed. Documentation evidence only."
+    },
+    {
+      "id": "E4",
+      "reference": "scripts/build_dashboard.py; tests/test_dashboard.py; local checks on Python 3.11.0 / Windows",
+      "scope": "Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against acc430b. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation."
     }
   ],
   "blockers": [],
-  "next_action": "Review the planning documents, apply Ravel branding, rename the local folder, and connect the repository to GitHub."
+  "next_action": "Maintainer: review the planning documents and visually inspect the Ravel dashboard before accepting M0-03 and M0-08. Folder renaming and GitHub connection follow as separate tasks."
 }
