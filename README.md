@@ -59,7 +59,9 @@ Development is AI-assisted, including repository documentation and planned code
 contributions. AI-generated work requires review and meaningful verification;
 AI assistance does not establish clinical correctness.
 
-The display name is **Ravel**; intended repository, folder, Python import, and CLI
-names are `ravel`. The current working folder is unchanged. The public PyPI
+The display name is **Ravel**; repository and folder names are `ravel`, as are
+the intended Python import and CLI names. The local working folder is
+`C:\Git\ravel`; the private GitHub repository is
+[Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel). The public PyPI
 distribution name remains unresolved. License selection is pending; no
 open-source license has been granted yet.
