@@ -125,14 +125,16 @@
       "id": "M0-05",
       "milestone_id": "M0",
       "title": "Specify baseline and review three tiny cases",
-      "status": "pending",
+      "status": "review",
       "acceptance_criteria": [
         "Baseline specification records eligibility, units, dose/date/tie handling, and independently established expected results for three tiny reviewed cases."
       ],
       "release_gate_ids": [
         "R1"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E11"
+      ],
       "blockers": []
     },
     {
@@ -535,10 +537,15 @@
       "id": "E10",
       "reference": "Maintainer acceptance and Hub review of PR #2; git:76458552d7c014db726e16a7114979feed343053; supplied 7 October 2026",
       "scope": "M0-09 accepted: maintainer confirmed the dashboard looks good. Hub code review found no blocking issues, independently passed all nine tracking tests and snapshot freshness, and inspected the supplied screenshot. Existing browser checks and limitations remain recorded in E9. Dashboard/tracking acceptance only; application release gates remain unverified."
+    },
+    {
+      "id": "E11",
+      "reference": "docs/baseline-specification.md; branch:docs/baseline-specification; git:b09e9588004df1a57de6f5d30f1a2e5d8f985b4a; local documentation/tracking checks, 7 October 2026",
+      "scope": "M0-05 proposal awaiting maintainer approval. Ten invented records (3 actual doses/7 measurements) checked for IDs, references, timestamps, units and hand-established expectations: C1-M1 gives 10/+3; C2-M1 gives 8/+3; strict boundary gives null/null with NO_ELIGIBLE_BASELINE. Second-agent document review found no blocker after exposure-status clarification. Nine tracking tests, snapshot freshness and Git whitespace passed; plan and generic example unchanged. No derivation implementation, independent clinical validation, browser recheck or release-gate validation."
     }
   ],
   "blockers": [],
-  "next_action": "Prepare the baseline specification and three hand-worked cases for review.",
+  "next_action": "Maintainer: review baseline policies and hand-check Cases 1?3 using docs/baseline-specification.md's required checklist before accepting M0-05.",
   "current_task_id": "M0-05",
   "next_task_ids": [
     "M0-06",
