@@ -96,6 +96,14 @@ def validate(data, plan):
                 require(set(item["release_gate_ids"]) <= set(gates), f"{key}: unknown release gate")
     strings(data.get("blockers"), "project.blockers")
     text(data.get("next_action"), "next_action")
+    text(data.get("current_task_id"), "current_task_id")
+    strings(data.get("next_task_ids"), "next_task_ids")
+    require(len(data["next_task_ids"]) <= 2, "next_task_ids: select at most two upcoming tasks")
+    selections = [data["current_task_id"], *data["next_task_ids"]]
+    require(len(selections) == len(set(selections)), "Focus: duplicate task selection")
+    for task_id in selections:
+        require(task_id in tasks, f"Focus: unknown task {task_id}")
+        require(tasks[task_id]["status"] != "done", f"Focus: completed task {task_id} cannot be selected")
     return pm, pg, evidence
 
 
@@ -116,17 +124,41 @@ def evidence_html(refs, evidence):
                    "No evidence recorded.")
 
 
+def focus_html(data):
+    tasks = {task["id"]: task for task in data["tasks"]}
+    current = tasks[data["current_task_id"]]
+    milestone = next(m for m in data["milestones"] if m["id"] == current["milestone_id"])
+
+    def task_link(task):
+        return f'<a class="task-link" href="#{esc(task["id"])}">{esc(task["id"])} · {esc(task["title"])}</a> {badge(task["status"])}'
+
+    upcoming = ''.join(f'<li>{task_link(tasks[tid])}</li>' for tid in data["next_task_ids"])
+    blockers = ''.join(f'<div><h3>{esc(label)} blockers</h3>{listing(items)}</div>'
+                       for label, items in (("Project", data["blockers"]),
+                                            (milestone["id"], milestone["blockers"]),
+                                            (current["id"], current["blockers"])) if items)
+    return f'''<section class="panel focus" aria-labelledby="focus-title">
+<h2 id="focus-title">Current focus</h2>
+<p class="focus-milestone">{esc(milestone['id'])} · {esc(milestone['title'])} {badge(milestone['status'])}</p>
+<div class="focus-grid"><div><h3>Current task</h3><p class="current-task">{task_link(current)}</p></div>
+<div><h3>Next action</h3><p id="focus-action">{esc(data['next_action'])}</p></div></div>
+<h3>Upcoming tasks · in recorded order</h3>
+{'<ol class="upcoming">' + upcoming + '</ol>' if upcoming else '<p class="muted">None recorded.</p>'}
+{('<div class="focus-blockers">' + blockers + '</div>') if blockers else ''}</section>'''
+
+
 STYLE = """
 :root{color-scheme:light;--ink:#24332d;--muted:#59665f;--green:#285c45;--line:#d7dfd8;--paper:#fff}
 *{box-sizing:border-box}body{margin:0;background:#f3f5f1;color:var(--ink);font:16px/1.6 system-ui,sans-serif}
-main{max-width:1120px;margin:auto;padding:40px 24px 64px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:48px;letter-spacing:-2px;line-height:1.1}h2{font-size:23px}h3{font-size:18px}
-header{margin-bottom:28px}.eyebrow{color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.tagline{font-size:24px;margin-top:12px}.muted,small{color:var(--muted)}
-section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}.next{border-left:5px solid var(--green)}
+main{max-width:1120px;margin:auto;padding:24px 24px 64px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:28px;line-height:1.1}h2{font-size:23px}h3{font-size:18px}
+header{margin-bottom:16px}.eyebrow{color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.tagline{font-size:18px}.muted,small{color:var(--muted)}
+section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}
+.focus{margin-top:0;border-top:4px solid var(--green)}.focus h2{margin-bottom:4px}.focus h3{font-size:15px;margin-bottom:4px}.focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.current-task{font-size:19px;font-weight:600}.focus p{overflow-wrap:anywhere}.upcoming{margin:4px 0 0;padding-left:24px}.upcoming li{margin:4px 0}.focus-blockers{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.focus-blockers ul{margin-bottom:8px}
 .counts{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.count{background:white;padding:16px;border:1px solid var(--line);border-radius:10px}.count strong{display:block;font-size:28px}
 .badge{display:inline-block;font-size:13px;font-weight:650;padding:2px 10px;border-radius:20px;background:#edf0ed;color:#39463e;white-space:nowrap}.done,.passed{background:#e0eee5;color:#20543d}.review{background:#fff0d2;color:#725014}.blocked,.failed{background:#f8e4e1;color:#823d35}.in_progress{background:#dfebe7;color:#285c45}
 .filters{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin:18px 0}.filters label{display:flex;flex:1;min-width:170px;flex-direction:column;gap:6px;font-weight:600}input,select,button{font:inherit;color:inherit;background:white;border:1px solid #87978c;border-radius:6px;padding:9px 12px}button{cursor:pointer}
 :focus-visible{outline:3px solid #276947;outline-offset:4px}summary{cursor:pointer;min-height:38px}summary .badge{margin-left:10px}summary strong{font-size:18px}details.milestone{margin-bottom:14px}details.task{border-top:1px solid var(--line);padding:16px 0}details.task:last-child{padding-bottom:0}details.task summary{font-weight:600}details.task p,details.task h3{margin-top:14px}ul{padding-left:22px;margin:8px 0 14px}li{overflow-wrap:anywhere}.gates{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.gate h3{margin-bottom:10px}.gate .badge{margin-bottom:12px}footer{margin-top:32px;font-size:14px}code{font-size:14px;overflow-wrap:anywhere}a{color:var(--green)}[hidden]{display:none!important}
-@media(max-width:700px){main{padding:24px 16px}.counts{grid-template-columns:repeat(2,1fr)}.gates{grid-template-columns:1fr}.panel,details.milestone,.gate{padding:16px}h1{font-size:40px}.tagline{font-size:21px}}
+@media(max-width:700px){main{padding:20px 16px}.counts{grid-template-columns:repeat(2,1fr)}.gates,.focus-grid{grid-template-columns:1fr}.focus-grid{gap:0}.panel,details.milestone,.gate{padding:16px}}
 """
 
 SCRIPT = """
@@ -156,6 +188,26 @@ document.getElementById('reset').addEventListener('click', () => {
   search.value = ''; milestone.value = ''; status.value = ''; filter(); search.focus();
 });
 filter();
+function revealTask(id) {
+  const task = document.getElementById(id);
+  if (!task || !task.classList.contains('task')) return;
+  const group = task.closest('.milestone');
+  if (task.hidden || group.hidden) {
+    search.value = ''; milestone.value = ''; status.value = ''; filter();
+  }
+  group.open = true; task.open = true;
+  task.querySelector('summary').focus({preventScroll: true});
+  task.scrollIntoView({block: 'start'});
+}
+for (const link of document.querySelectorAll('.task-link')) {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+    revealTask(link.hash.slice(1));
+  });
+}
+window.addEventListener('hashchange', () => revealTask(location.hash.slice(1)));
+revealTask(location.hash.slice(1));
 """
 
 
@@ -197,12 +249,12 @@ def render(data, plan):
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Ravel · Project progress</title><style>{STYLE}</style></head>
-<body><main><header><p class=eyebrow>Project progress · Planning revision {data['planning_revision']}</p>
-<h1>Ravel</h1><p class=tagline>Compose the data you need.</p>
+<body><main><header><h1>Ravel</h1></header>
+{focus_html(data)}
+<section aria-label="Project context"><p class=eyebrow>Project progress · Planning revision {data['planning_revision']}</p>
+<p class=tagline>Compose the data you need.</p>
 <p>Synthetic test data from examples, assumptions and explicit rules.</p>
-<p class=muted>Planning and foundation work. Application capabilities are planned; release readiness requires evidence.</p></header>
-<section class="panel next" aria-labelledby="next"><h2 id=next>Next action</h2><p>{esc(data['next_action'])}</p>
-<h3>Project blockers</h3>{listing(data['blockers'])}</section>
+<p class=muted>Planning and foundation work. Application capabilities are planned; release readiness requires evidence.</p></section>
 <section aria-labelledby="overview"><h2 id=overview>Task overview</h2><div class=counts>{cards}</div>
 <p style="margin-top:16px"><strong>Tasks completed: {percentage:.1f}%</strong> · {counts['done']} of {total} tasks. Tasks differ in size; this is a count, not an effort estimate.</p></section>
 <section aria-labelledby="milestones"><h2 id=milestones>Milestones and tasks</h2>

@@ -22,6 +22,9 @@
   support discussion without creating a duplicate status record.
 - Give a concise handoff containing branch/commit, changes, verification,
   blockers, and next action.
+- PR descriptions explain the change, reason, meaningful checks, and material
+  limitations; avoid duplicate progress records and exhaustive process narration.
+  Keep honest AI disclosure.
 - Document runnable setup/check commands when they exist. Do not invent commands
   while application code and tooling are absent.
 - Display name: Ravel. Tagline: “Compose the data you need.” Subtitle: “Synthetic

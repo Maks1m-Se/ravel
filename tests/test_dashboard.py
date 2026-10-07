@@ -106,11 +106,66 @@ class DashboardTests(unittest.TestCase):
         source = dashboard.render(self.data, self.plan)
         document = Document(source)
         for attrs in document.attrs:
-            self.assertFalse(set(attrs) & {"src", "srcset", "href", "action", "poster", "data"})
+            self.assertFalse(set(attrs) & {"src", "srcset", "action", "poster", "data"})
+            if "href" in attrs:
+                self.assertIn(attrs["href"], {"#" + t["id"] for t in self.data["tasks"]})
         self.assertNotIn("@import", dashboard.STYLE)
         self.assertNotIn("url(", dashboard.STYLE)
         self.assertNotRegex(dashboard.SCRIPT, r"fetch\(|XMLHttpRequest|WebSocket|import\(")
         self.assertIn("connect-src 'none'", source)
+
+    def test_focus_order_and_derived_records(self):
+        data = deepcopy(self.data)
+        data["current_task_id"] = "M1-01"
+        data["next_task_ids"] = ["M0-06", "M0-05"]
+        current = next(t for t in data["tasks"] if t["id"] == "M1-01")
+        current.update(title="Invented current title", status="blocked", blockers=["Task obstacle"])
+        data["milestones"][1].update(title="Invented milestone", blockers=["Milestone obstacle"])
+        data["blockers"] = ["Project obstacle"]
+        data["next_action"] = "Resolve the invented obstacle"
+        source = dashboard.render(data, self.plan)
+        focus = source.split('<section class="panel focus"', 1)[1].split('</section>', 1)[0]
+        links = [a["href"] for a in Document(focus).attrs if a.get("class") == "task-link"]
+        self.assertEqual(links, ["#M1-01", "#M0-06", "#M0-05"])
+        for value in ("M1 · Invented milestone", "Invented current title", "Blocked",
+                      data["next_action"], "Project obstacle", "Milestone obstacle", "Task obstacle"):
+            self.assertIn(value, focus)
+        self.assertLess(source.index('id="focus-title"'), source.index('class=tagline'))
+        self.assertLess(source.index('id="focus-title"'), source.index('id=overview'))
+        data["next_task_ids"] = []
+        self.assertIn('None recorded.', dashboard.focus_html(data))
+
+    def test_focus_rejects_invalid_selections(self):
+        cases = [
+            ({"current_task_id": "M99-01"}, "unknown task"),
+            ({"next_task_ids": ["M99-01"]}, "unknown task"),
+            ({"current_task_id": "M0-01"}, "completed task"),
+            ({"next_task_ids": ["M0-01"]}, "completed task"),
+            ({"next_task_ids": ["M0-05", "M0-05"]}, "duplicate"),
+            ({"next_task_ids": [self.data["current_task_id"]]}, "duplicate"),
+            ({"next_task_ids": ["M0-05", "M0-06", "M0-07"]}, "at most two"),
+            ({"current_task_id": None}, "current_task_id"),
+            ({"next_task_ids": "M0-05"}, "next_task_ids"),
+        ]
+        for changes, message in cases:
+            with self.subTest(changes=changes):
+                data = deepcopy(self.data)
+                data.update(changes)
+                with self.assertRaisesRegex(ValueError, message):
+                    dashboard.render(data, self.plan)
+
+    def test_focus_escapes_content_and_omits_empty_blockers(self):
+        data = deepcopy(self.data)
+        hostile = '<img src="https://invalid.example/" onerror="alert(1)">'
+        current = next(t for t in data["tasks"] if t["id"] == data["current_task_id"])
+        current["title"] = hostile
+        current["blockers"] = [hostile]
+        focus = dashboard.focus_html(data)
+        self.assertNotIn(hostile, focus)
+        self.assertIn(dashboard.esc(hostile), focus)
+        self.assertNotIn('Project blockers', focus)
+        current["blockers"] = []
+        self.assertNotIn('focus-blockers', dashboard.focus_html(data))
 
     def test_cli_errors_and_stale_snapshot(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -120,7 +175,8 @@ class DashboardTests(unittest.TestCase):
             command = [sys.executable, str(ROOT / "scripts/build_dashboard.py"),
                        "--progress", str(progress), "--output", str(output)]
             for invalid in ('{', '{"schema_version":1,"schema_version":1}', '{"invalid":NaN}',
-                            json.dumps({**self.data, "tasks": [] , "next_action": None})):
+                            json.dumps({**self.data, "tasks": [] , "next_action": None}),
+                            json.dumps({**self.data, "current_task_id": "M99-01"})):
                 progress.write_text(invalid, encoding="utf-8")
                 result = subprocess.run(command, capture_output=True, text=True)
                 self.assertEqual(result.returncode, 1)

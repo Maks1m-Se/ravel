@@ -4,23 +4,31 @@
 <title>Ravel · Project progress</title><style>
 :root{color-scheme:light;--ink:#24332d;--muted:#59665f;--green:#285c45;--line:#d7dfd8;--paper:#fff}
 *{box-sizing:border-box}body{margin:0;background:#f3f5f1;color:var(--ink);font:16px/1.6 system-ui,sans-serif}
-main{max-width:1120px;margin:auto;padding:40px 24px 64px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:48px;letter-spacing:-2px;line-height:1.1}h2{font-size:23px}h3{font-size:18px}
-header{margin-bottom:28px}.eyebrow{color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.tagline{font-size:24px;margin-top:12px}.muted,small{color:var(--muted)}
-section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}.next{border-left:5px solid var(--green)}
+main{max-width:1120px;margin:auto;padding:24px 24px 64px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:28px;line-height:1.1}h2{font-size:23px}h3{font-size:18px}
+header{margin-bottom:16px}.eyebrow{color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.tagline{font-size:18px}.muted,small{color:var(--muted)}
+section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}
+.focus{margin-top:0;border-top:4px solid var(--green)}.focus h2{margin-bottom:4px}.focus h3{font-size:15px;margin-bottom:4px}.focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.current-task{font-size:19px;font-weight:600}.focus p{overflow-wrap:anywhere}.upcoming{margin:4px 0 0;padding-left:24px}.upcoming li{margin:4px 0}.focus-blockers{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.focus-blockers ul{margin-bottom:8px}
 .counts{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.count{background:white;padding:16px;border:1px solid var(--line);border-radius:10px}.count strong{display:block;font-size:28px}
 .badge{display:inline-block;font-size:13px;font-weight:650;padding:2px 10px;border-radius:20px;background:#edf0ed;color:#39463e;white-space:nowrap}.done,.passed{background:#e0eee5;color:#20543d}.review{background:#fff0d2;color:#725014}.blocked,.failed{background:#f8e4e1;color:#823d35}.in_progress{background:#dfebe7;color:#285c45}
 .filters{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin:18px 0}.filters label{display:flex;flex:1;min-width:170px;flex-direction:column;gap:6px;font-weight:600}input,select,button{font:inherit;color:inherit;background:white;border:1px solid #87978c;border-radius:6px;padding:9px 12px}button{cursor:pointer}
 :focus-visible{outline:3px solid #276947;outline-offset:4px}summary{cursor:pointer;min-height:38px}summary .badge{margin-left:10px}summary strong{font-size:18px}details.milestone{margin-bottom:14px}details.task{border-top:1px solid var(--line);padding:16px 0}details.task:last-child{padding-bottom:0}details.task summary{font-weight:600}details.task p,details.task h3{margin-top:14px}ul{padding-left:22px;margin:8px 0 14px}li{overflow-wrap:anywhere}.gates{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.gate h3{margin-bottom:10px}.gate .badge{margin-bottom:12px}footer{margin-top:32px;font-size:14px}code{font-size:14px;overflow-wrap:anywhere}a{color:var(--green)}[hidden]{display:none!important}
-@media(max-width:700px){main{padding:24px 16px}.counts{grid-template-columns:repeat(2,1fr)}.gates{grid-template-columns:1fr}.panel,details.milestone,.gate{padding:16px}h1{font-size:40px}.tagline{font-size:21px}}
+@media(max-width:700px){main{padding:20px 16px}.counts{grid-template-columns:repeat(2,1fr)}.gates,.focus-grid{grid-template-columns:1fr}.focus-grid{gap:0}.panel,details.milestone,.gate{padding:16px}}
 </style></head>
-<body><main><header><p class=eyebrow>Project progress · Planning revision 3</p>
-<h1>Ravel</h1><p class=tagline>Compose the data you need.</p>
+<body><main><header><h1>Ravel</h1></header>
+<section class="panel focus" aria-labelledby="focus-title">
+<h2 id="focus-title">Current focus</h2>
+<p class="focus-milestone">M0 · Foundation <span class="badge in_progress">In progress</span></p>
+<div class="focus-grid"><div><h3>Current task</h3><p class="current-task"><a class="task-link" href="#M0-05">M0-05 · Specify baseline and review three tiny cases</a> <span class="badge pending">Pending</span></p></div>
+<div><h3>Next action</h3><p id="focus-action">Prepare the baseline specification and three hand-worked cases for review.</p></div></div>
+<h3>Upcoming tasks · in recorded order</h3>
+<ol class="upcoming"><li><a class="task-link" href="#M0-06">M0-06 · Evaluate environment, packaging, and UI</a> <span class="badge pending">Pending</span></li><li><a class="task-link" href="#M0-07">M0-07 · Establish contributor and release rules</a> <span class="badge pending">Pending</span></li></ol>
+</section>
+<section aria-label="Project context"><p class=eyebrow>Project progress · Planning revision 3</p>
+<p class=tagline>Compose the data you need.</p>
 <p>Synthetic test data from examples, assumptions and explicit rules.</p>
-<p class=muted>Planning and foundation work. Application capabilities are planned; release readiness requires evidence.</p></header>
-<section class="panel next" aria-labelledby="next"><h2 id=next>Next action</h2><p>M0-09: show current focus and upcoming tasks first on the dashboard.</p>
-<h3>Project blockers</h3><p class=muted>None recorded.</p></section>
-<section aria-labelledby="overview"><h2 id=overview>Task overview</h2><div class=counts><div class=count data-count-status="pending"><strong>18</strong><span class="badge pending">Pending</span></div><div class=count data-count-status="in_progress"><strong>0</strong><span class="badge in_progress">In progress</span></div><div class=count data-count-status="review"><strong>0</strong><span class="badge review">Review</span></div><div class=count data-count-status="blocked"><strong>0</strong><span class="badge blocked">Blocked</span></div><div class=count data-count-status="done"><strong>5</strong><span class="badge done">Done</span></div></div>
-<p style="margin-top:16px"><strong>Tasks completed: 21.7%</strong> · 5 of 23 tasks. Tasks differ in size; this is a count, not an effort estimate.</p></section>
+<p class=muted>Planning and foundation work. Application capabilities are planned; release readiness requires evidence.</p></section>
+<section aria-labelledby="overview"><h2 id=overview>Task overview</h2><div class=counts><div class=count data-count-status="pending"><strong>17</strong><span class="badge pending">Pending</span></div><div class=count data-count-status="in_progress"><strong>0</strong><span class="badge in_progress">In progress</span></div><div class=count data-count-status="review"><strong>0</strong><span class="badge review">Review</span></div><div class=count data-count-status="blocked"><strong>0</strong><span class="badge blocked">Blocked</span></div><div class=count data-count-status="done"><strong>6</strong><span class="badge done">Done</span></div></div>
+<p style="margin-top:16px"><strong>Tasks completed: 26.1%</strong> · 6 of 23 tasks. Tasks differ in size; this is a count, not an effort estimate.</p></section>
 <section aria-labelledby="milestones"><h2 id=milestones>Milestones and tasks</h2>
 <p class=muted>Search task titles, acceptance criteria, blockers and evidence. Filters affect tasks only; overview counts and release gates show the full project.</p>
 <div class=filters><label for=search>Search tasks<input id=search type=search placeholder="Find a task…"></label>
@@ -71,11 +79,11 @@ section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);b
 <h3>Acceptance criteria</h3><ul><li>Current documentation uses Ravel, the agreed tagline and subtitle, and intended ravel names; PyPI remains unresolved and application features remain planned.</li><li>A standard-library generator creates a deterministic offline, read-only HTML snapshot with status counts, M0-M6 task criteria/blockers/evidence, search and filters, next action, project blockers, and all ten gates using plan criterion text.</li><li>Input validation, reference/status consistency, totals, escaping, deterministic output, external-resource isolation, and Git whitespace checks pass; browser checks are reported with limitations.</li><li>Actual generation/check commands and regeneration rules are documented; existing statuses and gate criteria are preserved; maintainer visual inspection passes and its result is recorded.</li></ul>
 <h3>Blockers</h3><p class=muted>None recorded.</p>
 <h3>Evidence</h3><ul><li>E4 · scripts/build_dashboard.py; tests/test_dashboard.py; local checks on Python 3.11.0 / Windows — Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against acc430b. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation.</li><li>E6 · Maintainer browser review supplied through the Hub, 7 October 2026; git:b30b7853f06f405a366d0272586a252aaad505ee — Maintainer confirmed manual browser checks passed for Review filtering, milestone filtering, search/reset, keyboard expansion and visible focus; screenshots showed correct totals and readable layout. Subsequent maintainer inspection satisfies dashboard visual acceptance; E4 retains the earlier automated-browser initialization failure and its then-pending inspection as historical evidence. Project-dashboard checks only; application release gates remain unverified.</li></ul>
-<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="pending" id="M0-09">
-<summary>M0-09 · Show current focus and upcoming tasks first <span class="badge pending">Pending</span></summary>
+<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="done" id="M0-09">
+<summary>M0-09 · Show current focus and upcoming tasks first <span class="badge done">Done</span></summary>
 <h3>Acceptance criteria</h3><ul><li>A compact focus panel immediately after a small Ravel heading shows the current milestone, current task and actual status, concrete next action, two upcoming tasks in recorded order, and relevant project/milestone/current-task blockers when present; current task and action are visible at normal laptop zoom, ahead of prominent branding and counts.</li><li>Minimal current_task_id and ordered next_task_ids metadata references existing tasks; titles, statuses and milestone are derived from records and next_action supplies action text. Validation rejects duplicate, unknown or completed selections, and documentation explains advancing focus after acceptance.</li><li>Task links reveal and expand details even when filters hide them and support keyboard navigation; existing filtering, task details, counts and release gates remain usable.</li><li>Offline deterministic generation, focused metadata/order checks, documented tracking tests, freshness and Git whitespace checks pass; browser layout and task navigation are inspected when available and limitations are reported.</li></ul>
 <h3>Blockers</h3><p class=muted>None recorded.</p>
-<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<h3>Evidence</h3><ul><li>E9 · branch:feat/dashboard-focus; git:1a3635d8c55580bff755fb13bf3e590d22429a21; scripts/build_dashboard.py; tests/test_dashboard.py; local Chrome screenshots in ignored outputs/dashboard-focus.png and outputs/dashboard-focus-mobile.png; 7 October 2026 — Dashboard tracking only, pending maintainer review. Nine standard-library tests passed, including focus metadata/reference/status validation, explicitly recorded order, derived record details, escaping and empty blockers; generator freshness and Git whitespace checks passed. Headless Chrome checks passed hidden/visible task navigation, filter reset/preservation, summary focus and URL fragment; native Tab/Enter navigation and Space/Enter detail toggling passed. Laptop 1366x768 and narrow 390x844 screenshots inspected: current task/action visible immediately, no narrow horizontal overflow. Initial browser navigation check failed when default fragment navigation stole summary focus; fixed and rechecked. An initial native Enter test failed due to incomplete driver character events; corrected driver passed. Live browser tool initialization failed with sandbox deny-read ACLs; headless Chrome used instead. Other tasks, milestones, plan and all ten unverified gates preserved. Live manual interaction, cross-browser/OS, application and clinical validation not run. Screenshots are local review artifacts, not version-controlled release evidence.</li><li>E10 · Maintainer acceptance and Hub review of PR #2; git:76458552d7c014db726e16a7114979feed343053; supplied 7 October 2026 — M0-09 accepted: maintainer confirmed the dashboard looks good. Hub code review found no blocking issues, independently passed all nine tracking tests and snapshot freshness, and inspected the supplied screenshot. Existing browser checks and limitations remain recorded in E9. Dashboard/tracking acceptance only; application release gates remain unverified.</li></ul>
 <p class=muted>Release gates: None linked</p></details></details><details class="milestone" >
 <summary><strong>M1 · Working slice</strong> <span class="badge pending">Pending</span> <small>· 2 tasks</small></summary>
 <p>Deliverable: CLI generates 10 subjects, exposure records, and one biomarker over baseline plus four scheduled follow-up visits</p><p>Exit condition: One command produces linked CSV files, recipe, dictionary, and validation result; repeat runs reproduce content; impossible requests produce actionable errors</p>
@@ -224,4 +232,24 @@ document.getElementById('reset').addEventListener('click', () => {
   search.value = ''; milestone.value = ''; status.value = ''; filter(); search.focus();
 });
 filter();
+function revealTask(id) {
+  const task = document.getElementById(id);
+  if (!task || !task.classList.contains('task')) return;
+  const group = task.closest('.milestone');
+  if (task.hidden || group.hidden) {
+    search.value = ''; milestone.value = ''; status.value = ''; filter();
+  }
+  group.open = true; task.open = true;
+  task.querySelector('summary').focus({preventScroll: true});
+  task.scrollIntoView({block: 'start'});
+}
+for (const link of document.querySelectorAll('.task-link')) {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+    revealTask(link.hash.slice(1));
+  });
+}
+window.addEventListener('hashchange', () => revealTask(location.hash.slice(1)));
+revealTask(location.hash.slice(1));
 </script></body></html>
