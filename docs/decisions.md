@@ -49,6 +49,19 @@
   with Python 3.11.0 on Windows; the application Python-version choice remains
   unresolved.
 
+## Accepted recipe architecture
+
+- Hub review of `eb809e1` accepted [the M0-04 architectural outline](specification.md):
+  one JSON-compatible saved
+  recipe for the CLI and future Guided/Advanced views, separate recipe schema
+  versioning, and an engine/clinical-module/adapter ownership boundary.
+- Its invented example checks structure only. Field notation is illustrative;
+  schema stability and detailed clinical rules remain unresolved. Explicit
+  generic/clinical routing and stable seed/entity/field random streams were
+  confirmed; clinical-looking names cannot activate clinical rules.
+  M0-05 retains clinical edge cases and independent expected results; M2 retains
+  selected standards mappings, and M3 retains the detailed sample workflow.
+
 ## Unresolved
 
 - Public PyPI distribution name and license (MIT is proposed, subject to
