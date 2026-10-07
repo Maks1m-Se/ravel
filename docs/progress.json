@@ -191,7 +191,7 @@
       "id": "M0-09",
       "milestone_id": "M0",
       "title": "Show current focus and upcoming tasks first",
-      "status": "pending",
+      "status": "review",
       "acceptance_criteria": [
         "A compact focus panel immediately after a small Ravel heading shows the current milestone, current task and actual status, concrete next action, two upcoming tasks in recorded order, and relevant project/milestone/current-task blockers when present; current task and action are visible at normal laptop zoom, ahead of prominent branding and counts.",
         "Minimal current_task_id and ordered next_task_ids metadata references existing tasks; titles, statuses and milestone are derived from records and next_action supplies action text. Validation rejects duplicate, unknown or completed selections, and documentation explains advancing focus after acceptance.",
@@ -525,5 +525,10 @@
     }
   ],
   "blockers": [],
-  "next_action": "M0-09: show current focus and upcoming tasks first on the dashboard."
+  "next_action": "Maintainer review of the dashboard focus panel on feat/dashboard-focus.",
+  "current_task_id": "M0-09",
+  "next_task_ids": [
+    "M0-05",
+    "M0-06"
+  ]
 }

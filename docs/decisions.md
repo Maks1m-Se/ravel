@@ -48,6 +48,10 @@
 - Regenerate the snapshot alongside source changes. Tracking tools were tested
   with Python 3.11.0 on Windows; the application Python-version choice remains
   unresolved.
+- Show explicit current focus before branding and overall counts. Progress JSON
+  stores only `current_task_id` and ordered `next_task_ids` (up to two); the
+  dashboard derives record details and reuses `next_action`. Advance focus with
+  accepted-task status updates rather than inferring priority from IDs or status.
 
 ## Accepted recipe architecture
 
