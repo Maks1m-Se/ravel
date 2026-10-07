@@ -40,8 +40,9 @@
 - Use task-count completion with an explicit size caveat, and show gate
   readiness separately. No schedules, velocity, effort estimates, or completion
   history are inferred. Existing historical planning allowances stay in the plan.
-- Regenerate the snapshot alongside source changes. Python 3.11+ is the tested
-  tracking-tool baseline, not the unresolved application Python-version choice.
+- Regenerate the snapshot alongside source changes. Tracking tools were tested
+  with Python 3.11.0 on Windows; the application Python-version choice remains
+  unresolved.
 
 ## Unresolved
 
