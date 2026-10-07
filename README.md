@@ -42,8 +42,22 @@ git diff --check
 Update `docs/progress.json` for statuses, tasks, blockers, evidence, and next
 action. Criterion text comes from `docs/plan.md`. Regenerate and commit the
 dashboard alongside changes to either source; do not edit the HTML directly.
+The focus panel uses `current_task_id` and ordered `next_task_ids` (up to two)
+from progress.json, deriving titles, statuses and the current milestone from
+existing records. `next_action` supplies the concrete action. It shows project,
+current-milestone and current-task blockers when recorded. Task links open
+details and clear filters only when necessary to reveal the target; use Tab and
+Enter to follow a link, and Enter or Space on a task summary to toggle details.
+
+When the maintainer accepts a task, mark it done and advance `current_task_id`
+to the next agreed unfinished task in the same update. Remove that task from
+`next_task_ids`, record the next agreed order, and update `next_action`. Do not
+select completed, duplicate or unknown task IDs. Focus is explicitly maintained,
+not inferred from statuses or task-ID order. Regenerate the dashboard afterward.
+
 `--check` validates inputs and fails if the generated snapshot is stale. Tests
-check totals, determinism, escaping, invalid inputs, and resource isolation.
+check totals, determinism, escaping, invalid inputs, focus references and order,
+derived record details, and resource isolation.
 Browser interaction and visual review remain separate checks. These commands
 verify project tracking only; they do not establish application release readiness.
 
