@@ -66,6 +66,18 @@
   M0-05 retains clinical edge cases and independent expected results; M2 retains
   selected standards mappings, and M3 retains the detailed sample workflow.
 
+## Clinical policies proposed for review
+
+- [The M0-05 baseline proposal](baseline-specification.md) preserves the plan's
+  last-nonmissing, strictly pre-dose rule and provides three hand-worked cases.
+  Actual-dose recognition, timestamp precision/timezones, tie errors, exact
+  units without conversion, post-dose targets, missing-result reasons and
+  whole-run errors are proposals awaiting maintainer approval, not adopted rules.
+- Maintainer review of critical clinical decisions and important user-facing
+  behavior is required before acceptance. Required action remains in
+  progress.json's next_action; runnable additions supply exact review/try-out
+  steps and expected outcomes. No runnable clinical functionality exists yet.
+
 ## Unresolved
 
 - Public PyPI distribution name and license (MIT is proposed, subject to

@@ -21,6 +21,7 @@ dependencies or application setup commands exist yet.
 - [Progress record](docs/progress.json): authoritative status, evidence, and next action.
 - [Decisions](docs/decisions.md): agreed direction and unresolved choices.
 - [Specification](docs/specification.md): accepted recipe architecture and ownership boundary; field notation and clinical details remain illustrative or deferred.
+- [Baseline proposal](docs/baseline-specification.md): M0-05 clinical policies, three hand-worked cases, and required maintainer review; no runnable clinical functionality.
 
 - [Progress dashboard](docs/dashboard.html): generated, read-only offline snapshot.
 

@@ -155,15 +155,16 @@ estimates must not imply preserved associations. Unsupported assumptions must
 be reported. Both entry paths feed the same validation and engine; detailed
 profiling and generated-only/retain-and-extend behaviour remain M3 work.
 
-## Clinical work deferred
+## Clinical proposal and deferred work
 
 The existing baseline/change rule is in [the plan's Clinical specification
 paragraph](plan.md), immediately before the twelve reference cases. It remains
 the planning rule; this example neither extends nor validates it.
 
-M0-05 must specify tie handling, missing actual dose, unit compatibility and
-conversion, date handling, and invalid cases, and independently determine the
-expected clinical results for three tiny reviewed cases before derivation code.
-Those choices are unresolved here. Selected standards mappings and their exact
+The separate [M0-05 baseline proposal](baseline-specification.md) records
+actual-dose, eligibility, time, tie, unit and error policies with three
+hand-worked cases. Those proposed policies and results await maintainer review;
+they do not change this generic example or establish clinical validation.
+Selected standards mappings and their exact
 versions and limitations remain M2 work. Schema details and stability require
 further specification and review; application, clinical, and release-gate validation have not occurred.
