@@ -15,6 +15,7 @@ executable Python, SQL, or expressions.
 | --- | --- |
 | `schema_version` | Recipe format version, separate from application version; `1` below is illustrative |
 | `seed` | Explicit random seed; reproducibility also requires the recorded application and environment versions |
+| `domain` | Explicit generic mode or clinical mode with a named template and compatible template version; exact field naming remains illustrative |
 | `entities` | Named record collections, requested counts, typed fields, and keys |
 | `relationships` | Parent/child links, foreign keys, and explicit child counts per parent |
 | `generation_rules` | Named operations with explicit parameters, including constants, sequences, and supported distributions |
@@ -26,10 +27,19 @@ clearly before generation, identifying the supplied version and supported
 versions. Any migration produces a separately saved, reviewable copy and
 preserves the original. This outline makes no compatibility promise before review.
 
+Domain selection is explicit. Generic mode activates only the stated generic
+rules; clinical-looking entity or field names must not activate clinical rules.
+A future clinical recipe must explicitly select clinical mode, a named clinical
+template, and a template version compatible with the bundled clinical module.
+Unknown templates or incompatible versions must fail clearly rather than fall
+back to inferred rules. Template selection does not settle the M0-05 clinical
+decisions deferred below.
+
 ## Illustrative structural example
 
-All names and values are invented. This JSON describes two subjects, one
-exposure record per subject, and two biomarker measurements per subject. It
+This is a generic structural example. All names and values are invented.
+This JSON describes two subjects, one exposure record per subject, and two
+biomarker measurements per subject. It
 does not define dosing, visit timing, baseline, or change. No generator runs
 this example today.
 
@@ -37,6 +47,7 @@ this example today.
 {
   "schema_version": 1,
   "seed": 17,
+  "domain": {"mode": "generic"},
   "entities": {
     "subjects": {
       "count": 2,
@@ -112,6 +123,13 @@ from the structural request, without executing generation or clinical derivation
 | General engine | Generic counts, typed fields, keys, relationship expansion, distributions, random streams, explicit constraints, recipe/input validation, and structural output validation; reject unsupported or infeasible requests clearly without silently relaxing rules or returning successful partial output |
 | Bundled clinical module | Meaning of subjects, actual dose, visits, biomarker parameters and units, baseline/change, and clinical validation; translate explicit domain settings into engine requests and derive clinical outputs from underlying records |
 | Thin CLI/UI/export adapters | Collect and display settings and errors, preserve the shared recipe, invoke validation/generation, and serialize datasets, recipes, dictionaries, and reports; do not infer clinical rules or duplicate generation/validation logic |
+
+For [R3 reproducibility](plan.md), the general engine must derive stable random
+streams from the seed and entity/field identities so adding an independent
+field leaves existing fields unchanged in the same pinned environment.
+Independent fields must not consume a shared stream whose draw order changes
+when a field is added. The precise RNG algorithm and stream-derivation method
+remain implementation choices to verify against R3; this outline selects neither.
 
 The engine can handle a numeric field or a temporal constraint without knowing
 that it represents a dose or a clinical visit. The clinical module owns why a
