@@ -12,20 +12,36 @@
   review. The maintainer accepts changes and release decisions. Work one
   reviewable task at a time.
 - [progress.json](progress.json) is the authoritative progress record;
-  [plan.md](plan.md) defines scope and acceptance criteria. The planned dashboard
-  will be generated from progress.json. Issues support discussion, defects, and
-  linked tasks without a duplicate status board.
+  [plan.md](plan.md) defines scope and acceptance criteria. The dashboard is
+  generated from progress.json and plan criteria. Issues support discussion,
+  defects, and linked tasks without a duplicate status board.
 
 ## Naming decision
 
 - Display name: **Ravel**.
 - Repository and folder name: `ravel`.
 - Intended Python import and CLI command: `ravel`.
-- Tagline: “Ravel — Compose the data you need.”
+- Tagline: “Compose the data you need.”
+- Subtitle: “Synthetic test data from examples, assumptions and explicit rules.”
 - Rationale: musical composition/orchestration and examining structure before
   generating controlled data.
-- Public PyPI distribution name remains unresolved. Branding, local folder
-  renaming, and GitHub connection are deferred to the next session.
+- Public PyPI distribution name remains unresolved.
+- The naming decision was recorded in `acc430b`, after the planning commit
+  `f73dba524838f1c72925b70f13f6ed5153864df3`. At that point branding, local folder
+  renaming, and GitHub connection were deferred. This dashboard task applies
+  branding; folder renaming and GitHub connection remain separate tasks.
+
+## Dashboard implementation
+
+- Generate a read-only offline HTML snapshot with Python's standard library.
+  Progress JSON supplies status, tasks, blockers, evidence, and next action;
+  milestone and release-gate tables in the plan supply criterion text.
+  Gate thresholds are not copied into generator code or progress JSON.
+- Use task-count completion with an explicit size caveat, and show gate
+  readiness separately. No schedules, velocity, effort estimates, or completion
+  history are inferred. Existing historical planning allowances stay in the plan.
+- Regenerate the snapshot alongside source changes. Python 3.11+ is the tested
+  tracking-tool baseline, not the unresolved application Python-version choice.
 
 ## Unresolved
 

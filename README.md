@@ -1,4 +1,8 @@
-# Clinical test-data generator (provisional name)
+# Ravel
+
+**Compose the data you need.**
+
+Synthetic test data from examples, assumptions and explicit rules.
 
 A planned free, open-source, offline test-data generator for Windows, Linux,
 and macOS. Clinical and biomedical scenarios will come first, supported by a
@@ -7,8 +11,9 @@ general-purpose generation engine.
 ## Current status
 
 **Planning and repository setup.** This repository contains foundation
-documentation, planning records, and Git configuration only. No application
-functionality, dependencies, or runnable setup/check commands exist yet.
+documentation, planning records, and a standard-library progress dashboard
+generator. Application functionality is not implemented; no application
+dependencies or application setup commands exist yet.
 
 ## Project documents
 
@@ -16,7 +21,30 @@ functionality, dependencies, or runnable setup/check commands exist yet.
 - [Progress record](docs/progress.json): authoritative status, evidence, and next action.
 - [Decisions](docs/decisions.md): agreed direction and unresolved choices.
 
-A dashboard generated from the progress record is planned; it does not exist yet.
+- [Progress dashboard](docs/dashboard.html): generated, read-only offline snapshot.
+
+## Progress dashboard
+
+Open `docs/dashboard.html` directly in a browser. It uses no external resources.
+Task counts show **Tasks completed**, not effort; tasks differ in size. Release
+gates show readiness separately and require recorded evidence.
+
+From the repository root, with Python 3.11 or later (no extra dependencies):
+
+```sh
+python scripts/build_dashboard.py
+python scripts/build_dashboard.py --check
+python -m unittest discover -s tests -v
+git diff --check
+```
+
+Update `docs/progress.json` for statuses, tasks, blockers, evidence, and next
+action. Criterion text comes from `docs/plan.md`. Regenerate and commit the
+dashboard alongside changes to either source; do not edit the HTML directly.
+`--check` validates inputs and fails if the generated snapshot is stale. Tests
+check totals, determinism, escaping, invalid inputs, and resource isolation.
+Browser interaction and visual review remain separate checks. These commands
+verify project tracking only; they do not establish application release readiness.
 
 ## Planned direction
 
@@ -31,5 +59,7 @@ Development is AI-assisted, including repository documentation and planned code
 contributions. AI-generated work requires review and meaningful verification;
 AI assistance does not establish clinical correctness.
 
-The product name is provisional. License selection is pending; no open-source
-license has been granted yet.
+The display name is **Ravel**; intended repository, folder, Python import, and CLI
+names are `ravel`. The current working folder is unchanged. The public PyPI
+distribution name remains unresolved. License selection is pending; no
+open-source license has been granted yet.

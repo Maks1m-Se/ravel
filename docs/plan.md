@@ -1,12 +1,19 @@
-# Clinical test-data generator — project plan
+# Ravel — project plan
 
-Planning revision 3 · 6 October 2026 · Target release v0.1 · Product name pending
+Planning revision 3 · 6 October 2026 · Target release v0.1 · Display name: Ravel
+
+**Compose the data you need.**
+
+Synthetic test data from examples, assumptions and explicit rules.
+
+Intended repository, folder, Python import, and CLI names: `ravel`. Public PyPI
+distribution name remains unresolved; the current working folder is unchanged.
 
 Build a free, open-source, offline application for creating clinical test scenarios with verifiable expected results. Keep a general data-generation engine underneath it. The first demonstration is baseline and change from baseline in a fictional longitudinal study.
 
 This document defines proposed release criteria. Nothing here is a claim that software, benchmarks, user tests, or clinical validation already exist.
 
-**Working setup.** Local Codex implements changes, runs checks, and investigates failures. The ChatGPT Project handles planning and review; the maintainer accepts changes and release decisions. Keep code, specifications, evidence, and durable decisions in the repository rather than depending on chat history. `docs/plan.md` defines scope and acceptance criteria; `docs/progress.json` is the authoritative status record. The planned `docs/dashboard.html` will be generated from that record, not maintained separately. Record significant decisions in `docs/decisions.md` when useful. A ChatGPT Project and a Codex working directory are distinct.[1–3]
+**Working setup.** Local Codex implements changes, runs checks, and investigates failures. The ChatGPT Project handles planning and review; the maintainer accepts changes and release decisions. Keep code, specifications, evidence, and durable decisions in the repository rather than depending on chat history. `docs/plan.md` defines scope and acceptance criteria; `docs/progress.json` is the authoritative status record. The read-only `docs/dashboard.html` is generated from that record and the criterion tables here; regenerate it alongside source changes using `python scripts/build_dashboard.py`. Record significant decisions in `docs/decisions.md` when useful. A ChatGPT Project and a Codex working directory are distinct.[1–3]
 
 Work one reviewable task at a time. GitHub Issues may hold discussions, bug reports, and linked implementation tasks; avoid a separately maintained status board. Track milestone and task status in `docs/progress.json`. A separate website can wait; the README and a working release are the first public presentation.
 
@@ -112,7 +119,7 @@ Use the following loop:
 
 Tasks should normally fit a one-to-three-hour reviewable unit. Split work by behaviour, not arbitrary file count. Discuss scope, clinical-rule, interface-contract, license, and dependency changes when they affect the agreed design. Routine implementation details can proceed autonomously.
 
-At the end of each working week, check one runnable example when one exists, the open blockers, and the next tasks. Keep durable decisions in specifications and `docs/decisions.md`, with issue links when useful. `docs/progress.json` remains the sole maintained status record; generate the planned dashboard from it. Avoid duplicate status documents and chat transcripts in the repository.
+At the end of each working week, check one runnable example when one exists, the open blockers, and the next tasks. Keep durable decisions in specifications and `docs/decisions.md`, with issue links when useful. `docs/progress.json` remains the sole maintained status record; regenerate the dashboard alongside changes to it or the plan. Avoid duplicate status documents and chat transcripts in the repository.
 
 **Repository documentation.** Add each document when it has useful content.
 
@@ -129,7 +136,7 @@ At the end of each working week, check one runnable example when one exists, the
 | docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 3) |
 | docs/progress.json | Authoritative milestone/task status, evidence, blockers, and next action |
 | docs/decisions.md | Significant agreed decisions and visibly unresolved choices |
-| docs/dashboard.html (planned) | Generated view of docs/progress.json; not yet implemented |
+| docs/dashboard.html | Generated offline snapshot of progress.json and plan criteria; rebuild with `python scripts/build_dashboard.py` |
 | GitHub Issues and releases | Discussions, bug reports, linked implementation tasks, release changes and downloads; no duplicate status board |
 
 GitHub recognises contributor guidance, security policies, codes of conduct, and issue/PR templates as normal community documentation.[4] These should provide usable instructions; empty policy files and aspirational features add no value. A dedicated changelog can be added when release history needs one; avoid maintaining duplicate change lists.
@@ -142,7 +149,7 @@ Suggested README disclosure, once this workflow is in use:
 
 Describe the project publicly as AI-assisted development. If asked about vibe coding, explain exactly how you use it and show the reviewed specifications and evidence. Do not claim external validation, productive clinical deployment, or standards compliance beyond what was demonstrated.
 
-**First working session.** Use a temporary working title until the name is settled. Establish the repository, concise AGENTS.md, and M0–M6 tracking in `docs/progress.json`. Document installation/check commands when runnable tooling exists; establish the first three hand-checkable baseline fixtures. Complete the M0 specifications and experiments before the first M1 CLI implementation task. The rest of the application grows from that working example.
+**First working session (original planning direction).** The temporary working title has since been settled as Ravel. Establish the repository, concise AGENTS.md, and M0–M6 tracking in `docs/progress.json`. Document installation/check commands when runnable tooling exists; establish the first three hand-checkable baseline fixtures. Complete the M0 specifications and experiments before the first M1 CLI implementation task. The rest of the application grows from that working example.
 
 References checked on 6 October 2026:
 

@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Ravel · Project progress</title><style>
+:root{color-scheme:light;--ink:#24332d;--muted:#59665f;--green:#285c45;--line:#d7dfd8;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f3f5f1;color:var(--ink);font:16px/1.6 system-ui,sans-serif}
+main{max-width:1120px;margin:auto;padding:40px 24px 64px}h1,h2,h3,p{margin:0 0 12px}h1{font-size:48px;letter-spacing:-2px;line-height:1.1}h2{font-size:23px}h3{font-size:18px}
+header{margin-bottom:28px}.eyebrow{color:var(--green);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}.tagline{font-size:24px;margin-top:12px}.muted,small{color:var(--muted)}
+section{margin-top:28px}.panel,details.milestone,.gate{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}.next{border-left:5px solid var(--green)}
+.counts{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.count{background:white;padding:16px;border:1px solid var(--line);border-radius:10px}.count strong{display:block;font-size:28px}
+.badge{display:inline-block;font-size:13px;font-weight:650;padding:2px 10px;border-radius:20px;background:#edf0ed;color:#39463e;white-space:nowrap}.done,.passed{background:#e0eee5;color:#20543d}.review{background:#fff0d2;color:#725014}.blocked,.failed{background:#f8e4e1;color:#823d35}.in_progress{background:#dfebe7;color:#285c45}
+.filters{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin:18px 0}.filters label{display:flex;flex:1;min-width:170px;flex-direction:column;gap:6px;font-weight:600}input,select,button{font:inherit;color:inherit;background:white;border:1px solid #87978c;border-radius:6px;padding:9px 12px}button{cursor:pointer}
+:focus-visible{outline:3px solid #276947;outline-offset:4px}summary{cursor:pointer;min-height:38px}summary .badge{margin-left:10px}summary strong{font-size:18px}details.milestone{margin-bottom:14px}details.task{border-top:1px solid var(--line);padding:16px 0}details.task:last-child{padding-bottom:0}details.task summary{font-weight:600}details.task p,details.task h3{margin-top:14px}ul{padding-left:22px;margin:8px 0 14px}li{overflow-wrap:anywhere}.gates{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.gate h3{margin-bottom:10px}.gate .badge{margin-bottom:12px}footer{margin-top:32px;font-size:14px}code{font-size:14px;overflow-wrap:anywhere}a{color:var(--green)}[hidden]{display:none!important}
+@media(max-width:700px){main{padding:24px 16px}.counts{grid-template-columns:repeat(2,1fr)}.gates{grid-template-columns:1fr}.panel,details.milestone,.gate{padding:16px}h1{font-size:40px}.tagline{font-size:21px}}
+</style></head>
+<body><main><header><p class=eyebrow>Project progress · Planning revision 3</p>
+<h1>Ravel</h1><p class=tagline>Compose the data you need.</p>
+<p>Synthetic test data from examples, assumptions and explicit rules.</p>
+<p class=muted>Planning and foundation work. Application capabilities are planned; release readiness requires evidence.</p></header>
+<section class="panel next" aria-labelledby="next"><h2 id=next>Next action</h2><p>Maintainer: review the planning documents and visually inspect the Ravel dashboard before accepting M0-03 and M0-08. Folder renaming and GitHub connection follow as separate tasks.</p>
+<h3>Project blockers</h3><p class=muted>None recorded.</p></section>
+<section aria-labelledby="overview"><h2 id=overview>Task overview</h2><div class=counts><div class=count data-count-status="pending"><strong>18</strong><span class="badge pending">Pending</span></div><div class=count data-count-status="in_progress"><strong>0</strong><span class="badge in_progress">In progress</span></div><div class=count data-count-status="review"><strong>2</strong><span class="badge review">Review</span></div><div class=count data-count-status="blocked"><strong>0</strong><span class="badge blocked">Blocked</span></div><div class=count data-count-status="done"><strong>2</strong><span class="badge done">Done</span></div></div>
+<p style="margin-top:16px"><strong>Tasks completed: 9.1%</strong> · 2 of 22 tasks. Tasks differ in size; this is a count, not an effort estimate.</p></section>
+<section aria-labelledby="milestones"><h2 id=milestones>Milestones and tasks</h2>
+<p class=muted>Search task titles, acceptance criteria, blockers and evidence. Filters affect tasks only; overview counts and release gates show the full project.</p>
+<div class=filters><label for=search>Search tasks<input id=search type=search placeholder="Find a task…"></label>
+<label for=milestone>Milestone<select id=milestone><option value="">All milestones</option><option value="M0">M0 · Foundation</option><option value="M1">M1 · Working slice</option><option value="M2">M2 · Clinical alpha</option><option value="M3">M3 · Sample workflow</option><option value="M4">M4 · User interface</option><option value="M5">M5 · Distribution</option><option value="M6">M6 · v0.1</option></select></label>
+<label for=status>Task status<select id=status><option value="">All statuses</option><option value="pending">Pending</option><option value="in_progress">In progress</option><option value="review">Review</option><option value="blocked">Blocked</option><option value="done">Done</option></select></label>
+<button id=reset type=button>Reset filters</button></div><p id=results role=status aria-live=polite></p>
+<noscript><p>Enable JavaScript for search and filters. All task details remain readable without it.</p></noscript><details class="milestone" open>
+<summary><strong>M0 · Foundation</strong> <span class="badge in_progress">In progress</span> <small>· 8 tasks</small></summary>
+<p>Deliverable: Repository scaffold, recipe outline, concise contributor/release rules, baseline specification, packaging/UI experiment</p><p>Exit condition: A fresh checkout can run a meaningful smoke test; Windows/Linux/macOS target environments and the core/domain boundary are recorded; three tiny baseline cases are reviewed</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M0" data-status="done" id="M0-01">
+<summary>M0-01 · Check local development environment <span class="badge done">Done</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Local tool availability and setup blockers are reported without exposing credentials.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><ul><li>E1 · User-supplied successful local environment-check report in task context — Local environment setup only; not cross-platform or release evidence.</li></ul>
+<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="done" id="M0-02">
+<summary>M0-02 · Create repository foundation <span class="badge done">Done</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Repository on main contains README.md, AGENTS.md, .gitignore, and .gitattributes with verified whitespace and ignore behaviour.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><ul><li>E2 · git:a92d2ebafb09e0439ba9bd025bd9090cfd55c950 — Repository foundation only.</li></ul>
+<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="review" id="M0-03">
+<summary>M0-03 · Import plan and establish progress tracking <span class="badge review">Review</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Complete plan imported as planning revision 3 with protected criteria preserved.</li><li>Progress JSON parses with unique task IDs, valid references/statuses, and ten initially unverified gates.</li><li>README and agent instructions link the maintained documents; root source copy is removed after verification.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><ul><li>E3 · Local planning-document checks for this task — UTF-8 import protected sections compared exactly; JSON parsing, unique IDs, valid milestone/status/gate/evidence references checked; Git whitespace check passed. Documentation evidence only.</li></ul>
+<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="pending" id="M0-04">
+<summary>M0-04 · Specify recipe and core/domain boundary <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Recipe outline and core/domain boundary are recorded; recipe schema versioning is explicit.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: None linked</p></details><details class="task" data-milestone="M0" data-status="pending" id="M0-05">
+<summary>M0-05 · Specify baseline and review three tiny cases <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Baseline specification records eligibility, units, dose/date/tie handling, and independently established expected results for three tiny reviewed cases.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R1</p></details><details class="task" data-milestone="M0" data-status="pending" id="M0-06">
+<summary>M0-06 · Evaluate environment, packaging, and UI <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Supported Python minor version and locked environment are selected.</li><li>Exact Windows/Linux/macOS targets including Apple silicon, reference benchmark hardware, and frozen workload are recorded.</li><li>Offline launch, keyboard-use, and packaging experiment informs UI and installer/signing choices; fresh checkout runs a meaningful smoke test.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R6, R7, R9, R10</p></details><details class="task" data-milestone="M0" data-status="pending" id="M0-07">
+<summary>M0-07 · Establish contributor and release rules <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Concise contributor/release rules include real runnable setup/check commands when available.</li><li>Resolve license choice with dependency review before public alpha.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R10</p></details><details class="task" data-milestone="M0" data-status="review" id="M0-08">
+<summary>M0-08 · Apply Ravel branding and build the progress dashboard <span class="badge review">Review</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Current documentation uses Ravel, the agreed tagline and subtitle, and intended ravel names; PyPI remains unresolved and application features remain planned.</li><li>A standard-library generator creates a deterministic offline, read-only HTML snapshot with status counts, M0-M6 task criteria/blockers/evidence, search and filters, next action, project blockers, and all ten gates using plan criterion text.</li><li>Input validation, reference/status consistency, totals, escaping, deterministic output, external-resource isolation, and Git whitespace checks pass; browser checks are reported with limitations.</li><li>Actual generation/check commands and regeneration rules are documented; existing statuses and gate criteria are preserved; maintainer visual inspection remains pending.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><ul><li>E4 · scripts/build_dashboard.py; tests/test_dashboard.py; local checks on Python 3.11.0 / Windows — Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against acc430b. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation.</li></ul>
+<p class=muted>Release gates: None linked</p></details></details><details class="milestone" >
+<summary><strong>M1 · Working slice</strong> <span class="badge pending">Pending</span> <small>· 2 tasks</small></summary>
+<p>Deliverable: CLI generates 10 subjects, exposure records, and one biomarker over baseline plus four scheduled follow-up visits</p><p>Exit condition: One command produces linked CSV files, recipe, dictionary, and validation result; repeat runs reproduce content; impossible requests produce actionable errors</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M1" data-status="pending" id="M1-01">
+<summary>M1-01 · Implement linked clinical CLI slice <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R2</p></details><details class="task" data-milestone="M1" data-status="pending" id="M1-02">
+<summary>M1-02 · Verify repeatability and actionable errors <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Repeat runs reproduce content; infeasible requests fail clearly without silent relaxation or partial success.</li><li>Stable entity/field random streams support independent-field addition.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R2, R3</p></details></details><details class="milestone" >
+<summary><strong>M2 · Clinical alpha</strong> <span class="badge pending">Pending</span> <small>· 3 tasks</small></summary>
+<p>Deliverable: Twelve clinical cases, selected source-to-analysis mappings, independent R checks, one example table and figure</p><p>Exit condition: Every expected result agrees; three deliberately incorrect derivations are detected; a tagged public alpha can be reproduced from its quickstart</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M2" data-status="pending" id="M2-01">
+<summary>M2-01 · Establish twelve cases and selected mappings <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>All twelve specified cases have independently established expected results and valid/invalid classification.</li><li>Selected source-to-analysis mappings record exact standard versions and limitations.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R1</p></details><details class="task" data-milestone="M2" data-status="pending" id="M2-02">
+<summary>M2-02 · Verify derivations independently in R <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>R comparisons agree with expected results and targeted checks detect all specified wrong derivations.</li><li>One example table and figure are reproducible; unexecuted SAS companion work is labelled if present.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R1</p></details><details class="task" data-milestone="M2" data-status="pending" id="M2-03">
+<summary>M2-03 · Prepare reproducible public alpha <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Tagged alpha quickstart reproduces its declared scope with license, installation instructions, limitations, and checks ready.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R10</p></details></details><details class="milestone" >
+<summary><strong>M3 · Sample workflow</strong> <span class="badge pending">Pending</span> <small>· 2 tasks</small></summary>
+<p>Deliverable: Profile an invented CSV, edit assumptions, generate-only or retain-and-extend</p><p>Exit condition: A 10-row sample yields exactly 1,000 new rows or exactly 1,000 total rows as selected; retained records and row origin are verified; explicit new categories appear as requested</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M3" data-status="pending" id="M3-01">
+<summary>M3-01 · Profile sample and edit assumptions <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Invented CSV profiling exposes editable estimates, excludes identifiers by default, and reports unsupported fields and overrides.</li><li>Requested categories, quotas, missingness, ranges, and supported dependencies are explicit.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R2, R4</p></details><details class="task" data-milestone="M3" data-status="pending" id="M3-02">
+<summary>M3-02 · Verify both sample expansion workflows <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Generated-only and retain-and-extend pass R4 with retained values and row origins checked; uniqueness and infeasible requests are explicit.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R2, R4</p></details></details><details class="milestone" >
+<summary><strong>M4 · User interface</strong> <span class="badge pending">Pending</span> <small>· 2 tasks</small></summary>
+<p>Deliverable: Guided flow, Advanced controls, recipe preview/save/reload</p><p>Exit condition: Both views use the same engine and preserve all settings on switching; keyboard operation and invalid-input recovery work through the full workflow</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M4" data-status="pending" id="M4-01">
+<summary>M4-01 · Implement Guided and Advanced recipe views <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Both views share the engine and preserve canonical settings through switching, preview, save, and reload.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R9</p></details><details class="task" data-milestone="M4" data-status="pending" id="M4-02">
+<summary>M4-02 · Verify accessible workflow and recovery <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Both principal workflows are keyboard-completable with labelled controls, readable errors, and invalid-input recovery.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R9</p></details></details><details class="milestone" >
+<summary><strong>M5 · Distribution</strong> <span class="badge pending">Pending</span> <small>· 3 tasks</small></summary>
+<p>Deliverable: Windows/Linux/macOS installation paths, offline bundles, benchmark and release checks</p><p>Exit condition: Clean-machine installation and offline generation pass on all three targets; performance and reproducibility gates pass; update/reinstall instructions pass a smoke test</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M5" data-status="pending" id="M5-01">
+<summary>M5-01 · Verify native offline installation bundles <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Clean-machine installation and offline generation pass on all selected platforms with explicit prerequisites, network observations, and bundle checksums.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R7, R10</p></details><details class="task" data-milestone="M5" data-status="pending" id="M5-02">
+<summary>M5-02 · Verify statistical, performance, and reproducibility gates <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Collect evidence for R3, R5, and R6 under their unchanged criteria in docs/plan.md, recording pinned environments and raw measurements.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R3, R5, R6</p></details><details class="task" data-milestone="M5" data-status="pending" id="M5-03">
+<summary>M5-03 · Verify update and reinstall workflow <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Manual offline-capable update/reinstall instructions pass smoke checks; preceding-alpha recipes load or receive clear migration/error messages.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R10</p></details></details><details class="milestone" >
+<summary><strong>M6 · v0.1</strong> <span class="badge pending">Pending</span> <small>· 2 tasks</small></summary>
+<p>Deliverable: Usability fixes, concise documentation, release artifacts, demonstrated limitations</p><p>Exit condition: All release gates below have evidence; no unresolved release-blocking defects; five-person usability exercise meets its target</p>
+<h3>Milestone blockers</h3><p class=muted>None recorded.</p>
+<h3>Milestone evidence</h3><p class=muted>No evidence recorded.</p><details class="task" data-milestone="M6" data-status="pending" id="M6-01">
+<summary>M6-01 · Run usability exercise and fix blockers <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Usability exercise meets R8; fixes are checked and no release-blocking defects remain.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R8, R10</p></details><details class="task" data-milestone="M6" data-status="pending" id="M6-02">
+<summary>M6-02 · Complete validation report and release <span class="badge pending">Pending</span></summary>
+<h3>Acceptance criteria</h3><ul><li>Every R1–R10 gate has evidence against the release commit; supported-platform core checks and clean-checkout quickstart pass.</li><li>Concise documentation, limitations, license/dependency notices, tag, release notes, artifacts/checksums, and tested update instructions are ready.</li></ul>
+<h3>Blockers</h3><p class=muted>None recorded.</p>
+<h3>Evidence</h3><p class=muted>No evidence recorded.</p>
+<p class=muted>Release gates: R1, R2, R3, R4, R5, R6, R7, R8, R9, R10</p></details></details></section>
+<section aria-labelledby="gates"><h2 id=gates>Release-gate readiness</h2><p>10 unverified · 0 passed · 0 failed · 0 blocked · 0 of 10 gates passed.</p>
+<p class=muted>Criteria and required evidence come from docs/plan.md. Status and recorded evidence come from docs/progress.json. Task completion does not establish release readiness.</p>
+<div class=gates><article class=gate><h3>R1 · Clinical correctness</h3><span class="badge unverified">Unverified</span>
+<p>All 12 reference cases match their specified results, including expected errors. Tests reject at least three wrong derivations: inclusive dose boundary, selecting a missing latest value, and grouping across subjects</p><h3>Required evidence</h3><p>Reviewed fixtures, R comparison, targeted mutation results</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R2 · Counts and integrity</h3><span class="badge unverified">Unverified</span>
+<p>Every accepted reference recipe produces the exact requested counts and quotas, valid keys, supported types, and required temporal relations. Zero unexplained rule violations; deliberate defects match the scenario manifest. No silent rule relaxation or successful partial output</p><h3>Required evidence</h3><p>Automated checks, including infeasible recipes</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R3 · Reproducibility</h3><span class="badge unverified">Unverified</span>
+<p>For each of five fixed seeds, three runs with the same recipe, input, application version, and pinned environment have identical canonical dataset hashes. Adding an independent field leaves existing fields unchanged</p><h3>Required evidence</h3><p>Hash comparison; stable entity/field random streams; OS-specific evidence</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R4 · Sample handling</h3><span class="badge unverified">Unverified</span>
+<p>Both 10-to-1,000 workflows pass; retain-and-extend preserves all imported cell values and marks originals; generated-only appends none. Unsupported fields and overrides are reported. Requested new categories and exact quotas are respected</p><h3>Required evidence</h3><p>End-to-end invented sample fixtures</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R5 · Statistical behaviour</h3><span class="badge unverified">Unverified</span>
+<p>For five preselected seeds and n=100,000: a standard-normal fixture has absolute mean ≤0.02 and SD between 0.98 and 1.02; a Bernoulli(0.30) fixture has proportion between 0.29 and 0.31; a Gaussian-pair fixture targeting correlation 0.60 has observed correlation between 0.57 and 0.63</p><h3>Required evidence</h3><p>Repeatable statistical checks; these test known generation rules, not real-world fidelity</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R6 · Speed and memory</h3><span class="badge unverified">Unverified</span>
+<p>Generate and export a fixed 100,000-row × 20-scalar-column recipe to CSV with median elapsed time ≤60 seconds over five runs and peak process-tree memory ≤2 GiB in every run</p><h3>Required evidence</h3><p>Named reference machine, CPU/RAM/OS/storage, versions, recipe, and raw timings recorded; startup, profiling, UI, and reports measured separately</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R7 · Offline and installation</h3><span class="badge unverified">Unverified</span>
+<p>Install from a prepared offline bundle and complete both principal workflows with external networking blocked on clean Windows, Ubuntu, and macOS targets. No application-originated external requests; localhost communication allowed. Bundle includes dependencies; OS/browser and any interpreter prerequisites are explicit</p><h3>Required evidence</h3><p>Clean-machine checklist, application network observations, bundle checksums</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R8 · Usability</h3><span class="badge unverified">Unverified</span>
+<p>At least 4 of 5 first-time testers complete each task without coaching within 10 minutes after installation: generate/export a specified clinical scenario; import an invented sample, change a category setting, and export a requested count</p><h3>Required evidence</h3><p>Task sheet, timing, completion and errors; include clinical and general users</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R9 · Interface consistency</h3><span class="badge unverified">Unverified</span>
+<p>Switching Guided/Advanced or saving/reloading preserves the canonical recipe. Both workflows are keyboard-completable with labelled controls and readable error messages</p><h3>Required evidence</h3><p>Automated state checks and manual interaction review</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article><article class=gate><h3>R10 · Release evidence</h3><span class="badge unverified">Unverified</span>
+<p>Core checks pass on all three supported OS targets. No known silent incorrect output, data loss, unintended disclosure, or blocked core workflow remains. Quickstart succeeds from a clean checkout. License and dependency notices are present. Each release has a tag, notes, artifacts/checksums, and tested update instructions</p><h3>Required evidence</h3><p>CI results, release checklist, issue review, artifact links</p>
+<h3>Recorded evidence</h3><p class=muted>No evidence recorded.</p></article></div></section>
+<footer class=panel><strong>Generated, read-only snapshot.</strong> Update <code>docs/progress.json</code>, then run
+<code>python scripts/build_dashboard.py</code> from the repository root. Regenerate after changes to <code>docs/plan.md</code> too.
+Review and commit the snapshot with its source changes. Check it with <code>python scripts/build_dashboard.py --check</code>.</footer>
+</main><script>
+const search = document.getElementById('search');
+const milestone = document.getElementById('milestone');
+const status = document.getElementById('status');
+const tasks = [...document.querySelectorAll('.task')];
+function filter() {
+  const query = search.value.trim().toLowerCase();
+  let visible = 0;
+  for (const task of tasks) {
+    const match = (!milestone.value || task.dataset.milestone === milestone.value)
+      && (!status.value || task.dataset.status === status.value)
+      && (!query || task.textContent.toLowerCase().includes(query));
+    task.hidden = !match;
+    visible += Number(match);
+  }
+  const active = Boolean(query || milestone.value || status.value);
+  for (const group of document.querySelectorAll('.milestone')) {
+    group.hidden = ![...group.querySelectorAll('.task')].some(task => !task.hidden);
+    if (active && !group.hidden) group.open = true;
+  }
+  document.getElementById('results').textContent = `${visible} of ${tasks.length} tasks shown`;
+}
+for (const control of [search, milestone, status]) control.addEventListener('input', filter);
+document.getElementById('reset').addEventListener('click', () => {
+  search.value = ''; milestone.value = ''; status.value = ''; filter(); search.focus();
+});
+filter();
+</script></body></html>
