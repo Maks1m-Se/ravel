@@ -191,7 +191,7 @@
       "id": "M0-09",
       "milestone_id": "M0",
       "title": "Show current focus and upcoming tasks first",
-      "status": "review",
+      "status": "done",
       "acceptance_criteria": [
         "A compact focus panel immediately after a small Ravel heading shows the current milestone, current task and actual status, concrete next action, two upcoming tasks in recorded order, and relevant project/milestone/current-task blockers when present; current task and action are visible at normal laptop zoom, ahead of prominent branding and counts.",
         "Minimal current_task_id and ordered next_task_ids metadata references existing tasks; titles, statuses and milestone are derived from records and next_action supplies action text. Validation rejects duplicate, unknown or completed selections, and documentation explains advancing focus after acceptance.",
@@ -200,7 +200,8 @@
       ],
       "release_gate_ids": [],
       "evidence_refs": [
-        "E9"
+        "E9",
+        "E10"
       ],
       "blockers": []
     },
@@ -529,13 +530,18 @@
       "id": "E9",
       "reference": "branch:feat/dashboard-focus; git:1a3635d8c55580bff755fb13bf3e590d22429a21; scripts/build_dashboard.py; tests/test_dashboard.py; local Chrome screenshots in ignored outputs/dashboard-focus.png and outputs/dashboard-focus-mobile.png; 7 October 2026",
       "scope": "Dashboard tracking only, pending maintainer review. Nine standard-library tests passed, including focus metadata/reference/status validation, explicitly recorded order, derived record details, escaping and empty blockers; generator freshness and Git whitespace checks passed. Headless Chrome checks passed hidden/visible task navigation, filter reset/preservation, summary focus and URL fragment; native Tab/Enter navigation and Space/Enter detail toggling passed. Laptop 1366x768 and narrow 390x844 screenshots inspected: current task/action visible immediately, no narrow horizontal overflow. Initial browser navigation check failed when default fragment navigation stole summary focus; fixed and rechecked. An initial native Enter test failed due to incomplete driver character events; corrected driver passed. Live browser tool initialization failed with sandbox deny-read ACLs; headless Chrome used instead. Other tasks, milestones, plan and all ten unverified gates preserved. Live manual interaction, cross-browser/OS, application and clinical validation not run. Screenshots are local review artifacts, not version-controlled release evidence."
+    },
+    {
+      "id": "E10",
+      "reference": "Maintainer acceptance and Hub review of PR #2; git:76458552d7c014db726e16a7114979feed343053; supplied 7 October 2026",
+      "scope": "M0-09 accepted: maintainer confirmed the dashboard looks good. Hub code review found no blocking issues, independently passed all nine tracking tests and snapshot freshness, and inspected the supplied screenshot. Existing browser checks and limitations remain recorded in E9. Dashboard/tracking acceptance only; application release gates remain unverified."
     }
   ],
   "blockers": [],
-  "next_action": "Maintainer review of the dashboard focus panel on feat/dashboard-focus.",
-  "current_task_id": "M0-09",
+  "next_action": "Prepare the baseline specification and three hand-worked cases for review.",
+  "current_task_id": "M0-05",
   "next_task_ids": [
-    "M0-05",
-    "M0-06"
+    "M0-06",
+    "M0-07"
   ]
 }
