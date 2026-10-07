@@ -199,7 +199,9 @@
         "Offline deterministic generation, focused metadata/order checks, documented tracking tests, freshness and Git whitespace checks pass; browser layout and task navigation are inspected when available and limitations are reported."
       ],
       "release_gate_ids": [],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E9"
+      ],
       "blockers": []
     },
     {
@@ -522,6 +524,11 @@
       "id": "E8",
       "reference": "Maintainer-supplied Hub acceptance of PR #1; git:eb809e127cb1d063398e8e7fa9f59894d914b83c; 7 October 2026",
       "scope": "M0-04 architectural outline accepted. Hub confirmed both review findings resolved: explicit generic/clinical routing and stable random streams by seed and entity/field identity. Field notation remains illustrative; M0-05 clinical decisions, M2 mappings and schema stability remain deferred. No application or release-gate validation."
+    },
+    {
+      "id": "E9",
+      "reference": "branch:feat/dashboard-focus; git:1a3635d8c55580bff755fb13bf3e590d22429a21; scripts/build_dashboard.py; tests/test_dashboard.py; local Chrome screenshots in ignored outputs/dashboard-focus.png and outputs/dashboard-focus-mobile.png; 7 October 2026",
+      "scope": "Dashboard tracking only, pending maintainer review. Nine standard-library tests passed, including focus metadata/reference/status validation, explicitly recorded order, derived record details, escaping and empty blockers; generator freshness and Git whitespace checks passed. Headless Chrome checks passed hidden/visible task navigation, filter reset/preservation, summary focus and URL fragment; native Tab/Enter navigation and Space/Enter detail toggling passed. Laptop 1366x768 and narrow 390x844 screenshots inspected: current task/action visible immediately, no narrow horizontal overflow. Initial browser navigation check failed when default fragment navigation stole summary focus; fixed and rechecked. An initial native Enter test failed due to incomplete driver character events; corrected driver passed. Live browser tool initialization failed with sandbox deny-read ACLs; headless Chrome used instead. Other tasks, milestones, plan and all ten unverified gates preserved. Live manual interaction, cross-browser/OS, application and clinical validation not run. Screenshots are local review artifacts, not version-controlled release evidence."
     }
   ],
   "blockers": [],
