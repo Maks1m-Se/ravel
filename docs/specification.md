@@ -1,12 +1,14 @@
-# Proposed recipe outline and ownership boundary
+# Recipe outline and ownership boundary
 
-M0-04 proposal for maintainer review. Field names and rule notation below are
+M0-04 architectural outline accepted after Hub review of `eb809e1`: one shared
+recipe, explicit domain routing, ownership boundaries, separate schema versioning,
+and stable entity/field random streams. Field names and rule notation below remain
 illustrative, not a stable schema or an implemented generator contract. Scope
 and release criteria remain in [the plan](plan.md).
 
 ## One saved recipe
 
-Recommend one JSON-compatible recipe shared by the CLI and future Guided and
+Use one JSON-compatible recipe shared by the CLI and future Guided and
 Advanced interfaces. All views edit the same settings; switching views or
 saving/reloading must preserve them. Recipes contain declarative data, not
 executable Python, SQL, or expressions.
@@ -25,7 +27,7 @@ Record application, dependency environment, schema, and domain-module versions
 with each run as required by the plan. An unsupported schema version must fail
 clearly before generation, identifying the supplied version and supported
 versions. Any migration produces a separately saved, reviewable copy and
-preserves the original. This outline makes no compatibility promise before review.
+preserves the original. Acceptance of this outline does not establish schema stability.
 
 Domain selection is explicit. Generic mode activates only the stated generic
 rules; clinical-looking entity or field names must not activate clinical rules.
@@ -164,4 +166,4 @@ conversion, date handling, and invalid cases, and independently determine the
 expected clinical results for three tiny reviewed cases before derivation code.
 Those choices are unresolved here. Selected standards mappings and their exact
 versions and limitations remain M2 work. Schema details and stability require
-review; application, clinical, and release-gate validation have not occurred.
+further specification and review; application, clinical, and release-gate validation have not occurred.
