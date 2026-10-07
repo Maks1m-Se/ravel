@@ -93,7 +93,7 @@
       "id": "M0-03",
       "milestone_id": "M0",
       "title": "Import plan and establish progress tracking",
-      "status": "review",
+      "status": "done",
       "acceptance_criteria": [
         "Complete plan imported as planning revision 3 with protected criteria preserved.",
         "Progress JSON parses with unique task IDs, valid references/statuses, and ten initially unverified gates.",
@@ -101,7 +101,8 @@
       ],
       "release_gate_ids": [],
       "evidence_refs": [
-        "E3"
+        "E3",
+        "E5"
       ],
       "blockers": []
     },
@@ -169,16 +170,17 @@
       "id": "M0-08",
       "milestone_id": "M0",
       "title": "Apply Ravel branding and build the progress dashboard",
-      "status": "review",
+      "status": "done",
       "acceptance_criteria": [
         "Current documentation uses Ravel, the agreed tagline and subtitle, and intended ravel names; PyPI remains unresolved and application features remain planned.",
         "A standard-library generator creates a deterministic offline, read-only HTML snapshot with status counts, M0-M6 task criteria/blockers/evidence, search and filters, next action, project blockers, and all ten gates using plan criterion text.",
         "Input validation, reference/status consistency, totals, escaping, deterministic output, external-resource isolation, and Git whitespace checks pass; browser checks are reported with limitations.",
-        "Actual generation/check commands and regeneration rules are documented; existing statuses and gate criteria are preserved; maintainer visual inspection remains pending."
+        "Actual generation/check commands and regeneration rules are documented; existing statuses and gate criteria are preserved; maintainer visual inspection passes and its result is recorded."
       ],
       "release_gate_ids": [],
       "evidence_refs": [
-        "E4"
+        "E4",
+        "E6"
       ],
       "blockers": []
     },
@@ -482,8 +484,18 @@
       "id": "E4",
       "reference": "scripts/build_dashboard.py; tests/test_dashboard.py; local checks on Python 3.11.0 / Windows",
       "scope": "Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against acc430b. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation."
+    },
+    {
+      "id": "E5",
+      "reference": "Maintainer-supplied Hub planning review, 7 October 2026; git:f73dba524838f1c72925b70f13f6ed5153864df3; git:b30b7853f06f405a366d0272586a252aaad505ee",
+      "scope": "Hub comparison of the uploaded plan against original revision 2 confirmed unchanged first-release boundaries, deferred features, implementation/platform scope, M0-M6, clinical rules, all R1-R10 criteria and qualifications, and release policy. Hub JSON checks passed parsing, unique IDs, statuses and milestone/gate/evidence references: 22 tasks and ten unverified gates. Local acceptance checks confirmed README/AGENTS reference the maintained documents and the obsolete root source-plan copy is absent. Planning/documentation acceptance only; application release gates remain unverified."
+    },
+    {
+      "id": "E6",
+      "reference": "Maintainer browser review supplied through the Hub, 7 October 2026; git:b30b7853f06f405a366d0272586a252aaad505ee",
+      "scope": "Maintainer confirmed manual browser checks passed for Review filtering, milestone filtering, search/reset, keyboard expansion and visible focus; screenshots showed correct totals and readable layout. Subsequent maintainer inspection satisfies dashboard visual acceptance; E4 retains the earlier automated-browser initialization failure and its then-pending inspection as historical evidence. Project-dashboard checks only; application release gates remain unverified."
     }
   ],
   "blockers": [],
-  "next_action": "Maintainer: review the planning documents and visually inspect the Ravel dashboard before accepting M0-03 and M0-08. Folder renaming and GitHub connection follow as separate tasks."
+  "next_action": "Rename the local working folder to C:\\Git\\ravel, then connect the repository to GitHub."
 }
