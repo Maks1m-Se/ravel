@@ -26,10 +26,10 @@
 - Rationale: musical composition/orchestration and examining structure before
   generating controlled data.
 - Public PyPI distribution name remains unresolved.
-- The naming decision was recorded in `acc430b`, after the planning commit
-  `f73dba524838f1c72925b70f13f6ed5153864df3`. At that point branding, local folder
+- The naming decision was recorded in `506c944`, after the planning commit
+  `69effadff49540da5002326ecac6dbfe35d2b3cd`. At that point branding, local folder
   renaming, and GitHub connection were deferred. The dashboard work applied
-  branding and was accepted in `25ed3ae`. The local folder has since moved to
+  branding and was accepted in `9f61694`. The local folder has since moved to
   `C:\Git\ravel`. On 7 October 2026, `main` was fast-forwarded to that accepted
   commit and pushed to the newly created private
   [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository through
@@ -55,7 +55,7 @@
 
 ## Accepted recipe architecture
 
-- Hub review of `eb809e1` accepted [the M0-04 architectural outline](specification.md):
+- Hub review of `7ee3252` accepted [the M0-04 architectural outline](specification.md):
   one JSON-compatible saved
   recipe for the CLI and future Guided/Advanced views, separate recipe schema
   versioning, and an engine/clinical-module/adapter ownership boundary.

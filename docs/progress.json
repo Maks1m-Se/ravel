@@ -493,7 +493,7 @@
     },
     {
       "id": "E2",
-      "reference": "git:a92d2ebafb09e0439ba9bd025bd9090cfd55c950",
+      "reference": "git:ed556b15cc37f752ee14e66c3a273830f783633f",
       "scope": "Repository foundation only."
     },
     {
@@ -504,36 +504,36 @@
     {
       "id": "E4",
       "reference": "scripts/build_dashboard.py; tests/test_dashboard.py; local checks on Python 3.11.0 / Windows",
-      "scope": "Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against acc430b. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation."
+      "scope": "Tracking tooling only: six unittest checks passed (JSON/ID/reference/status validation, totals, exact snapshot match, repeated CLI byte determinism, plan-sourced criteria, hostile-text escaping, invalid-input errors without output replacement, stale-snapshot detection, and static external-resource isolation); generator --check and Git whitespace checks passed. Existing tasks, milestone/gate records and complete release-gate plan section compared unchanged against 506c944. Browser opening, filter interaction, expandable details, keyboard access and visual/responsive layout checks not run: browser tool initialization failed with sandbox apply deny-read ACLs error. Maintainer visual inspection pending; no application or release-gate validation."
     },
     {
       "id": "E5",
-      "reference": "Maintainer-supplied Hub planning review, 7 October 2026; git:f73dba524838f1c72925b70f13f6ed5153864df3; git:b30b7853f06f405a366d0272586a252aaad505ee",
+      "reference": "Maintainer-supplied Hub planning review, 7 October 2026; git:69effadff49540da5002326ecac6dbfe35d2b3cd; git:a6f02a109b28afff19b44877574ff4e128aba233",
       "scope": "Hub comparison of the uploaded plan against original revision 2 confirmed unchanged first-release boundaries, deferred features, implementation/platform scope, M0-M6, clinical rules, all R1-R10 criteria and qualifications, and release policy. Hub JSON checks passed parsing, unique IDs, statuses and milestone/gate/evidence references: 22 tasks and ten unverified gates. Local acceptance checks confirmed README/AGENTS reference the maintained documents and the obsolete root source-plan copy is absent. Planning/documentation acceptance only; application release gates remain unverified."
     },
     {
       "id": "E6",
-      "reference": "Maintainer browser review supplied through the Hub, 7 October 2026; git:b30b7853f06f405a366d0272586a252aaad505ee",
+      "reference": "Maintainer browser review supplied through the Hub, 7 October 2026; git:a6f02a109b28afff19b44877574ff4e128aba233",
       "scope": "Maintainer confirmed manual browser checks passed for Review filtering, milestone filtering, search/reset, keyboard expansion and visible focus; screenshots showed correct totals and readable layout. Subsequent maintainer inspection satisfies dashboard visual acceptance; E4 retains the earlier automated-browser initialization failure and its then-pending inspection as historical evidence. Project-dashboard checks only; application release gates remain unverified."
     },
     {
       "id": "E7",
-      "reference": "docs/specification.md; branch:docs/recipe-boundary; git:4544ee706738749b4e36085e719c54897a7a9c4a; local specification and tracking checks, 7 October 2026",
+      "reference": "docs/specification.md; branch:docs/recipe-boundary; git:38dc36b02f45383b204c68bf44a288f63bf53ebd; local specification and tracking checks, 7 October 2026",
       "scope": "M0-04 proposal only, pending maintainer review: shared JSON-compatible recipe, separate schema versioning and ownership boundary recorded. Invented structural example hand-checked independently as two subjects, two exposures and four measurements (eight records), with unique keys, one exposure and two measurements per subject and no orphan links. Python JSON parsing and table assertions confirmed counts, relationships, slots, values, constants and field assignments. Six existing tracking tests, dashboard freshness and Git whitespace checks passed. No generator execution, clinical derivation, schema implementation, browser review or application/release-gate validation; M0-05 clinical choices and M2 mappings remain deferred."
     },
     {
       "id": "E8",
-      "reference": "Maintainer-supplied Hub acceptance of PR #1; git:eb809e127cb1d063398e8e7fa9f59894d914b83c; 7 October 2026",
+      "reference": "Maintainer-supplied Hub acceptance of PR #1; git:7ee325209b4d5f6b5d2e6b04a5f0c829be735bc1; 7 October 2026",
       "scope": "M0-04 architectural outline accepted. Hub confirmed both review findings resolved: explicit generic/clinical routing and stable random streams by seed and entity/field identity. Field notation remains illustrative; M0-05 clinical decisions, M2 mappings and schema stability remain deferred. No application or release-gate validation."
     },
     {
       "id": "E9",
-      "reference": "branch:feat/dashboard-focus; git:1a3635d8c55580bff755fb13bf3e590d22429a21; scripts/build_dashboard.py; tests/test_dashboard.py; local Chrome screenshots in ignored outputs/dashboard-focus.png and outputs/dashboard-focus-mobile.png; 7 October 2026",
+      "reference": "branch:feat/dashboard-focus; git:6e2000bf24310d91411202cb5bc2793b252a0ba3; scripts/build_dashboard.py; tests/test_dashboard.py; local Chrome screenshots in ignored outputs/dashboard-focus.png and outputs/dashboard-focus-mobile.png; 7 October 2026",
       "scope": "Dashboard tracking only, pending maintainer review. Nine standard-library tests passed, including focus metadata/reference/status validation, explicitly recorded order, derived record details, escaping and empty blockers; generator freshness and Git whitespace checks passed. Headless Chrome checks passed hidden/visible task navigation, filter reset/preservation, summary focus and URL fragment; native Tab/Enter navigation and Space/Enter detail toggling passed. Laptop 1366x768 and narrow 390x844 screenshots inspected: current task/action visible immediately, no narrow horizontal overflow. Initial browser navigation check failed when default fragment navigation stole summary focus; fixed and rechecked. An initial native Enter test failed due to incomplete driver character events; corrected driver passed. Live browser tool initialization failed with sandbox deny-read ACLs; headless Chrome used instead. Other tasks, milestones, plan and all ten unverified gates preserved. Live manual interaction, cross-browser/OS, application and clinical validation not run. Screenshots are local review artifacts, not version-controlled release evidence."
     },
     {
       "id": "E10",
-      "reference": "Maintainer acceptance and Hub review of PR #2; git:76458552d7c014db726e16a7114979feed343053; supplied 7 October 2026",
+      "reference": "Maintainer acceptance and Hub review of PR #2; git:015266c3fbf194b7a2842a138cd5ee8419b50584; supplied 7 October 2026",
       "scope": "M0-09 accepted: maintainer confirmed the dashboard looks good. Hub code review found no blocking issues, independently passed all nine tracking tests and snapshot freshness, and inspected the supplied screenshot. Existing browser checks and limitations remain recorded in E9. Dashboard/tracking acceptance only; application release gates remain unverified."
     }
   ],
