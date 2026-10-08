@@ -156,6 +156,7 @@ class DashboardTests(unittest.TestCase):
 
     def test_focus_escapes_content_and_omits_empty_blockers(self):
         data = deepcopy(self.data)
+        data["blockers"] = []
         hostile = '<img src="https://invalid.example/" onerror="alert(1)">'
         current = next(t for t in data["tasks"] if t["id"] == data["current_task_id"])
         current["title"] = hostile

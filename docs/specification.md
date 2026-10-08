@@ -1,6 +1,6 @@
 # Recipe outline and ownership boundary
 
-M0-04 architectural outline accepted after Hub review of `eb809e1`: one shared
+M0-04 architectural outline accepted after Hub review of `7ee3252`: one shared
 recipe, explicit domain routing, ownership boundaries, separate schema versioning,
 and stable entity/field random streams. Field names and rule notation below remain
 illustrative, not a stable schema or an implemented generator contract. Scope
