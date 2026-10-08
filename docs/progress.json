@@ -125,14 +125,20 @@
       "id": "M0-05",
       "milestone_id": "M0",
       "title": "Specify baseline and review three tiny cases",
-      "status": "pending",
+      "status": "done",
       "acceptance_criteria": [
         "Baseline specification records eligibility, units, dose/date/tie handling, and independently established expected results for three tiny reviewed cases."
       ],
       "release_gate_ids": [
         "R1"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15"
+      ],
       "blockers": []
     },
     {
@@ -161,12 +167,14 @@
       "status": "pending",
       "acceptance_criteria": [
         "Concise contributor/release rules include real runnable setup/check commands when available.",
-        "Resolve license choice with dependency review before public alpha."
+        "Approved MIT license is present; complete dependency/license review before public alpha."
       ],
       "release_gate_ids": [
         "R10"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E17"
+      ],
       "blockers": []
     },
     {
@@ -211,7 +219,8 @@
       "title": "Implement linked clinical CLI slice",
       "status": "pending",
       "acceptance_criteria": [
-        "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output."
+        "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.",
+        "Reviewed numeric representation/range, overflow handling, rounding and export-format policies are required before clinical numeric implementation within the existing M1 slice."
       ],
       "release_gate_ids": [
         "R2"
@@ -242,7 +251,8 @@
       "status": "pending",
       "acceptance_criteria": [
         "All twelve specified cases have independently established expected results and valid/invalid classification.",
-        "Selected source-to-analysis mappings record exact standard versions and limitations."
+        "Selected source-to-analysis mappings record exact standard versions and limitations.",
+        "Implement the specified clinical derivation outputs and declared negative-fixture export/validation contract for the twelve planned scenarios; establish reference expectations before implementing their derivations. This does not expand the M1 working slice."
       ],
       "release_gate_ids": [
         "R1"
@@ -257,7 +267,8 @@
       "status": "pending",
       "acceptance_criteria": [
         "R comparisons agree with expected results and targeted checks detect all specified wrong derivations.",
-        "One example table and figure are reproducible; unexecuted SAS companion work is labelled if present."
+        "One example table and figure are reproducible; unexecuted SAS companion work is labelled if present.",
+        "Document Python/R comparison tolerances consistent with the reviewed numeric policy and the plan's R3 cross-platform qualification."
       ],
       "release_gate_ids": [
         "R1"
@@ -537,18 +548,50 @@
       "scope": "M0-09 accepted: maintainer confirmed the dashboard looks good. Hub code review found no blocking issues, independently passed all nine tracking tests and snapshot freshness, and inspected the supplied screenshot. Existing browser checks and limitations remain recorded in E9. Dashboard/tracking acceptance only; application release gates remain unverified."
     },
     {
+      "id": "E11",
+      "reference": "docs/baseline-specification.md; branch:docs/baseline-specification; git:3a5df0738a63e46fee413d7f8ee5056ad8298d5f; local documentation/tracking checks, 7 October 2026",
+      "scope": "M0-05 proposal awaiting maintainer approval. Ten invented records (3 actual doses/7 measurements) checked for IDs, references, timestamps, units and hand-established expectations: C1-M1 gives 10/+3; C2-M1 gives 8/+3; strict boundary gives null/null with NO_ELIGIBLE_BASELINE. Second-agent document review found no blocker after exposure-status clarification. Nine tracking tests, snapshot freshness and Git whitespace passed; plan and generic example unchanged. No derivation implementation, independent clinical validation, browser recheck or release-gate validation."
+    },
+    {
+      "id": "E12",
+      "reference": "Maintainer-supplied external AI review findings for draft PR #3; reviewed base git:e1a5dcdb6a1705371cfc895924a755508e81103d; local uncommitted revision on branch:docs/baseline-specification, 8 October 2026; docs/baseline-specification.md",
+      "scope": "Findings addressed as proposals, not acceptance: declared clinical-negative fixture export remains separate from failed clinical validation; generic validation and whole-run failure remain enforced. Logical group/change outputs, source-keyed diagnostics and empty/undosed groups specified. Cases 1-3 inputs preserved; Case 4 extends existing boundary coverage: baseline C4-M1=10, no C4-M2 change, C4-M3 change +5; incorrect inclusive follow-up gives +2 and inclusive baseline gives +3. Fourteen numbered inputs (4 doses/10 measurements), four group and four change outputs, IDs/references/units/timestamps and arithmetic checked. Official SDTMIG v3.3 sections 4.5.9/4.4.1-4.4.2 and FDA June 2026 v6.2.1 numeric-date guidance/4.1.4.1 inspected as text; PDF images not visually verified. Numeric representation/range, rounding, formatting and comparison tolerances remain unresolved before M1-01/M2-02. Second-agent document review found no blocker. Nine tracking tests, regenerated snapshot freshness, Git whitespace and status/history preservation checks passed. Plan, accepted generic outline, historical evidence, other statuses and all ten unverified gates preserved. No clinical implementation, independent clinical validation or dashboard browser recheck; M0-05 remains in review."
+    },
+    {
+      "id": "E13",
+      "reference": "Maintainer-supplied follow-up specification review, including Claude's crossed-pair finding; local uncommitted revision on branch:docs/baseline-specification from git:e1a5dcdb6a1705371cfc895924a755508e81103d, 8 October 2026; docs/baseline-specification.md",
+      "scope": "Proposed disposition: independent record checks, subject/group prerequisite suppression without reduced-set fallback, failure codes, NOT_EVALUATED diagnostics and exact code/scope/source-ID manifest matching specified; declared pair membership required. Hand-checkable a/b/c illustrations distinguish unit failure from skipped tie, valid baseline tie, and malformed-dose failure from no-dose absence; crossed pair fails UNDECLARED_GROUP. Existing M1-01/M2-01/M2-02 criteria retained with numeric-policy, clinical output/negative-fixture implementation and tolerance obligations appended; no M1 scope expansion. Second-agent document review found no blocker. Cases 1-4 and their results unchanged: 14 inputs, four group/four change outputs. Initial tracking run detected stale dashboard after criteria edits; regeneration followed by all nine tracking tests, freshness, whitespace, example/reference and status/history preservation checks passed. Existing uncommitted preparation, historical evidence, plan, accepted generic architecture, all statuses and ten unverified gates preserved. M0-05 remains review; no clinical implementation, independent clinical validation or browser recheck."
+    },
+    {
+      "id": "E14",
+      "reference": "Maintainer-supplied Hub final document review, 8 October 2026; docs/baseline-specification.md; local revision on branch:docs/baseline-specification",
+      "scope": "Final document review of the M0-05 specification revision. This Hub review is separate from Claude's earlier findings retained in E12/E13; no review of the final revision by Claude is asserted. Document review does not establish independent clinical validation."
+    },
+    {
+      "id": "E15",
+      "reference": "Explicit maintainer acceptance, 8 October 2026; docs/baseline-specification.md; local acceptance update on branch:docs/baseline-specification from git:e1a5dcdb6a1705371cfc895924a755508e81103d",
+      "scope": "M0-05 accepted: reviewed policies, validation/output contracts and four reference cases form a fictional test-data specification. Acceptance establishes no standards conformity, implemented functionality or independent clinical validation. Numeric prerequisites and M1/M2 implementation ownership remain unchanged. An initial tracking test assumed M0-05 was unfinished; its copied fixture now sets its own pending statuses. All nine tracking tests, freshness, whitespace and case/history/status/gate preservation checks then passed. Focus advances to pending M0-06, with M0-07 remaining in recorded order; M0-06 work has not started."
+    },
+    {
       "id": "E16",
       "reference": "Local email-privacy rewrite audit and fresh GitHub clone verification, 8 October 2026; private recovery archive and old-to-new commit mapping retained outside the repository",
       "scope": "Personal email replaced in author/committer metadata using git-filter-repo 2.47.0; no target occurrences found in historical file contents or commit messages. All 19 input commits compared: author/committer names and dates, parent order, file trees and messages preserved except email replacements; three invalidated GitHub signatures removed. Reviewed local M0-05 preparation committed before rewriting. Current evidence references repaired without deleting historical descriptions. Four existing remote branches updated atomically using explicit expected-SHA force-with-lease; two local-only branches stayed local and no tags existed. Original checkout aligned and old local commit objects purged, with ignored/untracked files preserved. Fresh GitHub clone found no target email in branch history; nine tracking tests, dashboard freshness, whitespace and Git integrity checks passed. One test initially assumed an empty project blocker list; its invented fixture now explicitly supplies that state, and all nine tests passed. Accepted M0-05 specification and all four cases preserved byte-for-byte; task/milestone statuses, numeric prerequisites, plan and ten unverified gates unchanged. Repository remains private and PR #3 remains an unmerged draft. Separate PR-ref and old-commit API checks found residual exposure recorded in blockers; complete erasure is not claimed. No Support contact, browser recheck, clinical implementation or application/release-gate validation."
+    },
+    {
+      "id": "E17",
+      "reference": "README.md; LICENSE; docs/development.md; local documentation checks and ignored outputs/readme-preview screenshots, 8 October 2026",
+      "scope": "Approved visitor documentation and MIT licensing preparation completed. Dashboard usage, maintenance and verification moved to the development guide. All four README baseline/change pairs (10/+3, 8/+3, null/null, 10/+5) compared directly with the accepted specification; 39 local Markdown links and the standard MIT text with copyright 2026 Maksim Sendetski verified. Nine tracking tests, regenerated dashboard freshness and Git whitespace checks passed. Local Python-Markdown/Mermaid Tiny 12.1.0 previews rendered in headless Chrome 154 at 1366x900 and 390x844; desktop, mobile and diagram screenshots inspected, with four case rows, five diagram nodes and no page overflow. Live computer/browser tools failed initialization; local headless rendering used instead. GitHub's live README renderer, other browsers, dashboard interaction, application and clinical validation were not checked. Clinical specification and recipe architecture preserved byte-for-byte; numeric prerequisites, historical evidence E1-E16, all task/milestone statuses, release criteria, ten unverified gates and the retained-history privacy blocker preserved. M0-07 remains pending for remaining contributor/release rules and dependency/license review. No clinical implementation, history rewrite or release-readiness claim; PR #3's description still needs updating before merge."
+    },
+    {
+      "id": "E18",
+      "reference": "Explicit maintainer decision and development-preview publication preparation, 8 October 2026; README.md; docs/decisions.md",
+      "scope": "Maintainer accepts personal-email discoverability in retained GitHub commits and authorizes updating/merging PR #3 and making the existing repository public after checks. The active privacy blocker is removed by acceptance of the exposure, not complete erasure; historical evidence E1-E17 is retained. Existing repository and cleaned history remain, with verified noreply identity for future commits; no further history cleanup, migration or Support request is required. README makes Case 4 inputs and expected result explicit and discloses AI assistance in code and documentation. M0-06 preparation is restored as next action without starting it. Task statuses, accepted clinical contracts, numeric prerequisites and all ten unverified gates remain unchanged. Publication is an early development preview, not an alpha/v0.1 release or application/clinical validation. All nine documented tracking tests, regenerated dashboard freshness and Git whitespace checks passed. All four README baseline/change pairs and Case 4 inputs (10, 12, 15) match the accepted specification; 40 local Markdown links resolve. Accepted clinical and recipe specifications, plan, license and tooling remain byte-for-byte unchanged from reviewed commit 4d9790f. The main-branch history-reference reconciliation preserved the reviewed file tree and both parent histories. Current visual/browser, application, cross-platform and clinical validation were not run; prior README/Mermaid rendering evidence remains in E17."
     }
   ],
-  "blockers": [
-    "Public publication blocked: GitHub retains personal-email history through refs/pull/1/head, refs/pull/2/head and refs/pull/3/merge. Eighteen original commit API views remain accessible, including fifteen exposing the address. Rewritten branch history is clean; complete GitHub removal is not established. Keep the repository private and PR #3 unmerged."
-  ],
-  "next_action": "Maintainer: arrange the next cleanup step for retained GitHub PR history and cached old commits, then verify removal before public publication. Keep the repository private and PR #3 unmerged; GitHub Support has not been contacted. MIT is already approved. After this blocker is cleared: Prepare the baseline specification and three hand-worked cases for review.",
-  "current_task_id": "M0-05",
+  "blockers": [],
+  "next_action": "Prepare M0-06's environment, packaging and UI evaluation: select Python and the locked environment, record exact OS targets and benchmark setup, and design the offline launch, keyboard-use and fresh-checkout smoke experiment.",
+  "current_task_id": "M0-06",
   "next_task_ids": [
-    "M0-06",
     "M0-07"
   ]
 }

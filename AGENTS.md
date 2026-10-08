@@ -25,6 +25,10 @@
 - PR descriptions explain the change, reason, meaningful checks, and material
   limitations; avoid duplicate progress records and exhaustive process narration.
   Keep honest AI disclosure.
+- Require maintainer review of critical clinical decisions and important
+  user-facing behavior before acceptance. For runnable additions, give a short
+  required review or optional try-out with exact steps and expected outcomes;
+  put required maintainer action in progress.json's next_action, not a second backlog.
 - Document runnable setup/check commands when they exist. Do not invent commands
   while application code and tooling are absent.
 - Display name: Ravel. Tagline: “Compose the data you need.” Subtitle: “Synthetic

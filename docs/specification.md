@@ -34,8 +34,8 @@ rules; clinical-looking entity or field names must not activate clinical rules.
 A future clinical recipe must explicitly select clinical mode, a named clinical
 template, and a template version compatible with the bundled clinical module.
 Unknown templates or incompatible versions must fail clearly rather than fall
-back to inferred rules. Template selection does not settle the M0-05 clinical
-decisions deferred below.
+back to inferred rules. Template selection is separate from the accepted M0-05
+fictional clinical specification linked below.
 
 ## Illustrative structural example
 
@@ -155,15 +155,29 @@ estimates must not imply preserved associations. Unsupported assumptions must
 be reported. Both entry paths feed the same validation and engine; detailed
 profiling and generated-only/retain-and-extend behaviour remain M3 work.
 
-## Clinical work deferred
+## Accepted clinical specification and deferred work
 
 The existing baseline/change rule is in [the plan's Clinical specification
 paragraph](plan.md), immediately before the twelve reference cases. It remains
 the planning rule; this example neither extends nor validates it.
 
-M0-05 must specify tie handling, missing actual dose, unit compatibility and
-conversion, date handling, and invalid cases, and independently determine the
-expected clinical results for three tiny reviewed cases before derivation code.
-Those choices are unresolved here. Selected standards mappings and their exact
+The separate [M0-05 baseline specification](baseline-specification.md) records
+actual-dose, eligibility, time, tie, unit and error policies with four
+hand-worked cases, versioned source context, logical outputs and a declared
+negative-fixture contract. It distinguishes exporting expected-invalid test
+inputs from successful clinical derivation without relaxing generic validation.
+The maintainer accepted those policies, contracts and four cases on 8 October
+2026 as a fictional test-data specification. Acceptance does not change this
+generic example or establish standards conformity, implemented functionality
+or independent clinical validation.
+The specification requires declared subject/parameter membership and specifies
+validation dependencies, failure codes and skipped-check diagnostics. Independent
+checks continue, while any failure suppresses successful outputs for the whole run.
+Numeric representation/range, rounding, export formatting and comparison
+tolerances remain to be specified before M1-01 clinical numeric implementation
+and M2-02 independent R comparison. M2-01 owns the specified clinical outputs
+and negative-fixture contract across the planned scenarios, with reference
+expectations before derivation implementation; M1's bounded slice is unchanged.
+Selected standards mappings and their exact
 versions and limitations remain M2 work. Schema details and stability require
 further specification and review; application, clinical, and release-gate validation have not occurred.
