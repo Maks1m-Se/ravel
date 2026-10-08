@@ -121,8 +121,21 @@
   repository, with no active push remote on the archives. Invalidated GitHub
   signatures were removed by the rewrite.
 - Clean branch history does not prove removal from GitHub PR references or
-  cached commit views. The publication blocker and required next action are
-  recorded in progress.json. Keep the repository private and PR #3 unmerged.
+  cached commit views. Publication was initially blocked while retained history
+  remained accessible; the original findings and limitations remain in progress
+  evidence E16 and E17. Complete erasure has not occurred.
+- On 8 October 2026, the maintainer explicitly accepted that the personal email
+  remains discoverable in GitHub's retained historical commits. The active
+  privacy publication blocker is removed because the exposure is accepted,
+  not because the email was completely removed. Keep the existing repository
+  and cleaned history, and continue using the verified GitHub noreply identity
+  for future commits. No further history cleanup, migration or Support request
+  is required.
+- The maintainer authorized updating and merging PR #3 while preserving its
+  commits, then making the existing repository public after checks pass, as an
+  early development preview. This is not an alpha or v0.1 release and establishes
+  no application functionality, standards conformity or clinical validation.
+  M0-06 and M0-07 remain pending; all release gates remain unverified.
 
 ## Visitor documentation and MIT licensing
 
@@ -137,10 +150,11 @@
   generation, personal authorship of every calculation or independent clinical
   validation. Planned reproducibility includes recipe, input, seed, application
   version and pinned environment.
-- Documentation/license preparation does not complete M0-07, change accepted
+- Documentation/license preparation did not complete M0-07, change accepted
   clinical contracts or numeric prerequisites, establish a release gate, or
-  clear the retained-history publication blocker. PR #3's outdated description
-  must be updated before any future merge; the PR remains unmerged.
+  clear the retained-history publication blocker at that time. PR #3's then-
+  outdated description required updating before merge. The later maintainer
+  decision above accepts the residual exposure and authorizes publication.
 
 ## Unresolved
 

@@ -8,7 +8,7 @@ Testing data workflows requires cases with known expected outcomes. Ravel is a p
 analysts who need reproducible synthetic datasets, starting with clinical and
 biomedical scenarios and a general-purpose generation engine underneath.
 
-**Status:** The accepted fictional baseline/change specification and working
+**Early development preview:** The accepted fictional baseline/change specification and working
 progress-dashboard tooling exist. Clinical data generation and the application
 CLI/UI are not implemented. The reference expectations below are part of the
 specification; they are not generated application results or evidence of
@@ -35,6 +35,10 @@ Values use the fictional unit `bx-unit`; `null` means a missing result.
 | 2 | Latest pre-dose value missing | 8 | +3 |
 | 3 | At-dose boundary without an earlier eligible value | `null` | `null` |
 | 4 | At-dose boundary with an earlier eligible value | 10 | +5 |
+
+Case 4 uses pre-dose **10**, at-dose **12**, and post-dose **15**. Its expected
+baseline is **10** and post-dose change is **15 - 10 = +5**. The at-dose record
+receives diagnostics and no change row.
 
 Case 3 reports `NO_ELIGIBLE_BASELINE`. In Cases 3 and 4, the change shown is for
 the post-dose measurement; the at-dose record has no change row. See the
@@ -80,7 +84,7 @@ See the [development guide](docs/development.md) for dashboard usage, local
 checks and maintenance, and [decisions](docs/decisions.md) for agreed direction
 and unresolved choices.
 
-Documentation is AI-assisted. The maintainer reviews and accepts changes;
-AI assistance does not establish clinical correctness.
+Development, including code and documentation, is AI-assisted. The maintainer
+reviews and accepts changes; AI assistance does not establish clinical correctness.
 
 Licensed under the [MIT License](LICENSE). Copyright 2026 Maksim Sendetski.

@@ -77,4 +77,6 @@ The approved [MIT license](../LICENSE) is present. M0-07 still requires the
 remaining contributor/release rules and dependency/license review before public
 alpha; adding the license and this guide does not complete the task or any
 release gate. Consult [progress.json](progress.json) for current blockers and the
-required next action, including the retained GitHub-history privacy issue.
+required next action. The maintainer accepted residual email discoverability in
+retained GitHub history; the [decision record](decisions.md) preserves that
+acceptance and the earlier findings without claiming complete removal.
