@@ -118,6 +118,9 @@ class DashboardTests(unittest.TestCase):
         data = deepcopy(self.data)
         data["current_task_id"] = "M1-01"
         data["next_task_ids"] = ["M0-06", "M0-05"]
+        for task in data["tasks"]:
+            if task["id"] in data["next_task_ids"]:
+                task["status"] = "pending"
         current = next(t for t in data["tasks"] if t["id"] == "M1-01")
         current.update(title="Invented current title", status="blocked", blockers=["Task obstacle"])
         data["milestones"][1].update(title="Invented milestone", blockers=["Milestone obstacle"])

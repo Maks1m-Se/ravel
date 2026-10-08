@@ -125,7 +125,7 @@
       "id": "M0-05",
       "milestone_id": "M0",
       "title": "Specify baseline and review three tiny cases",
-      "status": "review",
+      "status": "done",
       "acceptance_criteria": [
         "Baseline specification records eligibility, units, dose/date/tie handling, and independently established expected results for three tiny reviewed cases."
       ],
@@ -133,7 +133,11 @@
         "R1"
       ],
       "evidence_refs": [
-        "E11"
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15"
       ],
       "blockers": []
     },
@@ -213,7 +217,8 @@
       "title": "Implement linked clinical CLI slice",
       "status": "pending",
       "acceptance_criteria": [
-        "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output."
+        "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.",
+        "Reviewed numeric representation/range, overflow handling, rounding and export-format policies are required before clinical numeric implementation within the existing M1 slice."
       ],
       "release_gate_ids": [
         "R2"
@@ -244,7 +249,8 @@
       "status": "pending",
       "acceptance_criteria": [
         "All twelve specified cases have independently established expected results and valid/invalid classification.",
-        "Selected source-to-analysis mappings record exact standard versions and limitations."
+        "Selected source-to-analysis mappings record exact standard versions and limitations.",
+        "Implement the specified clinical derivation outputs and declared negative-fixture export/validation contract for the twelve planned scenarios; establish reference expectations before implementing their derivations. This does not expand the M1 working slice."
       ],
       "release_gate_ids": [
         "R1"
@@ -259,7 +265,8 @@
       "status": "pending",
       "acceptance_criteria": [
         "R comparisons agree with expected results and targeted checks detect all specified wrong derivations.",
-        "One example table and figure are reproducible; unexecuted SAS companion work is labelled if present."
+        "One example table and figure are reproducible; unexecuted SAS companion work is labelled if present.",
+        "Document Python/R comparison tolerances consistent with the reviewed numeric policy and the plan's R3 cross-platform qualification."
       ],
       "release_gate_ids": [
         "R1"
@@ -542,13 +549,32 @@
       "id": "E11",
       "reference": "docs/baseline-specification.md; branch:docs/baseline-specification; git:b09e9588004df1a57de6f5d30f1a2e5d8f985b4a; local documentation/tracking checks, 7 October 2026",
       "scope": "M0-05 proposal awaiting maintainer approval. Ten invented records (3 actual doses/7 measurements) checked for IDs, references, timestamps, units and hand-established expectations: C1-M1 gives 10/+3; C2-M1 gives 8/+3; strict boundary gives null/null with NO_ELIGIBLE_BASELINE. Second-agent document review found no blocker after exposure-status clarification. Nine tracking tests, snapshot freshness and Git whitespace passed; plan and generic example unchanged. No derivation implementation, independent clinical validation, browser recheck or release-gate validation."
+    },
+    {
+      "id": "E12",
+      "reference": "Maintainer-supplied external AI review findings for draft PR #3; reviewed base git:065ea046b2f0bd3644e4ed21556f17d6419a5d3c; local uncommitted revision on branch:docs/baseline-specification, 8 October 2026; docs/baseline-specification.md",
+      "scope": "Findings addressed as proposals, not acceptance: declared clinical-negative fixture export remains separate from failed clinical validation; generic validation and whole-run failure remain enforced. Logical group/change outputs, source-keyed diagnostics and empty/undosed groups specified. Cases 1-3 inputs preserved; Case 4 extends existing boundary coverage: baseline C4-M1=10, no C4-M2 change, C4-M3 change +5; incorrect inclusive follow-up gives +2 and inclusive baseline gives +3. Fourteen numbered inputs (4 doses/10 measurements), four group and four change outputs, IDs/references/units/timestamps and arithmetic checked. Official SDTMIG v3.3 sections 4.5.9/4.4.1-4.4.2 and FDA June 2026 v6.2.1 numeric-date guidance/4.1.4.1 inspected as text; PDF images not visually verified. Numeric representation/range, rounding, formatting and comparison tolerances remain unresolved before M1-01/M2-02. Second-agent document review found no blocker. Nine tracking tests, regenerated snapshot freshness, Git whitespace and status/history preservation checks passed. Plan, accepted generic outline, historical evidence, other statuses and all ten unverified gates preserved. No clinical implementation, independent clinical validation or dashboard browser recheck; M0-05 remains in review."
+    },
+    {
+      "id": "E13",
+      "reference": "Maintainer-supplied follow-up specification review, including Claude's crossed-pair finding; local uncommitted revision on branch:docs/baseline-specification from git:065ea046b2f0bd3644e4ed21556f17d6419a5d3c, 8 October 2026; docs/baseline-specification.md",
+      "scope": "Proposed disposition: independent record checks, subject/group prerequisite suppression without reduced-set fallback, failure codes, NOT_EVALUATED diagnostics and exact code/scope/source-ID manifest matching specified; declared pair membership required. Hand-checkable a/b/c illustrations distinguish unit failure from skipped tie, valid baseline tie, and malformed-dose failure from no-dose absence; crossed pair fails UNDECLARED_GROUP. Existing M1-01/M2-01/M2-02 criteria retained with numeric-policy, clinical output/negative-fixture implementation and tolerance obligations appended; no M1 scope expansion. Second-agent document review found no blocker. Cases 1-4 and their results unchanged: 14 inputs, four group/four change outputs. Initial tracking run detected stale dashboard after criteria edits; regeneration followed by all nine tracking tests, freshness, whitespace, example/reference and status/history preservation checks passed. Existing uncommitted preparation, historical evidence, plan, accepted generic architecture, all statuses and ten unverified gates preserved. M0-05 remains review; no clinical implementation, independent clinical validation or browser recheck."
+    },
+    {
+      "id": "E14",
+      "reference": "Maintainer-supplied Hub final document review, 8 October 2026; docs/baseline-specification.md; local revision on branch:docs/baseline-specification",
+      "scope": "Final document review of the M0-05 specification revision. This Hub review is separate from Claude's earlier findings retained in E12/E13; no review of the final revision by Claude is asserted. Document review does not establish independent clinical validation."
+    },
+    {
+      "id": "E15",
+      "reference": "Explicit maintainer acceptance, 8 October 2026; docs/baseline-specification.md; local acceptance update on branch:docs/baseline-specification from git:065ea046b2f0bd3644e4ed21556f17d6419a5d3c",
+      "scope": "M0-05 accepted: reviewed policies, validation/output contracts and four reference cases form a fictional test-data specification. Acceptance establishes no standards conformity, implemented functionality or independent clinical validation. Numeric prerequisites and M1/M2 implementation ownership remain unchanged. An initial tracking test assumed M0-05 was unfinished; its copied fixture now sets its own pending statuses. All nine tracking tests, freshness, whitespace and case/history/status/gate preservation checks then passed. Focus advances to pending M0-06, with M0-07 remaining in recorded order; M0-06 work has not started."
     }
   ],
   "blockers": [],
-  "next_action": "Maintainer: review baseline policies and hand-check Cases 1?3 using docs/baseline-specification.md's required checklist before accepting M0-05.",
-  "current_task_id": "M0-05",
+  "next_action": "Prepare M0-06's environment, packaging and UI evaluation: select Python and the locked environment, record exact OS targets and benchmark setup, and design the offline launch, keyboard-use and fresh-checkout smoke experiment.",
+  "current_task_id": "M0-06",
   "next_task_ids": [
-    "M0-06",
     "M0-07"
   ]
 }

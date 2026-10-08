@@ -60,19 +60,48 @@
   recipe for the CLI and future Guided/Advanced views, separate recipe schema
   versioning, and an engine/clinical-module/adapter ownership boundary.
 - Its invented example checks structure only. Field notation is illustrative;
-  schema stability and detailed clinical rules remain unresolved. Explicit
-  generic/clinical routing and stable seed/entity/field random streams were
+  schema stability remains unresolved. Explicit generic/clinical routing and
+  stable seed/entity/field random streams were
   confirmed; clinical-looking names cannot activate clinical rules.
-  M0-05 retains clinical edge cases and independent expected results; M2 retains
-  selected standards mappings, and M3 retains the detailed sample workflow.
+  M0-05 records the accepted fictional clinical policies and four reference
+  cases; M2 retains selected standards mappings, and M3 retains the detailed
+  sample workflow.
 
-## Clinical policies proposed for review
+## Accepted fictional clinical specification
 
-- [The M0-05 baseline proposal](baseline-specification.md) preserves the plan's
-  last-nonmissing, strictly pre-dose rule and provides three hand-worked cases.
+- [The M0-05 baseline specification](baseline-specification.md) preserves the plan's
+  last-nonmissing, strictly pre-dose rule and provides four hand-worked cases
+  within the existing twelve planned scenarios.
   Actual-dose recognition, timestamp precision/timezones, tie errors, exact
   units without conversion, post-dose targets, missing-result reasons and
-  whole-run errors are proposals awaiting maintainer approval, not adopted rules.
+  whole-run errors were accepted by the maintainer on 8 October 2026, together
+  with the validation/output contracts and four cases, as a fictional test-data
+  specification. Acceptance does not establish standards conformity, implemented
+  functionality or independent clinical validation.
+- The Hub's final document review is recorded separately from the earlier
+  Claude reviews in progress.json. Claude's earlier findings informed revisions;
+  no final-revision review by Claude is asserted.
+- The maintainer-supplied external AI review prompted explicit negative-fixture
+  versus derivation contracts, group/change/record-diagnostic outputs, an extra
+  boundary illustration and versioned CDISC/FDA source context. The specification
+  retains strict pre-dose selection as the fictional study rule and distinguishes
+  it from scoped software restrictions; no universal clinical or submission
+  compliance is claimed. AI review does not establish independent clinical
+  validation. Historical preparation evidence remains in progress.json.
+- Follow-up review, including Claude's crossed-pair counterexample, prompted
+  explicit declared subject/parameter membership and deterministic validation
+  dependencies. Failed dose records block their subject's anchor; failed
+  measurements block their declared group's baseline selection without fallback.
+  The specification distinguishes evaluable failures, failed-prerequisite skips and
+  valid missing reasons; manifests match failures by code/scope/source IDs.
+  Independent checks continue and whole-run output suppression remains intact.
+- Arithmetic representation/range, rounding, export formatting and Python/R
+  comparison tolerances remain unresolved. Specify these before M1-01 clinical
+  numeric implementation and align M2-02 R comparison with the plan's R3
+  qualification. No mandatory decimal-scale recipe attribute is selected.
+  Existing task criteria now record that prerequisite, M2-01's ownership of
+  specified clinical outputs/negative fixtures with expectations before their
+  derivations, and M2-02's tolerance documentation. M1 scope is unchanged.
 - Maintainer review of critical clinical decisions and important user-facing
   behavior is required before acceptance. Required action remains in
   progress.json's next_action; runnable additions supply exact review/try-out
@@ -86,7 +115,7 @@
 - Exact platform environments, including macOS version on Apple silicon.
 - Installer/signing choices and benchmark reference hardware/frozen workload.
 - Detailed recipe schema, selected clinical mapping standard versions, and
-  declared handling of ties, missing dose, units, and invalid cases.
+  numeric policies under the recorded M1/M2 prerequisites.
 
-Resolve these through the planned specifications and M0 experiments; proposals
-are not adopted choices or implementation evidence.
+Resolve these remaining choices through the planned specifications and M0
+experiments; unresolved proposals are not adopted choices or implementation evidence.

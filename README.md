@@ -4,24 +4,29 @@
 
 Synthetic test data from examples, assumptions and explicit rules.
 
-A planned free, open-source, offline test-data generator for Windows, Linux,
-and macOS. Clinical and biomedical scenarios will come first, supported by a
-general-purpose generation engine.
+Ravel is a project to build an offline synthetic test-data generator for
+software testing. Clinical and biomedical scenarios will come first, backed by
+a general-purpose generation engine. Windows, Linux and macOS support is planned.
 
 ## Current status
 
-**Planning and repository setup.** This repository contains foundation
-documentation, planning records, and a standard-library progress dashboard
-generator. Application functionality is not implemented; no application
-dependencies or application setup commands exist yet.
+**Development preview.** The working tooling is a Python standard-library
+generator and an offline progress dashboard showing current focus, tasks,
+evidence and release criteria. Generation and viewing instructions are below.
+
+The maintainer has accepted a [fictional baseline/change specification](docs/baseline-specification.md)
+with explicit validation/output contracts and four hand-worked reference cases.
+Clinical data generation and the application CLI/UI are not implemented.
+Specification acceptance does not establish independent clinical validation or
+standards conformity; no application dependencies or setup commands exist yet.
 
 ## Project documents
 
 - [Project plan](docs/plan.md): scope, milestones, and measurable release gates.
 - [Progress record](docs/progress.json): authoritative status, evidence, and next action.
 - [Decisions](docs/decisions.md): agreed direction and unresolved choices.
-- [Specification](docs/specification.md): accepted recipe architecture and ownership boundary; field notation and clinical details remain illustrative or deferred.
-- [Baseline proposal](docs/baseline-specification.md): M0-05 clinical policies, three hand-worked cases, and required maintainer review; no runnable clinical functionality.
+- [Specification](docs/specification.md): accepted recipe architecture and ownership boundary; field notation remains illustrative and schema details deferred.
+- [Baseline specification](docs/baseline-specification.md): accepted M0-05 fictional clinical policies, source context, validation/output contracts and four hand-worked cases; numeric prerequisites remain open and no clinical functionality is implemented.
 
 - [Progress dashboard](docs/dashboard.html): generated, read-only offline snapshot.
 
