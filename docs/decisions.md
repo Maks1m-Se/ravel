@@ -26,10 +26,10 @@
 - Rationale: musical composition/orchestration and examining structure before
   generating controlled data.
 - Public PyPI distribution name remains unresolved.
-- The naming decision was recorded in `acc430b`, after the planning commit
-  `f73dba524838f1c72925b70f13f6ed5153864df3`. At that point branding, local folder
+- The naming decision was recorded in `506c944`, after the planning commit
+  `69effadff49540da5002326ecac6dbfe35d2b3cd`. At that point branding, local folder
   renaming, and GitHub connection were deferred. The dashboard work applied
-  branding and was accepted in `25ed3ae`. The local folder has since moved to
+  branding and was accepted in `9f61694`. The local folder has since moved to
   `C:\Git\ravel`. On 7 October 2026, `main` was fast-forwarded to that accepted
   commit and pushed to the newly created private
   [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository through
@@ -55,7 +55,7 @@
 
 ## Accepted recipe architecture
 
-- Hub review of `eb809e1` accepted [the M0-04 architectural outline](specification.md):
+- Hub review of `7ee3252` accepted [the M0-04 architectural outline](specification.md):
   one JSON-compatible saved
   recipe for the CLI and future Guided/Advanced views, separate recipe schema
   versioning, and an engine/clinical-module/adapter ownership boundary.
@@ -107,10 +107,28 @@
   progress.json's next_action; runnable additions supply exact review/try-out
   steps and expected outcomes. No runnable clinical functionality exists yet.
 
+## Email privacy cleanup and publication
+
+- On 8 October 2026, the maintainer authorized rewriting personal email
+  metadata while preserving author names, original dates, commit ancestry,
+  accepted work and unrelated content. Repository commits now use the verified
+  GitHub noreply identity. The reviewed local M0-05 preparation was committed
+  before the rewrite; M0-05 remains accepted.
+- Current commit references point to rewritten equivalents. Historical evidence
+  descriptions retain their original scope and limitations; the old-to-new
+  mapping and recoverable original history are kept privately outside the
+  repository, with no active push remote on the archives. Invalidated GitHub
+  signatures were removed by the rewrite.
+- Clean branch history does not prove removal from GitHub PR references or
+  cached commit views. The publication blocker and required next action are
+  recorded in progress.json. Keep the repository private and PR #3 unmerged.
+- MIT is approved by the maintainer; no further license-choice decision is
+  required. Adding the license file and completing contributor/release
+  preparation remain M0-07 work. Earlier license proposals above are historical.
+
 ## Unresolved
 
-- Public PyPI distribution name and license (MIT is proposed, subject to
-  dependency review).
+- Public PyPI distribution name.
 - Supported Python minor version, locked dependencies, and UI framework.
 - Exact platform environments, including macOS version on Apple silicon.
 - Installer/signing choices and benchmark reference hardware/frozen workload.

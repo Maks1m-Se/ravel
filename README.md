@@ -84,5 +84,6 @@ The display name is **Ravel**; repository and folder names are `ravel`, as are
 the intended Python import and CLI names. The local working folder is
 `C:\Git\ravel`; the private GitHub repository is
 [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel). The public PyPI
-distribution name remains unresolved. License selection is pending; no
-open-source license has been granted yet.
+distribution name remains unresolved. MIT is approved; adding the license file
+and completing the contributor/release preparation remain M0-07 work. Public
+publication is blocked by the privacy cleanup recorded in [progress](docs/progress.json).
