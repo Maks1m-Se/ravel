@@ -4,86 +4,83 @@
 
 Synthetic test data from examples, assumptions and explicit rules.
 
-Ravel is a project to build an offline synthetic test-data generator for
-software testing. Clinical and biomedical scenarios will come first, backed by
-a general-purpose generation engine. Windows, Linux and macOS support is planned.
+Testing data workflows requires cases with known expected outcomes. Ravel is a project for developers, testers and
+analysts who need reproducible synthetic datasets, starting with clinical and
+biomedical scenarios and a general-purpose generation engine underneath.
 
-## Current status
+**Status:** The accepted fictional baseline/change specification and working
+progress-dashboard tooling exist. Clinical data generation and the application
+CLI/UI are not implemented. The reference expectations below are part of the
+specification; they are not generated application results or evidence of
+independent clinical validation or standards conformity.
 
-**Development preview.** The working tooling is a Python standard-library
-generator and an offline progress dashboard showing current focus, tasks,
-evidence and release criteria. Generation and viewing instructions are below.
+[Clinical specification](docs/baseline-specification.md) ·
+[Recipe architecture](docs/specification.md) ·
+[Product plan](docs/plan.md)
 
-The maintainer has accepted a [fictional baseline/change specification](docs/baseline-specification.md)
-with explicit validation/output contracts and four hand-worked reference cases.
-Clinical data generation and the application CLI/UI are not implemented.
-Specification acceptance does not establish independent clinical validation or
-standards conformity; no application dependencies or setup commands exist yet.
+## Reference cases
 
-## Project documents
+Within each declared subject/parameter pair, select the last nonmissing
+measurement **strictly before the first actual dose** as baseline. Change is
+follow-up value minus baseline, for measurements **strictly after dose** in the
+same group and compatible units. At-dose measurements receive
+`AT_DOSE_BOUNDARY` diagnostics and **no change row**.
 
-- [Project plan](docs/plan.md): scope, milestones, and measurable release gates.
-- [Progress record](docs/progress.json): authoritative status, evidence, and next action.
-- [Decisions](docs/decisions.md): agreed direction and unresolved choices.
-- [Specification](docs/specification.md): accepted recipe architecture and ownership boundary; field notation remains illustrative and schema details deferred.
-- [Baseline specification](docs/baseline-specification.md): accepted M0-05 fictional clinical policies, source context, validation/output contracts and four hand-worked cases; numeric prerequisites remain open and no clinical functionality is implemented.
+These four accepted, invented cases are specification reference expectations.
+Values use the fictional unit `bx-unit`; `null` means a missing result.
 
-- [Progress dashboard](docs/dashboard.html): generated, read-only offline snapshot.
+| Case | Situation | Expected baseline | Expected change |
+| --- | --- | --- | --- |
+| 1 | Ordinary baseline | 10 | +3 |
+| 2 | Latest pre-dose value missing | 8 | +3 |
+| 3 | At-dose boundary without an earlier eligible value | `null` | `null` |
+| 4 | At-dose boundary with an earlier eligible value | 10 | +5 |
 
-## Progress dashboard
+Case 3 reports `NO_ELIGIBLE_BASELINE`. In Cases 3 and 4, the change shown is for
+the post-dose measurement; the at-dose record has no change row. See the
+[complete inputs, source IDs, diagnostics and expected outputs](docs/baseline-specification.md)
+for the accepted validation contracts, missing-result handling and error rules.
+These are fictional study rules, not universal clinical conventions.
 
-Open `docs/dashboard.html` directly in a browser. It uses no external resources.
-Task counts show **Tasks completed**, not effort; tasks differ in size. Release
-gates show readiness separately and require recorded evidence.
+## Planned capabilities
 
-From the repository root, with Python 3.11 or later (no extra dependencies):
+- Generate linked subjects, exposures and biomarker measurements from explicit
+  recipes and clinical rules.
+- Profile an invented sample, edit its assumptions, and generate new records
+  or retain and extend the sample with row origin recorded.
+- Export CSV datasets with a JSON recipe, data dictionary and validation report.
+- Run offline through a CLI and a local browser UI with Guided and Advanced
+  views of the same recipe; Windows, Linux and macOS are intended targets.
 
-```sh
-python scripts/build_dashboard.py
-python scripts/build_dashboard.py --check
-python -m unittest discover -s tests -v
-git diff --check
+Planned reproducibility checks use the same **recipe, input, seed, application
+version and pinned environment**. Cross-platform comparisons require declared
+numeric tolerances; arbitrary byte equality across environments is not promised.
+Numeric policies and implementation remain future work.
+
+**Planned architecture (not implemented):**
+
+```mermaid
+flowchart TD
+    ui["CLI / local browser UI"] --> recipe["Shared recipe"]
+    recipe --> engine["General engine"]
+    recipe --> clinical["Bundled clinical module"]
+    clinical -->|Generation requests| engine
+    engine -->|Source records| clinical
+    engine --> exports["Export adapters"]
+    clinical --> exports
 ```
 
-Update `docs/progress.json` for statuses, tasks, blockers, evidence, and next
-action. Criterion text comes from `docs/plan.md`. Regenerate and commit the
-dashboard alongside changes to either source; do not edit the HTML directly.
-The focus panel uses `current_task_id` and ordered `next_task_ids` (up to two)
-from progress.json, deriving titles, statuses and the current milestone from
-existing records. `next_action` supplies the concrete action. It shows project,
-current-milestone and current-task blockers when recorded. Task links open
-details and clear filters only when necessary to reveal the target; use Tab and
-Enter to follow a link, and Enter or Space on a task summary to toggle details.
+The engine owns generic generation and structural constraints. The clinical
+module owns clinical meaning and derivations; thin interfaces and export
+adapters collect settings and present or serialize results.
 
-When the maintainer accepts a task, mark it done and advance `current_task_id`
-to the next agreed unfinished task in the same update. Remove that task from
-`next_task_ids`, record the next agreed order, and update `next_action`. Do not
-select completed, duplicate or unknown task IDs. Focus is explicitly maintained,
-not inferred from statuses or task-ID order. Regenerate the dashboard afterward.
+## Development and license
 
-`--check` validates inputs and fails if the generated snapshot is stale. Tests
-check totals, determinism, escaping, invalid inputs, focus references and order,
-derived record details, and resource isolation.
-Browser interaction and visual review remain separate checks. These commands
-verify project tracking only; they do not establish application release readiness.
+See the [development guide](docs/development.md) for dashboard usage, local
+checks and maintenance, and [decisions](docs/decisions.md) for agreed direction
+and unresolved choices.
 
-## Planned direction
-
-The intended clinical focus is invented test data for clinical and biomedical
-scenarios, with explicit clinical rules and independently determined expected
-results. Generic generation logic, clinical rules, and interface code will be
-kept separate. These are planned capabilities, not implemented functionality.
-
-## Development and licensing
-
-Development is AI-assisted, including repository documentation and planned code
-contributions. AI-generated work requires review and meaningful verification;
+Documentation is AI-assisted. The maintainer reviews and accepts changes;
 AI assistance does not establish clinical correctness.
 
-The display name is **Ravel**; repository and folder names are `ravel`, as are
-the intended Python import and CLI names. The local working folder is
-`C:\Git\ravel`; the private GitHub repository is
-[Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel). The public PyPI
-distribution name remains unresolved. MIT is approved; adding the license file
-and completing the contributor/release preparation remain M0-07 work. Public
-publication is blocked by the privacy cleanup recorded in [progress](docs/progress.json).
+Licensed under the [MIT License](LICENSE). Copyright 2026 Maksim Sendetski.

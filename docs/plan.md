@@ -7,9 +7,8 @@ Planning revision 3 · 6 October 2026 · Target release v0.1 · Display name: Ra
 Synthetic test data from examples, assumptions and explicit rules.
 
 Repository and folder names: `ravel`; intended Python import and CLI names:
-`ravel`. The local working folder is `C:\Git\ravel`, connected to the private
-[Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository. Public
-PyPI distribution name remains unresolved.
+`ravel`. Repository: [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel).
+Public PyPI distribution name remains unresolved.
 
 Build a free, open-source, offline application for creating clinical test scenarios with verifiable expected results. Keep a general data-generation engine underneath it. The first demonstration is baseline and change from baseline in a fictional longitudinal study.
 
@@ -128,7 +127,7 @@ At the end of each working week, check one runnable example when one exists, the
 | File or location | Contents |
 | --- | --- |
 | README.md | Purpose, actual supported workflows, quickstart, one screenshot/example, limitations, and brief AI disclosure |
-| LICENSE | Chosen open-source license; MIT is the proposed starting choice, subject to dependency review |
+| [LICENSE](../LICENSE) | Approved MIT license; dependency/license review remains required before public alpha |
 | CONTRIBUTING.md | Setup/check commands, issue/PR expectations, and responsibility for AI-assisted contributions |
 | AGENTS.md | Short repository instructions for coding agents; aim for roughly 30–50 useful lines |
 | docs/specification.md | Recipe behaviour, clinical rules, supported mappings/versions, units, date/tie handling |
@@ -138,6 +137,7 @@ At the end of each working week, check one runnable example when one exists, the
 | docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 3) |
 | docs/progress.json | Authoritative milestone/task status, evidence, blockers, and next action |
 | docs/decisions.md | Significant agreed decisions and visibly unresolved choices |
+| [docs/development.md](development.md) | Dashboard usage, maintenance, verification commands and contributor/release preparation |
 | docs/dashboard.html | Generated offline snapshot of progress.json and plan criteria; rebuild with `python scripts/build_dashboard.py` |
 | GitHub Issues and releases | Discussions, bug reports, linked implementation tasks, release changes and downloads; no duplicate status board |
 

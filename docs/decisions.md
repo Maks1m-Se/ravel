@@ -29,12 +29,13 @@
 - The naming decision was recorded in `506c944`, after the planning commit
   `69effadff49540da5002326ecac6dbfe35d2b3cd`. At that point branding, local folder
   renaming, and GitHub connection were deferred. The dashboard work applied
-  branding and was accepted in `9f61694`. The local folder has since moved to
-  `C:\Git\ravel`. On 7 October 2026, `main` was fast-forwarded to that accepted
-  commit and pushed to the newly created private
+  branding and was accepted in `9f61694`. The local folder was renamed `ravel`.
+  On 7 October 2026, `main` was fast-forwarded to that accepted commit and pushed
+  to the newly created
   [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel) GitHub repository through
-  `origin`. Python import and CLI names remain intended; PyPI and license
-  choices remain unresolved.
+  `origin`. Python import and CLI names remain intended. At connection time,
+  PyPI and license choices remained unresolved; MIT adoption below records the
+  later license decision.
 
 ## Dashboard implementation
 
@@ -122,9 +123,24 @@
 - Clean branch history does not prove removal from GitHub PR references or
   cached commit views. The publication blocker and required next action are
   recorded in progress.json. Keep the repository private and PR #3 unmerged.
-- MIT is approved by the maintainer; no further license-choice decision is
-  required. Adding the license file and completing contributor/release
-  preparation remain M0-07 work. Earlier license proposals above are historical.
+
+## Visitor documentation and MIT licensing
+
+- On 8 October 2026, the approved [MIT license](../LICENSE) was added with
+  copyright 2026 Maksim Sendetski. No further license-choice decision is needed;
+  earlier license proposals are historical. Dependency/license review and
+  remaining contributor/release rules are still M0-07 work.
+- The [README](../README.md) introduces the intended audience, current status,
+  four accepted specification reference cases and planned capabilities and
+  architecture. Dashboard usage, maintenance and check commands live in the
+  [development guide](development.md). The examples make no claim of executed
+  generation, personal authorship of every calculation or independent clinical
+  validation. Planned reproducibility includes recipe, input, seed, application
+  version and pinned environment.
+- Documentation/license preparation does not complete M0-07, change accepted
+  clinical contracts or numeric prerequisites, establish a release gate, or
+  clear the retained-history publication blocker. PR #3's outdated description
+  must be updated before any future merge; the PR remains unmerged.
 
 ## Unresolved
 
