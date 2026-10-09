@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "planning_revision": 3,
+  "planning_revision": 4,
   "plan_ref": "docs/plan.md",
   "milestones": [
     {
@@ -145,11 +145,12 @@
       "id": "M0-06",
       "milestone_id": "M0",
       "title": "Evaluate environment, packaging, and UI",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria": [
         "Supported Python minor version and locked environment are selected.",
         "Exact Windows/Linux/macOS targets including Apple silicon, reference benchmark hardware, and frozen workload are recorded.",
-        "Offline launch, keyboard-use, and packaging experiment informs UI and installer/signing choices; fresh checkout runs a meaningful smoke test."
+        "Offline launch, keyboard-use, and packaging experiment informs UI and installer/signing choices; fresh checkout runs a meaningful smoke test.",
+        "First workbook experiment: both generic entry paths share one provisional configuration; fixed invented sample suggestions are distinguished from defaults and overrides; edits survive view switching and save/reload; counts distinguish 1,000 new from 10 retained plus 990 new; keyboard recovery, laptop layout, offline assets and exact tested environment are recorded. Maintainer UI review is required; this partial experiment does not adopt NiceGUI or complete the remaining environment/platform/benchmark/packaging criteria."
       ],
       "release_gate_ids": [
         "R6",
@@ -157,7 +158,11 @@
         "R9",
         "R10"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E19",
+        "E20",
+        "E21"
+      ],
       "blockers": []
     },
     {
@@ -216,9 +221,10 @@
     {
       "id": "M1-01",
       "milestone_id": "M1",
-      "title": "Implement linked clinical CLI slice",
+      "title": "Implement generic entry paths and optional clinical CLI slice",
       "status": "pending",
       "acceptance_criteria": [
+        "The first usable slice supports both generic explicit-rule generation and basic single-table sample-assisted generation/extension through one recipe. Basic profiling proposes editable types, categories, missingness and ranges with provenance, excludes identifiers by default, and reports unsupported inputs. Both paths save/load and export; ten source rows produce exactly 1,000 new rows or extend to 1,000 total with 990 generated rows, preserved source values and row origins. The clinical template is optional and generic screens use general terms.",
         "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.",
         "Reviewed numeric representation/range, overflow handling, rounding and export-format policies are required before clinical numeric implementation within the existing M1 slice."
       ],
@@ -282,7 +288,8 @@
       "title": "Prepare reproducible public alpha",
       "status": "pending",
       "acceptance_criteria": [
-        "Tagged alpha quickstart reproduces its declared scope with license, installation instructions, limitations, and checks ready."
+        "Tagged alpha quickstart reproduces its declared scope with license, installation instructions, limitations, and checks ready.",
+        "The first usable alpha includes both M1 generic entry paths and their shared recipe; basic sample-assisted generation/extension is not deferred until M3."
       ],
       "release_gate_ids": [
         "R10"
@@ -296,6 +303,7 @@
       "title": "Profile sample and edit assumptions",
       "status": "pending",
       "acceptance_criteria": [
+        "Extend the basic sample-assisted path delivered in M1; this milestone owns deeper profiling and the full supported-assumption criteria, not the first availability of sample-assisted generation.",
         "Invented CSV profiling exposes editable estimates, excludes identifiers by default, and reports unsupported fields and overrides.",
         "Requested categories, quotas, missingness, ranges, and supported dependencies are explicit."
       ],
@@ -586,10 +594,25 @@
       "id": "E18",
       "reference": "Explicit maintainer decision and development-preview publication preparation, 8 October 2026; README.md; docs/decisions.md",
       "scope": "Maintainer accepts personal-email discoverability in retained GitHub commits and authorizes updating/merging PR #3 and making the existing repository public after checks. The active privacy blocker is removed by acceptance of the exposure, not complete erasure; historical evidence E1-E17 is retained. Existing repository and cleaned history remain, with verified noreply identity for future commits; no further history cleanup, migration or Support request is required. README makes Case 4 inputs and expected result explicit and discloses AI assistance in code and documentation. M0-06 preparation is restored as next action without starting it. Task statuses, accepted clinical contracts, numeric prerequisites and all ten unverified gates remain unchanged. Publication is an early development preview, not an alpha/v0.1 release or application/clinical validation. All nine documented tracking tests, regenerated dashboard freshness and Git whitespace checks passed. All four README baseline/change pairs and Case 4 inputs (10, 12, 15) match the accepted specification; 40 local Markdown links resolve. Accepted clinical and recipe specifications, plan, license and tooling remain byte-for-byte unchanged from reviewed commit 4d9790f. The main-branch history-reference reconciliation preserved the reviewed file tree and both parent histories. Current visual/browser, application, cross-platform and clinical validation were not run; prior README/Mermaid rendering evidence remains in E17."
+    },
+    {
+      "id": "E19",
+      "reference": "9 October 2026 maintainer-approved generic workbook direction; experiments/workbook/; tests/test_workbook_config.py; docs/development.md#workbook-experiment",
+      "scope": "Partial M0-06 NiceGUI 3.18.0 evaluation on CPython 3.11.0 x64 and Windows 11 Home 26H2 build 26300.9550, Chrome 154.0.8037.98 headless. Both generic entry paths share a provisional configuration with per-setting defaults/sample suggestions/overrides, fixed illustrative preview, atomic validation and JSON download/reload. Six focused state/count/fixture tests and nine existing tracking tests pass. Keyboard-driven Chrome review covers entry/table/field selection, draft preservation across views, invalid range/count recovery, preview focus, actual save/reload and 1,000-new versus 990-new-plus-10-retained arithmetic. Unsupported JSON leaves edits intact. Screenshots inspected and laptop layouts checked at 1366x768 and 1280x800 without horizontal overflow. Fresh browser context and process-local server guards block non-loopback destinations; no external attempts or page errors observed. Native computer/browser helpers failed initialization; headless checks do not verify the native file chooser, screen readers, disconnected clean machines or other platforms. Initial 5-versus-5.0 display assertion was corrected; subsequent browser checks passed. Pinned experiment dependencies do not select the final supported application environment. Planning revision 4 moves basic sample-assisted generation into M1 before the first usable release, with clinical functionality optional and M3 retaining deeper sample work. Accepted M0-05 content, numeric prerequisites, prior evidence, task IDs and all ten unverified release gates are preserved. No generation, profiling, derivation, installer or plugin loader was implemented. Maintainer UI review remains required; environment/platform/benchmark/packaging decisions remain open. The 48-package lock was recreated in a second local virtual environment using only prepared wheels (--no-index); pip check passed, and that environment ran the final browser checks. Dashboard freshness and Git whitespace checks pass. This does not establish a fresh committed checkout or clean-machine installation."
+    },
+    {
+      "id": "E20",
+      "reference": "9 October 2026 bounded M0-06 repair; experiments/workbook/; tests/test_workbook_config.py; scripts/check_workbook_browser.py; scripts/workbook_offline_server.py; docs/development.md#validation-and-keyboard-repair-checks",
+      "scope": "Local, uncommitted repair on experiment/m0-06-nicegui-workbook from 2b1fcb0. Save validates and serializes the complete field/output candidate before assignment/download; failed Save preserves applied state, provenance and drafts. Unsupported 401-digit integers now follow readable ValueError import recovery without replacing applied settings or drafts. Inline messages expose invalid state and association, mark both conflicting bounds, focus/scroll to the first invalid input, retain correction text and explain refused field selection. Awaited refresh/Vue render flush through the stable page client fixes removed-input focus; an inset button ring avoids the layered Quasar no-outline override, and error layout stays in normal flow. E19 remains historical: its checks did not establish combined Save atomicity or immediate field/button focus. All 18 unit tests (nine tracking, nine workbook), dashboard freshness and Git whitespace checks pass. Maintained Playwright 1.58.0 assertions pass both routes at 1366x657 and 1280x800 on CPython 3.11.0 x64, Windows 11 Home 26H2 build 26300.9550, Chrome 154.0.8037.98 headless. They cover immediate field focus before helper navigation, computed focus styles/screenshots, range/missing/count correction, full inline-message viewport/non-overlap, refused selection, failed Save without download, valid retry, oversized import preservation and recovery, drafts across views, keyboard preview access, fixed illustrations/provenance, canonical JSON round-trip and 1000-new versus 10-retained-plus-990-new counts. Final screenshots inspected; no horizontal overflow, browser page errors or external HTTP/WebSocket/socket/DNS attempts observed under process-local guards. Server stderr retained one Windows asyncio connection-teardown ConnectionResetError (WinError 10054); all four browser cases completed successfully. Raw results/configurations/screenshots retained locally in ignored outputs/workbook-repair/final, with earlier failed runs alongside it. Failures led to callback-context, ARIA/error-slot and CSS fixes; harness readiness, download callback, alert locator and dialog-close/reopen checks were corrected. Native computer tools could not initialize; human keyboard/native chooser, screen readers, other browsers/platforms, physical disconnection and clean-machine/packaging checks remain unrun. Clinical specification, numeric prerequisites, prior evidence, task statuses and ten unverified gates preserved. Provisional format unchanged; no new clinical numeric policy, generation or deferred UI features. M0-06 remains partial awaiting maintainer review; M0-07 stays pending. NiceGUI is not adopted."
+    },
+    {
+      "id": "E21",
+      "reference": "9 October 2026 maintainer report and public prototype review preparation; README.md; docs/development.md#public-prototype-review-snapshot; docs/images/m0-06-prototype-sample.png; docs/images/m0-06-prototype-validation.png",
+      "scope": "Maintainer reports successful range recovery and approves the compact light/dark design direction. This limited feedback does not accept the entire experiment or adopt NiceGUI; proposed themes and a logo redesign are not implemented. The existing fixture-based prototype and validation/focus repair are prepared for a draft PR with a Windows quickstart, pinned runtime/review dependencies and two unaltered running-app screenshots at 1366x960. Captured invalid Minimum 200 against Maximum 12.2, then verified correction to 5. Public-review rerun: all 18 unit tests, four maintained browser cases (both paths at 1366x657 and 1280x800), pip check, regenerated dashboard freshness, local link checks and Git whitespace checks pass on the recorded CPython 3.11.0 / NiceGUI 3.18.0 / Windows 11 / Chrome 154.0.8037.98 environment. Browser non-loopback HTTP/WebSocket blocking observed no external attempts or page errors. The existing maintainer-started server was preserved; server stderr and socket/DNS guard were not recaptured for this rerun. E19/E20 retain prior guarded evidence and the Windows teardown diagnostic. Native chooser, remaining human interaction, screen-reader, other-browser/platform and clean-machine checks remain outstanding. Raw evidence, environments and review archives remain local and ignored. README explicitly distinguishes fixed illustrations, precomputed suggestions, provisional configuration and arithmetic from profiling or generation. Existing code, accepted clinical content, numeric prerequisites, prior evidence, task statuses and ten unverified gates are preserved. M0-06 remains partial; M0-07 pending; no release/tag or merge is authorized by this snapshot."
     }
   ],
   "blockers": [],
-  "next_action": "Prepare M0-06's environment, packaging and UI evaluation: select Python and the locked environment, record exact OS targets and benchmark setup, and design the offline launch, keyboard-use and fresh-checkout smoke experiment.",
+  "next_action": "Required maintainer review of the draft fixture-based workbook prototype PR: review source changes, pinned dependencies, tests and screenshot/README claims. Range recovery is reported successful; complete the remaining Windows interaction steps in docs/development.md#workbook-experiment: immediate field focus and visible Tab indicators, missing-percentage/refused-switch recovery, failed Save with Maximum 20 and extension total 9 then retry at 1000, fixed previews, count meanings, native chooser round-trip and oversized-import draft preservation, and offline operation. Record accept/change feedback before the next M0-06 experiment. Compact light/dark direction is approved but unimplemented; NiceGUI adoption and environment/platform/benchmark/packaging criteria remain open.",
   "current_task_id": "M0-06",
   "next_task_ids": [
     "M0-07"

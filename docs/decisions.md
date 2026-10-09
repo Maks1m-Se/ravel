@@ -2,8 +2,10 @@
 
 ## Agreed
 
-- Clinical and biomedical scenarios come first, with baseline/change from
-  baseline in a fictional longitudinal study as the first demonstration.
+- The initial plan led with clinical and biomedical scenarios. The maintainer's
+  9 October direction below makes both generic entry paths part of the first
+  usable release and clinical functionality an optional template. Baseline/change
+  in a fictional longitudinal study remains the first clinical demonstration.
   First-release boundaries and deferred features remain in [the plan](plan.md).
 - Keep the general generation engine separate from clinical rules and thin
   interface adapters. The clinical module initially shares the repository and
@@ -66,7 +68,7 @@
   confirmed; clinical-looking names cannot activate clinical rules.
   M0-05 records the accepted fictional clinical policies and four reference
   cases; M2 retains selected standards mappings, and M3 retains the detailed
-  sample workflow.
+  sample refinements; the 9 October direction brings the basic sample path into M1.
 
 ## Accepted fictional clinical specification
 
@@ -156,10 +158,48 @@
   outdated description required updating before merge. The later maintainer
   decision above accepts the residual exposure and authorizes publication.
 
+## Generic workbook direction and first M0-06 experiment
+
+- On 9 October 2026, the maintainer approved two first-release entry paths:
+  create generic test data from explicit rules, and generate/extend data from
+  an imported sample. Both edit one recipe. Generic screens use general terms;
+  clinical functionality is an optional domain template. The accepted M0-04
+  ownership boundary and M0-05 clinical contracts remain intact. Public add-on
+  infrastructure remains later work.
+- Basic editable sample assumptions and both output modes now belong in M1,
+  before the first usable release; M3 owns deeper sample handling and its full
+  criteria. Task IDs, clinical numeric prerequisites and all ten release gates
+  are preserved. Planning revision 3 and prior evidence remain historical.
+- Evaluate NiceGUI through a small dark graphite scientific workbook with table,
+  navigator, properties-panel and toolbar conventions. NiceGUI is a candidate,
+  not an adopted framework. This slice uses an invented ten-row CSV, explicitly
+  precomputed suggestions and fixed illustrative values, with no production
+  profiling, random generation, clinical derivation, installer or plugin loader.
+- The experiment uses CPython 3.11 and a pinned Windows environment with NiceGUI
+  3.18.0. This is not the final supported application environment. Its
+  `ravel-workbook-experiment/1` configuration is provisional and distinct from
+  the future application recipe. Numeric bounds here exercise UI validation;
+  they do not select clinical representation, rounding or tolerance policies.
+- Continue evaluating NiceGUI after the required maintainer UI review. The
+  local browser interaction is viable in the tested scope. Remaining obstacles
+  are packaging its Python/server/browser dependencies, native file-dialog and
+  keyboard review, and clean-machine/cross-platform evidence. This experiment
+  does not settle installer/signing or native launch choices. Setup, observed
+  checks, screenshots and review steps are in [development.md](development.md#workbook-experiment);
+  authoritative status and required action remain in progress.json.
+
+The maintainer reported a successful range-recovery check on 9 October 2026
+and approved the compact light/dark design direction. This is limited feedback,
+not acceptance of the complete M0-06 experiment or adoption of NiceGUI. The
+published prototype retains its existing dark interface; the proposed themes
+and a logo redesign are not implemented in this snapshot. Remaining interaction
+and PR source review are recorded in progress.json's next_action.
+
 ## Unresolved
 
 - Public PyPI distribution name.
-- Supported Python minor version, locked dependencies, and UI framework.
+- Supported application Python minor version, release dependency lock and UI
+  framework adoption; the experiment-only environment is pinned separately.
 - Exact platform environments, including macOS version on Apple silicon.
 - Installer/signing choices and benchmark reference hardware/frozen workload.
 - Detailed recipe schema, selected clinical mapping standard versions, and
