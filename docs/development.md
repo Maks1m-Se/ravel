@@ -46,8 +46,8 @@ No inference runs, identifier fields are not fitted, and ten observations do
 not establish population properties or associations.
 
 Select a field, change its name/type, numeric bounds or missing percentage,
-then **Apply field**. Selecting another field applies valid edits first; invalid
-edits remain visible for correction. Field definitions and Illustrative preview
+then **Apply**. Selecting another field applies valid edits first; invalid
+edits remain visible for correction. Fields and Preview
 share the same in-memory configuration and keep unfinished field edits. The
 preview is fixed: it never regenerates or renames columns when settings change.
 The scratch illustration contains three display values and is not source data.
@@ -65,36 +65,62 @@ recipe schema. Setting origins record defaults, sample suggestions and user
 overrides relative to the original values. Save before leaving the page or
 closing/restarting the server: there is no automatic persistence.
 
-Required maintainer review (record the outcome against M0-06):
+The compact workbench has a Light/Dark selector, fixed panes and Fields/Preview
+tabs. Badges beside each setting show the applied origin: **Default**, **Sample**
+or **Edited**. A separate **Draft** marker and **Unapplied field edits** state
+identify unfinished edits; badges do not relabel drafts as applied. The canonical
+JSON origins remain `default`, `sample suggestion` and `user override`. Output
+edits apply when valid; an invalid draft leaves the displayed applied counts
+unchanged. The input label follows the mode: **New rows** or **Total rows**.
+
+Question-mark help opens on hover or keyboard focus; click/tap pins it, and a
+second click/tap or Escape closes it. Errors, session-only persistence, draft
+state, counts-only status and **Fixed preview — not generated** stay visible.
+Theme switching updates colors without rebuilding inputs. The selected theme
+travels through Home and the two entry links; it is not part of saved JSON.
+
+Manual interaction procedure retained for reproducibility. On 10 October the
+maintainer reported all seven checks in their manual run passed on the earlier
+compact-workbench build, including native save/reload and disconnected operation
+(E24). This report applies to that tested build, not the subsequent alignment.
+Required review of the aligned build is described under
+[approved reference alignment](#approved-reference-alignment) and in
+progress.json's next_action.
 
 1. At browser **content** viewports 1366×657 and 1280×800, open **Create from
    scratch**. Use Tab/Shift+Tab and Enter to select **New table**, then **value**.
-   Before pressing another key, expect focus in **Field name**. Check visible
-   focus on links, buttons, selectors and inputs throughout these steps.
-2. Tab to **Minimum**, press Ctrl+A and enter `200`, then Tab to **Apply field**
+   Before pressing another key, expect focus in **Field name**. Run both themes
+   and check readable labels, menus, dialogs, disabled bounds, unfocused input
+   boundaries and visible focus.
+   Open each help control by hover, focus and click/tap; dismiss with Escape.
+2. Tab to **Minimum**, press Ctrl+A and enter `200`, then Tab to **Apply**
    and press Enter. Expect both bounds marked invalid, focus on Minimum and the
    whole range message beside it without scrolling manually. Correct to `5`
-   and apply. Repeat with **Missing percent** `150`, correcting to `15`.
-   Expect errors to clear and applied origins to show the overrides.
-3. Edit Maximum without applying, switch to **Illustrative preview** and back,
+   and apply. Repeat with **Missing %** `150`, correcting to `15`.
+   Before correcting, switch Light/Dark and back: drafts, errors and selected
+   field must remain. Expect errors and Draft markers to clear after Apply,
+   with the changed origin now Edited. Check unchanged settings retain their
+   original badges.
+3. Edit Maximum without applying, switch to **Preview** and back,
    and check the draft survives while the three illustrated values stay fixed.
+   Switch themes while Preview is active; expect the same view and draft.
    Tab to the preview region and use arrow keys. Save JSON, edit again, then
    reload the saved file using the native chooser's keyboard controls. Expect
    saved settings and origins to return.
 4. Return home and open **Start from a sample**. Expect three fields and ten
    invented rows, with marked sample suggestions. In `length_mm`, enter Missing
-   percent `150`, then activate **material**. Expect the selection to remain
+   % `150`, then activate **material**. Expect the selection to remain
    `length_mm`, an explanation in its panel, and focus on the invalid input.
    Correct to `15`, select material successfully, then return to length_mm.
-5. With **Generate new rows** and `1000`, expect **1,000 generated + 0 retained
-   = 1,000 output**. Choose **Extend source to total** using Enter/arrow keys:
+5. With **New rows** and `1000`, expect **1,000 generated + 0 retained
+   = 1,000 output**. Choose **Extend to total** using Enter/arrow keys:
    expect **10 retained + 990 generated = 1,000 total**. Draft Maximum `20`
    without applying, enter total `9`, then **Save configuration**. Expect focus
    and a full inline count error, no download, Maximum still `20` in the editor
-   but its applied origin still **sample suggestion**. Correct total to `1000`
-   and Save; expect Maximum's origin to become **user override**. Draft a new
+   but its applied origin still **Sample**. Correct total to `1000`
+   and Save; expect Maximum's origin to become **Edited**. Draft a new
    name and maximum, then reload the oversized fixture produced by the browser
-   check below (`1366x657-sample-oversized.json`). Expect a readable error;
+   check below (`1366x657-sample-dark-oversized.json`). Expect a readable error;
    Cancel must leave both drafts intact. Reload the valid saved JSON and verify
    the complete configuration returns.
 6. After installation, disconnect external networking using your normal
@@ -151,7 +177,7 @@ After it reports the local server address, use terminal 2:
 ```powershell
 py -3.11 -m venv outputs/workbook-review-env
 .\outputs\workbook-review-env\Scripts\python.exe -m pip install -r experiments/workbook/requirements-review.lock
-.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --output outputs/workbook-repair/final
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --output outputs/workbench-themes/review
 ```
 
 The review lock pins Playwright 1.58.0, pyee 13.0.1, greenlet 3.5.6 and
@@ -213,8 +239,8 @@ partial; M0-07 and all ten release gates retain their pending/unverified scope.
 On 9 October 2026, the maintainer reported successful range recovery and approved
 the compact light/dark design direction. Only that interaction check is reported
 as successful; full experiment acceptance and NiceGUI adoption remain pending.
-The snapshot retains the existing dark interface and logo. Proposed themes have
-not been implemented. Remaining interaction review and PR source review are the
+The initial public snapshot `7f953af` retains the existing dark interface and
+logo. Proposed themes were not implemented in that snapshot. Remaining interaction review and PR source review are the
 next action in progress.json.
 
 The README quickstart uses the pinned runtime lock and the existing
@@ -236,6 +262,238 @@ not mockups or generated datasets. Screenshot paths and README launch commands
 were checked. Raw rerun results and capture evidence stay in ignored
 `outputs/workbook-public-review/`, outside the commit. Native chooser, remaining
 human interaction, screen-reader and cross-platform review remain outstanding.
+
+### Compact workbench and theme checks
+
+The approved follow-up keeps the existing R mark and replaces the workbook
+header/tagline and large cards with a compact toolbar, narrow navigator, central
+Fields/Preview area, Properties pane and count strip. Explicit Light/Dark colors
+cover controls, labels, menus, dialogs, errors, disabled bounds and focus.
+Secondary explanations use hover/focus/click/tap help. Applied Default/Sample/
+Edited badges remain separate from unfinished Draft markers. The configuration
+model, fixtures and provisional JSON format are unchanged.
+
+Theme changes are presentation-only and preserve input elements, unfinished
+values, associated errors, selected field, active view and applied configuration.
+A focus trace exposed a queued Quasar selector-focus callback stealing focus
+from a newly selected field after the menu transition. Before explicit field or
+error focus, the app now calls the selectors' supported `blur` method to cancel
+that pending focus, then awaits Vue's render flush. No arbitrary delay was added.
+The browser helper also awaits menu opening and removal before continuing.
+
+Current verification uses the maintained browser script across **eight cases**:
+both routes, both themes, at 1366×657 and 1280×800 browser content viewports.
+It retains the repair assertions described above and adds theme round trips with
+invalid range/count drafts, refused-switch recovery, selected text fields with
+disabled bounds, an active fixed Preview and saved/reloaded configuration.
+Assertions check hover, focus, click/tap pinning and Escape dismissal of help,
+rendered text contrast and visible keyboard-focus contrast. This is focused
+coverage, not a general accessibility audit.
+
+Final local results on 10 October 2026:
+
+- **All eight maintained browser cases passed**. Theme cycles preserve canonical
+  saved JSON as well as drafts, errors, field selection and the active view.
+- **All 18 unit tests passed**; dashboard regeneration/freshness and Git
+  whitespace checks passed. All 56 local Markdown file links resolve. README
+  quickstart and all four clinical reference cases remain unchanged.
+- Representative rendered text readings were at least **4.98:1**; checked focus
+  rings were at least **6.11:1** against their rendered surfaces. Menu/dialog
+  captures await transition completion. Screenshots were visually inspected for
+  layout, error placement, focus and readable values at both viewport sizes.
+- No external browser HTTP/WebSocket attempts or page errors were recorded.
+  Final isolated-server stderr was empty; earlier Windows asyncio teardown
+  diagnostics and failed runs remain retained. This does not broaden the
+  offline/platform scope below.
+- Final raw evidence is `outputs/workbench-themes/final-6/results.json`, with
+  downloaded configurations and screenshots alongside it; the final server logs,
+  preservation results and focus diagnosis are retained in the parent directory.
+
+The tested environment remains CPython 3.11.0 x64, NiceGUI 3.18.0, Playwright
+1.58.0 and Chrome 154.0.8037.98 headless on Windows 11 Home 26H2 build
+26300.9550. Runtime and review locks remain unchanged. The commands above are
+the reproducible setup/check commands; README has the ordinary launch command.
+This run uses an isolated local review server at port 8081 and browser blocking
+of non-loopback HTTP/WebSocket destinations. The process-local server socket/DNS
+guard was not rerun for this follow-up; E19/E20 retain that earlier evidence.
+Physical disconnection, native interactive browser/file-chooser review, screen
+readers, other browsers/platforms and clean-machine installation remain unrun.
+
+The E22 Light/Dark captures showed the running sample route at 1366×657: Light
+with a maximum draft and its applied Sample origin; Dark with fixed rows,
+retained invalid drafts and inline errors/focus. The public screenshot paths now
+show the later alignment documented below; earlier captures remain in ignored
+review outputs. Representative route, menu and dialog screenshots
+from the maintained checks are also inspected locally; help visibility and
+viewport placement are asserted by the browser checks. Raw JSON, focus traces,
+downloaded invented configurations, screenshots and server logs stay in ignored
+`outputs/workbench-themes/`. Earlier failures are retained, including focus
+races and review-server startup readiness; they are not replacement pass evidence.
+
+M0-06 remains partial and NiceGUI provisional. The maintainer's earlier successful
+range check and approval of the direction do not accept this implementation or
+the entire experiment. Required interaction and draft PR #4 source review remain
+in progress.json's next_action. Continue evaluating NiceGUI subject to that
+review: component focus/layered styling require deliberate integration, and
+Python/server/browser packaging and launch/shutdown remain unresolved.
+
+### Unfocused control-boundary repair
+
+The scoped follow-up separates `--control-border` from `--line`. Enabled input
+and selector outlines use `#72808d` in Light and `#7e8b97` in Dark; pane dividers,
+table rules, badges and other existing separator colors still use the unchanged
+line tokens. No layout, application logic, configuration or editing behavior
+changed.
+
+The maintained browser check measures the actual `::before` outline on all
+visible, enabled, non-error, unfocused outlined inputs/selectors. It waits for
+blur and CSS transitions to finish, verifies four solid visible edges, and
+composites computed border color/opacity against both the control fill and its
+surrounding surface. Every edge must reach **3:1 on both sides**. Disabled
+controls and error/focus treatments retain their separate checks/scope. The
+existing eight-case state, validation and immediate-focus assertions are retained.
+Measurements run initially, after selecting a text field with disabled bounds
+on the sample route, and after saving/returning through both themes.
+
+A separate browser negative control temporarily applied the old divider colors:
+the assertion correctly rejected **2.13:1 Light** and **1.89:1 Dark** against the
+surrounding surface. The initial injected-style probe ran during the border
+transition; waiting for actual transition completion made this probe reliable.
+This was a check-lifecycle adjustment, not an application delay or editing change.
+
+For E23, the actual Light/Dark screenshots were refreshed and inspected.
+The Light capture keeps the unapplied maximum edit while focus is on Save, making
+all input boundaries unfocused; the Dark capture retains fixed preview rows,
+invalid range drafts and immediate error focus. Previous captures and the
+pre-repair snapshot are retained under ignored `outputs/workbook-border-contrast/`;
+the earlier review ZIP also remains unchanged. E22's text/focus checks are
+historical evidence and did not establish unfocused-boundary contrast.
+
+Final scoped results on 10 October 2026: **all eight maintained browser cases
+passed**, including all earlier state, validation, focus, fixed-preview,
+count and canonical round-trip assertions. Unfocused enabled-control outlines
+measured at least **4.05:1 Light** and **4.38:1 Dark** against both adjacent
+surfaces. No external browser HTTP/WebSocket attempts or page errors were
+recorded. The server log retains a Windows asyncio connection-teardown
+`ConnectionResetError` (WinError 10054); it is not suppressed or treated as a
+clean stderr result. Final browser results, downloaded invented configurations,
+viewport captures, negative-control measurements and server logs are retained
+in ignored `outputs/workbook-border-contrast/`. All 18 unit tests, dashboard
+regeneration/freshness, local screenshot links and Git whitespace checks passed.
+
+For reproduction, use the same locked setup and review commands above with a new
+output directory. The local rerun uses the isolated port-8081 launcher and:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8081 --output outputs/workbook-border-contrast/final
+```
+
+The Python/NiceGUI/Playwright/Windows/Chrome environment is unchanged. Browser
+non-loopback HTTP/WebSocket blocking remains scoped browser evidence; server
+socket/DNS guards, physical disconnection, native chooser/human acceptance,
+screen readers, other platforms and clean-machine checks are not rerun here.
+M0-06 remains partial, NiceGUI provisional and PR #4 draft; all release gates and
+open maintainer review items remain unchanged.
+
+### Approved reference alignment
+
+The 10 October maintainer report records **all seven manual checks passed** on
+the pre-alignment compact-workbench build (E22/E23), including native save/reload
+and physically disconnected operation. This is attributed maintainer evidence,
+not an automated observation or clean-machine/cross-platform claim. Earlier
+pending-check statements above describe their historical snapshots. Visual
+alignment and acceptance of this subsequent pass remain pending.
+
+The supplied `ravel-approved-workbench-reference.html` is a visual reference
+only. Its illustrative field names, values and demo logic are not application
+requirements. The app retains `item_id`, `material`, `length_mm`, the 9.8–12.2
+sample range and 0% missing, its configuration model, validation, atomic Save,
+provenance and draft behavior. No dependencies or clinical rules changed.
+
+This bounded pass restores neutral grey/graphite panes and blue accents while
+keeping the existing green R mark. Three small original SVG toolbar icons are
+served from the app's local static route; there is no icon CDN. Properties uses
+paired bounds with full inline errors, applied origin badges and separate Draft
+markers. The Settings column reads applied configuration only, including full
+numeric values and missing percentages. Text fields say Text without inventing
+category or identifier rules. Hover/focus/click/tap/Escape help is centered beside
+its label. Assumptions expands with click or Enter/Space. The count strip spans
+the panes and retains applied-count, invalid-draft and counts-only labels.
+
+Required visual/source review for this aligned build:
+
+1. Launch with the documented command above, open `/sample` and compare Fields
+   in both themes against the approved HTML. Expect grey/graphite panes, blue
+   selection/actions, the existing logo, three toolbar icons, compact Properties
+   and one count strip. Edit Maximum to `20`: Settings must remain
+   `9.8–12.2 · 0% missing` with Sample origin and a separate Draft indicator.
+   Apply: expect `9.8–20 · 0% missing` and Edited origin.
+2. Enter Minimum `200`, Apply, then view Preview. Expect both complete range
+   errors, retained drafts and fixed source rows. Switch themes; state must stay.
+   Correct Minimum to `5` and Apply. Open Assumptions by keyboard and mouse;
+   expect the individual-field/relationship/fixed-preview limitations. Check
+   adjacent help via hover, focus, click/tap and Escape.
+3. Review draft PR #4 source and the actual captures below. Record accept/change
+   feedback against progress.json's next_action. The earlier seven-check report
+   does not approve these new visual changes or adopt NiceGUI.
+
+Remaining visual differences from the reference are deliberate: Properties is
+312 px rather than 235 px at tested laptop widths to accommodate applied origin,
+draft state and complete per-input errors; Quasar retains floating labels and
+selectors; the app shows a persistent status line and fuller count/session
+labels. The fixed preview contains all ten actual fixture rows. These differences
+are for maintainer review, not a claim of pixel equivalence.
+
+[Light Fields](images/m0-06-workbench-light.png) ·
+[Dark Fields](images/m0-06-workbench-dark.png) ·
+[Light validation](images/m0-06-validation-light.png) ·
+[Dark validation](images/m0-06-validation-dark.png)
+
+Final verification on 10 October 2026:
+
+- All **18 unit tests** and **eight maintained browser cases** passed (both entry
+  paths and themes at 1366×657 and 1280×800). Existing validation, immediate focus,
+  refused-switch, atomic failed Save/retry, oversized import, fixed preview,
+  counts, theme preservation and canonical JSON round-trip assertions remain.
+  Added checks cover local icon loading, centered adjacent help behavior,
+  keyboard Assumptions, paired complete errors and Settings isolation from drafts
+  and failed operations, followed by Apply/Save/reload updates.
+- Minimum measured contrast (text / focus / enabled boundaries, against both
+  adjacent surfaces): **Light 4.76:1 / 4.45:1 / 3.23:1**; **Dark 5.91:1 / 5.19:1 / 3.63:1**. Text must reach 4.5:1;
+  focus and boundaries must reach 3:1. Boundary checks include inputs/selectors,
+  Apply and help buttons. This is focused rendered-state coverage, not a complete
+  accessibility audit.
+- Four actual 1366×657 captures above were inspected against both locally
+  rendered reference themes, including complete paired range errors. Correction
+  to Minimum 5 passed. Expanded Assumptions and an unrounded `1.23456789` Settings
+  summary were also checked. The Properties pane can scroll when explanations
+  are expanded at the shorter viewport.
+- Dashboard regeneration/freshness, **61 local Markdown links/anchors**, unchanged
+  model/fixture/lock/clinical-contract checks, runtime and review `pip check`, and
+  Git whitespace checks passed. Historical E1–E23 and all task/milestone/release
+  gate statuses remain unchanged; E24 records the maintainer report separately.
+- Final browser guards recorded **no external HTTP/WebSocket attempts or page
+  errors**; the isolated port-8081 server stderr was empty. Environment remains
+  CPython 3.11.0 / NiceGUI 3.18.0 / Playwright 1.58.0 / Chrome 154.0.8037.98
+  headless on the Windows host recorded above. Native/disconnected operation was
+  not rerun on this aligned build, nor were server socket/DNS guards, screen
+  readers, other browsers/platforms or clean-machine checks.
+
+The initial guarded port-8080 launch failed because an existing server occupied
+the port. That server was preserved; the resulting old-server browser run is not
+new-build evidence. A later new-build run found the Properties help popup clipped
+at its pane edge; its placement was corrected before all eight cases passed.
+Final runs are retained in ignored `outputs/workbench-alignment/final/`, with
+logs, previous screenshots and rendered reference captures in the parent folder.
+To repeat the maintained check, use the documented setup/launcher and:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --output outputs/workbench-alignment/review
+```
+
+For an already running isolated review server, pass its loopback URL with
+`--base-url`; this pass used `http://127.0.0.1:8081`. M0-06 remains partial,
+NiceGUI provisional and PR #4 draft, pending maintainer visual/source review.
 
 ## View and check the dashboard
 

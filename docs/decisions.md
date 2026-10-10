@@ -188,12 +188,33 @@
   checks, screenshots and review steps are in [development.md](development.md#workbook-experiment);
   authoritative status and required action remain in progress.json.
 
-The maintainer reported a successful range-recovery check on 9 October 2026
+For the initial public snapshot `7f953af`, the maintainer reported a successful range-recovery check on 9 October 2026
 and approved the compact light/dark design direction. This is limited feedback,
 not acceptance of the complete M0-06 experiment or adoption of NiceGUI. The
 published prototype retains its existing dark interface; the proposed themes
 and a logo redesign are not implemented in this snapshot. Remaining interaction
 and PR source review are recorded in progress.json's next_action.
+
+The subsequent approved M0-06 follow-up implements the compact scientific
+workbench and explicit Light/Dark themes, retaining Ravel and the existing R
+mark while removing the tagline from the workbook UI. Fixed panes, contextual
+help, neutral applied-origin badges and separate draft indicators are the
+bounded interface scope. Theme selection is presentation state and must not
+modify the provisional configuration, applied origins, drafts, errors or view.
+The configuration model, fixtures and clinical contracts remain unchanged.
+This implements the approved direction for review; it is not maintainer
+acceptance of the complete experiment or NiceGUI adoption. PR #4 stays draft.
+
+The 10 October maintainer report records all seven manual checks passed on the
+tested pre-alignment compact-workbench build, including native save/reload and
+disconnected operation. Visual alignment remains pending. The supplied approved
+HTML governs appearance only; its illustrative data and demo logic do not replace
+the application's fixtures or configuration/validation/provenance/draft behavior.
+The bounded pass adds local original SVG action icons, applied Settings summaries
+and expandable Assumptions, retaining the R mark and repaired contrast. Properties
+remains wider than the reference to fit complete errors and origin/draft state.
+This is not acceptance of the later aligned build or framework adoption; M0-06
+remains partial, NiceGUI provisional and PR #4 draft.
 
 ## Unresolved
 

@@ -81,6 +81,19 @@ not implement profiling, generation or derivation and does not select NiceGUI
 for adoption. Remaining environment, platform, benchmark and packaging criteria
 stay in M0-06; the required UI review is in progress.json's next_action.
 
+The approved follow-up evaluates a compact scientific workbench with explicit
+Light/Dark themes, contextual help and applied-origin badges separated from
+draft state. Both themes must preserve the existing editor/validation state;
+this remains the same fixture experiment and does not adopt NiceGUI.
+
+The bounded reference-alignment pass uses the approved HTML for appearance only:
+neutral panes, blue accents, local action icons, compact paired bounds, an applied
+Settings summary, adjacent help, expandable Assumptions and a compact count strip.
+Preserve fixtures/model/validation/provenance/drafts and visible essential state;
+verify text contrast ≥4.5:1 and enabled boundaries/focus ≥3:1 in both themes.
+The 10 October seven-check maintainer report applies to the earlier tested build;
+visual acceptance of the aligned build remains a separate required review.
+
 Initial planning allowance from revision 1: roughly 120–180 focused hours, including review, learning, documentation, and packaging. At eight hours per week that is about 15–23 weeks. Adding native macOS validation introduces work not yet estimated; review the budget after the M0 packaging experiment and M1 implementation. Public add-on infrastructure is outside this v0.1 budget. Publish the alpha and use its demonstrated work in applications before the entire plan is finished.
 
 **Clinical specification.** The first rule is: select the last nonmissing biomarker measurement strictly before the first actual dose, within subject and parameter. Calculate change as follow-up value minus baseline in compatible units. Absence of an eligible baseline produces a missing baseline and change with an explicit reason. Ties require a declared rule or a clear error. This is the example project's rule, not a universal clinical convention.

@@ -29,6 +29,17 @@ sample** opens three fields based on a bundled, invented ten-row CSV and
 field settings, inspect their origins, recover from inline validation errors,
 and save/reload a provisional JSON configuration.
 
+The compact workbench has **Fields / Preview**, a Properties pane and explicit
+**Light / Dark** themes. Theme changes preserve unfinished edits and errors.
+**Default / Sample / Edited** badges describe applied settings; a separate
+**Draft** marker identifies unapplied changes. Question-mark help is available
+by hover, keyboard focus and click/tap. Output controls show **New rows** or
+**Total rows**, with retained/new/total arithmetic labelled **Counts only**.
+Neutral grey/graphite panes use blue selection and action accents. Toolbar
+icons are served locally; the **Settings** column summarizes applied ranges
+and missing percentages without incorporating drafts. Properties pairs the
+bounds and includes expandable **Assumptions**.
+
 From a checkout of this branch, in PowerShell at the repository root with
 Python 3.11 installed:
 
@@ -53,15 +64,21 @@ means 990 generated rows. Neither option generates data. The configuration forma
 `ravel-workbook-experiment/1` is provisional; download it before leaving the page.
 There is no installer or supported cross-platform release yet.
 
-**Prototype screenshot — sample workbook:** Actual running application with
-precomputed sample suggestions and count arithmetic.
+**Prototype screenshot — Light:** Sample fields with an unfinished maximum edit.
+Its applied origin remains Sample until the edit is applied.
 
-![Prototype sample workbook with field definitions, selected-field settings and output intent](docs/images/m0-06-prototype-sample.png)
+![Light workbench with sample fields and a separate Draft marker beside Maximum](docs/images/m0-06-workbench-light.png)
 
-**Prototype screenshot — inline validation recovery:** An invalid minimum is
-retained for correction; both bounds show the error and Minimum receives focus.
+**Prototype screenshot — Dark:** The same applied settings and unfinished edit.
 
-![Prototype inline range error beside Minimum and Maximum, with visible keyboard focus](docs/images/m0-06-prototype-validation.png)
+![Dark workbench with blue selection and applied Settings separate from the maximum draft](docs/images/m0-06-workbench-dark.png)
+
+Actual fixed-preview validation captures in [Light](docs/images/m0-06-validation-light.png)
+and [Dark](docs/images/m0-06-validation-dark.png) show complete inline range errors.
+The maintainer reported all seven manual checks passed on the earlier tested
+build on 10 October, including native save/reload and disconnected operation.
+Visual review of this alignment remains pending; M0-06 is partial and NiceGUI
+remains provisional.
 
 ## Reference cases
 
