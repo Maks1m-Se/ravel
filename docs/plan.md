@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 3 · 6 October 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 4 · 9 October 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -10,7 +10,7 @@ Repository and folder names: `ravel`; intended Python import and CLI names:
 `ravel`. Repository: [Maks1m-Se/ravel](https://github.com/Maks1m-Se/ravel).
 Public PyPI distribution name remains unresolved.
 
-Build a free, open-source, offline application for creating clinical test scenarios with verifiable expected results. Keep a general data-generation engine underneath it. The first demonstration is baseline and change from baseline in a fictional longitudinal study.
+Build a free, open-source, offline application for creating generic test data from explicit rules or from an imported sample. Both workflows edit the same recipe and belong in the first usable release. Clinical functionality is an optional domain template; baseline and change from baseline in a fictional longitudinal study remains its first demonstration. Generic screens use general terminology.
 
 This document defines proposed release criteria. Nothing here is a claim that software, benchmarks, user tests, or clinical validation already exist.
 
@@ -61,14 +61,38 @@ Python packaging already provides entry points for discovering installed extensi
 | Milestone | Deliverable | Exit condition |
 | --- | --- | --- |
 | M0 — Foundation | Repository scaffold, recipe outline, concise contributor/release rules, baseline specification, packaging/UI experiment | A fresh checkout can run a meaningful smoke test; Windows/Linux/macOS target environments and the core/domain boundary are recorded; three tiny baseline cases are reviewed |
-| M1 — Working slice | CLI generates 10 subjects, exposure records, and one biomarker over baseline plus four scheduled follow-up visits | One command produces linked CSV files, recipe, dictionary, and validation result; repeat runs reproduce content; impossible requests produce actionable errors |
+| M1 — Working slice | Generic explicit-rule and basic single-table sample-assisted workflows share one recipe; optional clinical CLI slice generates 10 subjects, exposure records, and one biomarker over baseline plus four scheduled follow-up visits | Both generic paths can save a recipe and generate/export data; the basic 10-row sample produces 1,000 new rows or extends to 1,000 total with retained values and origin recorded; the clinical command produces linked CSV files, recipe, dictionary, and validation result; repeat runs reproduce content; impossible requests produce actionable errors |
 | M2 — Clinical alpha | Twelve clinical cases, selected source-to-analysis mappings, independent R checks, one example table and figure | Every expected result agrees; three deliberately incorrect derivations are detected; a tagged public alpha can be reproduced from its quickstart |
-| M3 — Sample workflow | Profile an invented CSV, edit assumptions, generate-only or retain-and-extend | A 10-row sample yields exactly 1,000 new rows or exactly 1,000 total rows as selected; retained records and row origin are verified; explicit new categories appear as requested |
+| M3 — Sample workflow | Extend M1's basic sample workflow with supported profiling, categories, quotas and dependencies | A 10-row sample yields exactly 1,000 new rows or exactly 1,000 total rows as selected; retained records and row origin are verified; explicit new categories appear as requested |
 | M4 — User interface | Guided flow, Advanced controls, recipe preview/save/reload | Both views use the same engine and preserve all settings on switching; keyboard operation and invalid-input recovery work through the full workflow |
 | M5 — Distribution | Windows/Linux/macOS installation paths, offline bundles, benchmark and release checks | Clean-machine installation and offline generation pass on all three targets; performance and reproducibility gates pass; update/reinstall instructions pass a smoke test |
 | M6 — v0.1 | Usability fixes, concise documentation, release artifacts, demonstrated limitations | All release gates below have evidence; no unresolved release-blocking defects; five-person usability exercise meets its target |
 
-Publish the alpha after M2, once its license, installation instructions, limitations, and checks are ready. Keep its scope clear. Full v0.1 adds the original sample-expansion workflow and accessible UI.
+Publish the alpha after M2, once its license, installation instructions, limitations, and checks are ready. Its first usable scope must include both M1 generic paths: explicit rules and basic sample-assisted generation/extension. M3 deepens that sample workflow; M4 completes the accessible Guided/Advanced interface. Neither entry path is deferred until after the first usable release.
+
+The first M0-06 experiment evaluates a dark graphite scientific workbook in
+NiceGUI: narrow table navigator, field definitions, selected-field properties,
+toolbar and clearly labelled fixed preview. Both entry paths share a provisional
+configuration; a bundled invented ten-row CSV has precomputed example
+suggestions distinguished from defaults and overrides. Verify edit preservation,
+save/reload, 1,000-new versus 990-new-plus-10-retained count arithmetic, keyboard
+recovery, laptop layout and offline assets. This fixture-only experiment does
+not implement profiling, generation or derivation and does not select NiceGUI
+for adoption. Remaining environment, platform, benchmark and packaging criteria
+stay in M0-06; the required UI review is in progress.json's next_action.
+
+The approved follow-up evaluates a compact scientific workbench with explicit
+Light/Dark themes, contextual help and applied-origin badges separated from
+draft state. Both themes must preserve the existing editor/validation state;
+this remains the same fixture experiment and does not adopt NiceGUI.
+
+The bounded reference-alignment pass uses the approved HTML for appearance only:
+neutral panes, blue accents, local action icons, compact paired bounds, an applied
+Settings summary, adjacent help, expandable Assumptions and a compact count strip.
+Preserve fixtures/model/validation/provenance/drafts and visible essential state;
+verify text contrast ≥4.5:1 and enabled boundaries/focus ≥3:1 in both themes.
+The 10 October seven-check maintainer report applies to the earlier tested build;
+visual acceptance of the aligned build remains a separate required review.
 
 Initial planning allowance from revision 1: roughly 120–180 focused hours, including review, learning, documentation, and packaging. At eight hours per week that is about 15–23 weeks. Adding native macOS validation introduces work not yet estimated; review the budget after the M0 packaging experiment and M1 implementation. Public add-on infrastructure is outside this v0.1 budget. Publish the alpha and use its demonstrated work in applications before the entire plan is finished.
 
@@ -134,7 +158,7 @@ At the end of each working week, check one runnable example when one exists, the
 | docs/validation.md | Release criteria, reproducible verification commands, results and limitations |
 | SECURITY.md and CODE_OF_CONDUCT.md | Real reporting/contact routes and concise community expectations, before inviting contributions |
 | examples/ and tests/ | Runnable invented examples and small reviewed reference fixtures |
-| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 3) |
+| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 4) |
 | docs/progress.json | Authoritative milestone/task status, evidence, blockers, and next action |
 | docs/decisions.md | Significant agreed decisions and visibly unresolved choices |
 | [docs/development.md](development.md) | Dashboard usage, maintenance, verification commands and contributor/release preparation |
