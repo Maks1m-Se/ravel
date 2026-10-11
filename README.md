@@ -39,8 +39,8 @@ not a supported application release.
 
 ### Quickstart
 
-From a checkout of `experiment/m0-06-nicegui-workbook`, in PowerShell at the
-repository root with Python 3.11 installed:
+From a repository checkout, in PowerShell at the repository root with
+Python 3.11 installed:
 
 ```powershell
 py -3.11 -m venv .venv

@@ -629,6 +629,17 @@ locks are unchanged. Raw preparation evidence is ignored under
 uncommitted until the maintainer authorized publication on Sunday, 11 October.
 The Berlin 08:00?16:30 publishing restriction applies Monday?Friday only.
 
+On 11 October the maintainer authorized integrating PR #4 into main with a merge
+commit, preserving all existing commits and without a release/tag/binary
+publication. Main's README-only `e1be2d0` overlapped the reviewed `e2814bc`
+README; integration retains the compact version and one Dark screenshot, and
+changes the quickstart to a normal repository checkout. All 18 unit/tracking
+tests and 80 local document/image/anchor checks passed; application code,
+fixtures, assets and dependency locks are unchanged, so recorded browser evidence
+is reused. Earlier draft-PR instructions describe the historical review stage.
+Merge authorization does not accept visual alignment, adopt the proposed
+platform/environment choices or satisfy any release gate.
+
 ## View and check the dashboard
 
 Open [dashboard.html](dashboard.html) directly in a browser. It uses no external
