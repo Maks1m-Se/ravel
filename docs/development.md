@@ -880,6 +880,75 @@ native-dialog, benchmark, security or redistribution approval. New setuptools
 vendor inclusion still needs artifact/source-obligation mapping. M0-06 partial,
 NiceGUI provisional, proposals unadopted and release gates unchanged.
 
+### Private clean-Windows review preparation
+
+PR [#5](https://github.com/Maks1m-Se/ravel/pull/5) merged the reviewed
+`22428f4a0b696a567bda8196f07006459a92d14e` by merge commit
+`edec6d62e14e9a2e36cfdf06c9635190c68e95a8` on 11 October 2026. Main already
+was an ancestor: no integration changes, and local main matched the reviewed tree
+exactly. E32/E33 checks remain valid and are reused. This accepts the experiment
+record/candidate tooling for integration, **not Python 3.14 adoption**; original
+Python 3.11 defaults/locks, partial M0-06 and release gates remain intact.
+
+Read-only local inspection found no accessible `Get-VM`, `VBoxManage` or `vmrun`.
+An unidentified `vmwp.exe` process existed, but its command line was unavailable
+and `root/virtualization/v2` was an invalid namespace. No authorized clean Windows
+guest or separate machine could be established. Its OS and Python absence were
+**not verified**. No Windows feature or virtualization platform was enabled or
+installed, and no clean-machine execution has happened.
+
+The private archive, kept ignored and not uploaded or published, is:
+
+```text
+C:\Git\ravel\outputs\private-windows-review-2026-10-11\ravel-python314-setuptools8090-windows-x64-review.zip
+SHA-256: 2b13d1faa22714f8fb9a5f41df0c963baa342d5b4a74377025020658c262cd2e
+Size: 35,192,969 bytes (33.56 MiB)
+```
+
+It includes the **complete E33 tested standalone folder**: standard GIL-enabled
+CPython 3.14.8 x64 / NiceGUI 3.18.0 / candidate setuptools 80.9.0, all **1,198
+bundle files (71,204,215 bytes)**. Four accompanying files are `REVIEW.md`,
+`THIRD-PARTY-NOTICES.txt` (the current collection), Ravel `LICENSE` and a per-file
+`bundle-manifest.json`; the ZIP has **1,202 files**. Private packaging does not
+complete redistribution review: frontend/native/vendor mapping, source obligations
+and artifact notice completeness remain open.
+
+Actual archive verification: ZIP CRC passed, full extraction completed, and every
+extracted file's size/SHA-256 matched staging. All bundle files matched the E33
+tested standalone and original build folders. Raw guide/staging/extraction,
+manifest and `archive-verification.json` remain under ignored
+`outputs/private-windows-review-2026-10-11`. This is **archive verification on
+the development host**, not a clean-machine launch or another browser run.
+
+Required maintainer check on an authorized genuinely clean Windows x64 machine/VM:
+record exact edition/version/build/architecture and verify Python is absent
+(Installed apps plus command discovery; Store aliases alone are not installed
+Python). Do not install Python for this check. Extract the entire ZIP to a
+writable local folder, keeping `_internal` intact. Follow only these three checks:
+
+1. In PowerShell inside the extracted `Ravel-workbook` folder, run
+   `.\Ravel-workbook.exe --port 8095` (use an unused port if needed). Open
+   `http://127.0.0.1:8095/`, choose **Create from scratch**, then **New table**
+   and **value**. Expect the workbook/local assets to load.
+2. Set Minimum **200** and Apply: expect a complete range error and no applied
+   change. Correct to **5**, Apply and **Save configuration**. Change Minimum
+   again; **Reload configuration** using the native chooser and saved JSON.
+   Expect Minimum **5** restored.
+3. Press **Ctrl+C** in the server terminal; expect the prompt to return. A fresh
+   HTTP request must fail and the port must no longer have a listener:
+
+   ```powershell
+   Get-NetTCPConnection -State Listen -LocalPort 8095 -ErrorAction SilentlyContinue
+   ```
+
+Report the environment/Python-absence evidence and pass/fail for those three
+checks, including error text. A loaded browser tab alone does not prove shutdown.
+No physical-offline, other-platform, benchmark, generation/clinical or release
+acceptance follows from this preparation. The [progress record](progress.json)
+contains the required next action. Documentation-only follow-up checks cover
+tracking, links/image paths, command syntax, dashboard freshness and whitespace;
+application/browser checks are reused because no executable source changed.
+
 ## Maintain progress
 
 [progress.json](progress.json) is the authoritative record of statuses, tasks,
