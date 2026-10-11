@@ -2,7 +2,7 @@ body {
   --canvas: #1c2026; --surface: #232830; --input: #1c2026; --raised: #292f38;
   --ink: #e4e8ed; --muted: #aeb8c5; --line: #414953; --control-border: #7e8b97; --accent: #93bafa;
   --selected: #30425a; --badge: #292f38; --badge-ink: #ccd5df;
-  --error: #ffc0b9; --focus: #93bafa; --disabled: #b0bac4; --logo: #9cdbc5;
+  --error: #ffc0b9; --focus: #93bafa; --disabled: #b0bac4;
   --button: #405878; --button-ink: #e4e8ed; --action-border: #a7b9cf;
   --q-primary: var(--accent) !important; --q-negative: var(--error) !important;
   background: var(--canvas); color: var(--ink); color-scheme: dark;
@@ -12,12 +12,12 @@ body.body--light {
   --canvas: #ffffff; --surface: #f1f3f6; --input: #ffffff; --raised: #e8ecf1;
   --ink: #202b38; --muted: #475667; --line: #bdc6d0; --control-border: #72808d; --accent: #285e96;
   --selected: #dfebf8; --badge: #edf0f4; --badge-ink: #405268;
-  --error: #a32222; --focus: #356da8; --disabled: #5b6974; --logo: #075e4b;
+  --error: #a32222; --focus: #356da8; --disabled: #5b6974;
   --button: #d9e7f8; --button-ink: #202b38; --action-border: #72808d; color-scheme: light;
 }
 .nicegui-content { padding: 0; gap: 0; display: block; }
 .toolbar { height: 46px; padding: 4px 10px; display: flex; align-items: center; gap: 10px; background: var(--raised); border-bottom: 1px solid var(--line); }
-.mark { font-family: Georgia, serif; font-size: 25px; color: var(--logo); border: 1px solid var(--line); width: 34px; text-align: center; line-height: 32px; }
+.mark { width: 34px; height: 32px; padding: 0 1px; box-sizing: border-box; flex-shrink: 0; }
 .brand-name { font-size: 18px; font-weight: 650; }
 .edition { font-size: 11px; margin-right: 12px; }
 .toolbar .theme-select { order: 3; width: 104px; margin-left: auto; flex-shrink: 0; }

@@ -8,6 +8,8 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+BRAND_ASSETS = ("svg/ravel-mark-32-light.svg", "svg/ravel-mark-32-dark.svg",
+                "favicon/favicon.svg", "favicon/favicon.ico")
 
 
 def main():
@@ -34,6 +36,9 @@ def main():
                                 ("icons", "experiments/workbook/icons"),
                                 ("fixtures", "experiments/workbook/fixtures")):
         command.extend(["--add-data", f"{ROOT / 'experiments/workbook' / source}{os.pathsep}{destination}"])
+    for asset in BRAND_ASSETS:
+        destination = Path("brand") / Path(asset).parent
+        command.extend(["--add-data", f"{ROOT / 'brand' / asset}{os.pathsep}{destination}"])
     command.append(str(ROOT / "experiments/workbook/bundle_entry.py"))
     env = dict(os.environ)
     # NiceGUI 3.18.0 invokes `pyinstaller` by name on Windows.
@@ -50,6 +55,7 @@ def main():
     required = [bundle / "Ravel-workbook.exe"]
     required.extend(bundle / "_internal/experiments/workbook" / path for path in
                     ("workbook.css", "icons/home.svg", "icons/save.svg", "icons/reload.svg", "fixtures/sample.csv"))
+    required.extend(bundle / "_internal/brand" / asset for asset in BRAND_ASSETS)
     missing = [str(path) for path in required if not path.is_file()]
     if missing:
         raise RuntimeError(f"Incomplete bundle; see {output / 'build.log'}: {missing}")

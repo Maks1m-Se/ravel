@@ -9,7 +9,7 @@ from scripts import build_workbook_windows as build
 
 
 class BuildLockTests(unittest.TestCase):
-    def run_recipe(self, lock=None, setuptools_version="65.5.0"):
+    def run_recipe(self, lock=None, setuptools_version="65.5.0", missing_brand_asset=None):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "build"
             argv = ["build_workbook_windows.py", "--output", str(output)]
@@ -28,6 +28,9 @@ class BuildLockTests(unittest.TestCase):
                     "_internal/experiments/workbook/" + asset for asset in
                     ("workbook.css", "icons/home.svg", "icons/save.svg",
                      "icons/reload.svg", "fixtures/sample.csv")]
+                paths += ["_internal/brand/" + asset for asset in (
+                    "svg/ravel-mark-32-light.svg", "svg/ravel-mark-32-dark.svg",
+                    "favicon/favicon.svg", "favicon/favicon.ico") if asset != missing_brand_asset]
                 for path in paths:
                     target = bundle / path
                     target.parent.mkdir(parents=True, exist_ok=True)
@@ -50,6 +53,10 @@ class BuildLockTests(unittest.TestCase):
     def test_explicit_candidate_accepts_replacement(self):
         self.run_recipe(build.ROOT / "experiments/workbook/requirements-build-python314-candidate.lock",
                         setuptools_version="80.9.0")
+
+    def test_incomplete_branding_fails_build(self):
+        with self.assertRaisesRegex(RuntimeError, "favicon.svg"):
+            self.run_recipe(missing_brand_asset="favicon/favicon.svg")
 
 
 if __name__ == "__main__":

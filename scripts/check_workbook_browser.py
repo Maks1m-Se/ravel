@@ -129,6 +129,23 @@ def set_theme(page, theme):
     expect(target).to_have_attribute('aria-expanded', 'false')
     expect(page.locator('.q-menu')).to_have_count(0)
     expect(target).to_be_focused()
+    assert_branding(page, theme)
+
+
+def assert_branding(page, theme):
+    mark = page.locator('img.mark')
+    expect(mark).to_have_attribute('src', f'/ravel-brand/ravel-mark-32-{theme.lower()}.svg')
+    expect(mark).to_be_visible()
+    page.wait_for_function('''() => {
+        const e = document.querySelector('img.mark');
+        return e?.complete && e.naturalWidth === 32 && e.naturalHeight === 32;
+    }''')
+    assert mark.evaluate('''e => {
+        const s = getComputedStyle(e), r = e.getBoundingClientRect();
+        return r.width - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight) === 32 && r.height === 32;
+    }'''), 'Pixel drawing must render at its native 32 px size'
+    expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).to_have_attribute('href', '/favicon.svg')
+    expect(page.locator('link[rel="shortcut icon"]')).to_have_attribute('href', '/favicon.ico')
 
 
 def applied_origins(page):
@@ -278,6 +295,8 @@ def exercise(page, out, width, height, entry, theme, results):
     name = 'value' if entry == 'scratch' else 'length_mm'
     expect(page.get_by_label('Field name', exact=True)).to_have_value(name)
     expect(page.locator('body')).to_have_class(re.compile('body--' + theme.lower()))
+    assert_branding(page, theme)
+    observations['branding'] = 'native 32-px theme mark; local SVG favicon and ICO fallback'
     for title in ['Configuration', 'Fields', 'Properties', 'Counts']:
         check_help(page, title)
     expect(page.locator('.action-icon')).to_have_count(3)

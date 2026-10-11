@@ -20,6 +20,7 @@ def main():
                           "executable": sys.executable, "app": workbook.__file__,
                           "fixture": str(workbook.model.FIXTURE), "import_paths": sys.path}), flush=True)
     ui.run(host="127.0.0.1", port=args.port, title="Ravel | Workbook experiment",
+           favicon=workbook.BRAND / "favicon/favicon.ico",
            dark=True, reload=False, show=False, prod_js=True, on_air=False)
 
 
