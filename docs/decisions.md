@@ -222,17 +222,20 @@ remains partial, NiceGUI provisional and PR #4 draft.
 experiment unchanged. Recommend standard GIL-enabled **CPython 3.14** for the
 next isolated candidate environment, then pin its current security patch and
 platform-specific locks after tests. The [official support table](https://devguide.python.org/versions/)
-places 3.14 in bugfix support through October 2030, 3.13 in security-only support
-through October 2029 and 3.11 through October 2027. Python 3.15 has just released;
+places 3.14 in bugfix support; [PEP 745](https://peps.python.org/pep-0745/)
+specifies regular bugfix releases through **October 2027**, followed by
+source-only security releases through **October 2030**. Python 3.13 has
+security-only support through October 2029 and 3.11 through October 2027. Python 3.15 has just released;
 our PyInstaller 6.20.0 metadata explicitly requires Python `<3.15`. This favors
 3.14 over either the old tested interpreter or the newly released minor.
 
-**Compatibility facts:** installed metadata for all 48 runtime pins, seven build
+**Compatibility facts when proposed:** installed metadata for all 48 runtime pins, seven build
 pins and four review pins permits 3.14 (one shared pin). A Windows x64 `cp314`
 wheel-only resolver/download succeeded for all **58 distinct pins** on 11 October,
 without installing anything. NiceGUI declares `>=3.10,<4`; PyInstaller declares
-`>=3.8,<3.15`. This is metadata/wheel evidence, not an import, runtime or bundle
-test on 3.14; setuptools 65.5.0 and build hooks still need actual build validation.
+`>=3.8,<3.15`. That was metadata/wheel evidence, not an import, runtime or bundle
+test on 3.14. The isolated same-host trial below supplies subsequent runtime/build
+evidence and records the setuptools import limitation.
 Do not reuse the Windows experiment lock as a tested cross-platform release lock.
 The original 3.11.0 patch remains historical experiment evidence, not a recommended
 security baseline. No interpreter or dependency upgrade is implemented here.
@@ -303,6 +306,45 @@ measurement is available. Reject unexplained monitor gaps. **R6 is unchanged:
 median elapsed ?60 seconds across five runs and peak process-tree memory ?2 GiB
 in every run.** No weaker threshold or benchmark result is proposed. R3/R5 need
 their own specified seeds/fixtures; this speed workload does not satisfy them.
+
+## Isolated Python 3.14 trial (11 October 2026)
+
+This follows the proposal above without adopting it or replacing the CPython
+3.11 setup. Starting main was `a6abeb97d032f4b0143600b189ac22a6af7bea43`.
+The official [Python 3.14.8 release](https://www.python.org/downloads/release/python-3148/)
+and Windows downloads list were checked before installation. The x64 installer
+matched its published SHA-256 and had a valid Python Software Foundation
+Authenticode signature. Standard CPython **3.14.8**, MSC v.1944 AMD64, reports
+64 bits, `sys._is_gil_enabled() == True` and `Py_GIL_DISABLED == 0`. Separate
+runtime/build/review environments use the existing pins; none is upgraded.
+
+All 18 unit/tracking tests, all three `pip check` runs and eight maintained
+runtime browser cases passed. The existing NiceGUI/PyInstaller one-folder recipe
+built successfully with **every pin unchanged**, including setuptools 65.5.0.
+The copied folder uses its own standard 3.14.8 DLL (byte-identical to the official
+installation), app/fixture/import paths within `_internal`, Windows-only PATH and
+no Python environment variables. Complete assets match the source. Final bundle
+browser results and reproducible commands are recorded in the
+[development guide](development.md#isolated-python-314-compatibility-trial).
+
+**Limitation:** a separate `import setuptools` probe fails with
+`AttributeError: module 'pkgutil' has no attribute 'ImpImporter'`. PyInstaller also logged a nonfatal `SetuptoolsInfo` probe failure
+for that import and continued to build. The passing workbook artifact does not
+establish compatibility of setuptools itself. `pip check` checks metadata relationships, not that API.
+A setuptools 80.9.0 wheel was downloaded in preparation but **not installed or
+used**; no candidate lock or general dependency upgrade is warranted by the
+observed pipeline. Do not describe the full build toolchain as compatible merely
+because this recipe succeeds. The maintained browser script also emits a
+SyntaxWarning for its existing JavaScript `\d` string escape; checks still pass.
+
+**Recommendation for review:** keep Python 3.14 as a viable candidate for this
+workbook/runtime and folder-bundle approach, retain the working 3.11 environment,
+and decide whether to remove or replace the unused incompatible setuptools pin
+in a separately tested candidate build lock before adopting a 3.14 toolchain.
+Native clean targets, visual acceptance, workload/benchmark and redistribution
+review remain open. This trial does not accept the broader environment proposal,
+change release gates or establish other-platform, clean-machine, physical-offline,
+native-dialog or redistribution approval. Published UI screenshots still apply.
 
 ## Unresolved
 

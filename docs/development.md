@@ -640,6 +640,133 @@ is reused. Earlier draft-PR instructions describe the historical review stage.
 Merge authorization does not accept visual alignment, adopt the proposed
 platform/environment choices or satisfy any release gate.
 
+### Isolated Python 3.14 compatibility trial
+
+On 11 October 2026, branch `experiment/m0-06-python314` started from clean main
+`a6abeb97d032f4b0143600b189ac22a6af7bea43`. The [official release page](https://www.python.org/downloads/release/python-3148/)
+and [Windows downloads](https://www.python.org/downloads/windows/) confirmed
+3.14.8 before installation. The x64 installer SHA-256 was
+`759be887b96e736a3ca886daf8d575f18fcae1a09efab6902f42d59e8999f8ef`;
+Authenticode was Valid with Python Software Foundation as signer. Installation
+used an ignored trial directory without PATH, launcher binary, file association
+or shortcut changes. The existing `.venv` and explicit `py -3.11` remain 3.11.0;
+this does not replace the documented working setup.
+
+These PowerShell commands run from `C:\Git\ravel`. The paths below identify the
+recorded run; use a new trial root/output directory when repeating, so old results
+and bundles are not overwritten. Keep the existing development server running;
+this trial verified ports 8092/8093 were unused before starting.
+
+```powershell
+$trialRoot = Join-Path (Get-Location) 'outputs/python314-trial-2026-10-11'
+New-Item -ItemType Directory -Path $trialRoot
+$installer = Join-Path $trialRoot 'python-3.14.8-amd64.exe'
+Invoke-WebRequest https://www.python.org/ftp/python/3.14.8/python-3.14.8-amd64.exe -OutFile $installer
+if ((Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLower() -ne '759be887b96e736a3ca886daf8d575f18fcae1a09efab6902f42d59e8999f8ef') { throw 'Installer hash mismatch' }
+if ((Get-AuthenticodeSignature -LiteralPath $installer).Status -ne 'Valid') { throw 'Installer signature invalid' }
+$installerArgs = @('/quiet', 'InstallAllUsers=0', ('TargetDir=' + $trialRoot + '\python'), 'Include_launcher=0', 'InstallLauncherAllUsers=0', 'PrependPath=0', 'AssociateFiles=0', 'Shortcuts=0', 'Include_test=0', 'Include_doc=0', 'Include_tcltk=0', 'Include_pip=1', 'Include_freethreaded=0', '/log', ($trialRoot + '\install.log'))
+$installProcess = Start-Process -FilePath $installer -ArgumentList $installerArgs -WindowStyle Hidden -Wait -PassThru
+if ($installProcess.ExitCode -notin @(0, 3010)) { throw ('Installer exit ' + $installProcess.ExitCode) }
+.\outputs\python314-trial-2026-10-11\python\python.exe -c "import sys,sysconfig,struct; print(sys.version); assert sys.version_info[:3] == (3,14,8); assert struct.calcsize('P')*8 == 64; assert sys._is_gil_enabled(); assert not sysconfig.get_config_var('Py_GIL_DISABLED')"
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/runtime-env
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/build-env
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/review-env
+```
+
+The recorded install used `--no-index --find-links
+outputs/m0-06-preparation-2026-10-11/cp314-wheel-probe`, reusing prepared wheels.
+To prepare those exact pins on a repeat (network needed), download with the new
+interpreter before the following installs:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\python\python.exe -m pip download --only-binary=:all: --dest outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build.lock -r experiments/workbook/requirements-review.lock
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build.lock
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements-review.lock
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m unittest discover -s tests -v
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe scripts/build_dashboard.py --check
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m experiments.workbook.bundle_entry --port 8092 --runtime-info
+```
+
+In another terminal at the same root, check the runtime server:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8092 --output outputs/python314-trial-2026-10-11/runtime-browser
+```
+
+Stop only that trial server after its checks (Ctrl+C in its terminal), then use
+one unchanged packaging approach:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe scripts/build_workbook_windows.py --output outputs/python314-trial-2026-10-11/build-original
+New-Item -ItemType Directory -Path outputs/python314-trial-2026-10-11/standalone
+Copy-Item -LiteralPath outputs/python314-trial-2026-10-11/build-original/dist/Ravel-workbook -Destination outputs/python314-trial-2026-10-11/standalone/Ravel-workbook -Recurse
+Set-Location outputs/python314-trial-2026-10-11/standalone/Ravel-workbook
+$env:PYTHONPATH = $null
+$env:PYTHONHOME = $null
+$env:VIRTUAL_ENV = $null
+$env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
+.\Ravel-workbook.exe --port 8093 --runtime-info
+```
+
+Run the browser check in a separate terminal with normal environment variables,
+from `C:\Git\ravel`; the test driver is not an executable dependency:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8093 --output outputs/python314-trial-2026-10-11/bundle-browser
+```
+
+`--runtime-info` must show `frozen: true` and executable/app/fixture/import paths
+inside the copied folder. The trial also byte-compared the bundled
+`_internal/python314.dll` to the verified official installation's DLL and CSS,
+three SVG icons and CSV to source. Stop only this trial bundle after checking.
+Distribute the entire folder for any later review, not just its executable.
+
+Observed environment: standard GIL-enabled CPython **3.14.8**,
+`MSC v.1944 64 bit (AMD64)`; Windows 11 Home **26H2 build 26300.9550**; NiceGUI 3.18.0,
+PyInstaller 6.20.0/hooks 2026.8, Playwright 1.58.0 and installed headless
+**Chrome 154.0.8037.98**.
+All 48 runtime, seven build and four review pin/version checks and all three
+`pip check` runs passed. All **18 unit/tracking tests** and **eight runtime
+browser cases** passed; the original recipe built successfully in about 52 seconds.
+The complete copy contains **69,778,736 bytes (66.55 MiB), 1190 files**; one
+observed startup to HTTP 200 was **2.62 seconds**, not a benchmark.
+All **eight standalone-bundle browser cases passed** as well, covering both
+routes/themes at 1366?657 and 1280?800, local assets, validation/recovery,
+provenance/drafts, fixed previews/counts and canonical save/reload. Both runs
+recorded zero external HTTP/WebSocket attempts and page errors; both server stderr
+logs were empty. Trial servers on 8092/8093 were stopped by verified process
+identity, including their children only. Original port-8080 server PID 15316 was
+preserved and still returned HTTP 200. No native chooser/disconnection check was
+performed in this trial.
+
+The separate diagnostic command below failed on pinned setuptools 65.5.0 with `pkgutil.ImpImporter` absent. This is a
+real tooling limitation despite successful metadata checks; PyInstaller logged the same failure as a nonfatal
+`SetuptoolsInfo` warning and continued. The artifact passes do not establish
+setuptools API compatibility. A candidate setuptools 80.9.0 wheel was prepared
+but not installed. **No pin, candidate lock, recipe or application repair was
+needed for the tested pipeline.** Keep the unsupported import explicit when
+reviewing a future build environment. The existing review script emits a
+SyntaxWarning for a JavaScript `\d` escape; this does not fail its cases. Build
+logs retain the setuptools probe warning and optional hidden-import `tzdata` warning.
+
+```powershell
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -c "import setuptools"
+```
+
+Raw installer/install/build logs, environment/version data, browser results,
+DLL/path/asset verification, diagnostic failure, captures and binaries remain in
+ignored `outputs/python314-trial-2026-10-11/`. This is a **same-host** Windows
+trial, not a clean-machine, other-platform, physical-offline, native-chooser or
+redistribution approval. Appearance is unchanged; published screenshots are
+reused. Python 3.11 setup, original locks and historical evidence are preserved;
+M0-06 remains partial, NiceGUI provisional, proposals unadopted and gates unverified.
+Final documentation checks passed: 81 local links/images/anchors, extracted
+PowerShell command syntax, dashboard regeneration/freshness and Git whitespace.
+
 ## View and check the dashboard
 
 Open [dashboard.html](dashboard.html) directly in a browser. It uses no external
