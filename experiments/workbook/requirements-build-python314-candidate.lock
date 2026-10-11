@@ -1,0 +1,10 @@
+# Windows / standard CPython 3.14 candidate; not an adopted release lock.
+# Install alongside the unchanged requirements.lock; use --build-lock explicitly.
+# Only setuptools differs from requirements-build.lock (PyInstaller requires >=42).
+altgraph==0.17.5
+packaging==26.3
+pefile==2024.8.26
+pyinstaller==6.20.0
+pyinstaller-hooks-contrib==2026.8
+pywin32-ctypes==0.2.3
+setuptools==80.9.0

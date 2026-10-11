@@ -283,10 +283,10 @@ free memory/storage, OS patch and versions at measurement time. No benchmark has
 run; confirm stable hardware availability before accepting it.
 
 **Proposed frozen R6 workload:** one invented table, exactly **100,000 rows and
-20 scalar columns**, ordered `row_id`, `normal_01`?`normal_10`, `flag_01`?`flag_05`,
-`integer_01`?`integer_04`. IDs 1?100000 unique/nonmissing; ten independent standard
+20 scalar columns**, ordered `row_id`, `normal_01`–`normal_10`, `flag_01`–`flag_05`,
+`integer_01`–`integer_04`. IDs 1–100000 unique/nonmissing; ten independent standard
 normal floats, five independent Bernoulli(0.30) booleans and four independent
-uniform integers 0?999 inclusive. Missingness zero; no sample/profile, clinical
+uniform integers 0–999 inclusive. Missingness zero; no sample/profile, clinical
 rules, quotas, linked tables or UI. Fixed seed **20261011**, stable field streams;
 freeze recipe/schema/hash and CSV contract before implementation/measurement.
 Proposed CSV: UTF-8 without BOM, LF, header in that order, decimal IDs/integers,
@@ -339,7 +339,7 @@ SyntaxWarning for its existing JavaScript `\d` string escape; checks still pass.
 
 **Recommendation for review:** keep Python 3.14 as a viable candidate for this
 workbook/runtime and folder-bundle approach, retain the working 3.11 environment,
-and decide whether to remove or replace the unused incompatible setuptools pin
+and decide whether to resolve the incompatible setuptools pin
 in a separately tested candidate build lock before adopting a 3.14 toolchain.
 Native clean targets, visual acceptance, workload/benchmark and redistribution
 review remain open. This trial does not accept the broader environment proposal,
@@ -358,3 +358,22 @@ native-dialog or redistribution approval. Published UI screenshots still apply.
 
 Resolve these remaining choices through the planned specifications and M0
 experiments; unresolved proposals are not adopted choices or implementation evidence.
+
+## Python 3.14 setuptools candidate follow-up (11 October 2026)
+
+Inspection corrects the earlier “unused” assumption: PyInstaller 6.20.0 declares
+`setuptools>=42.0.0`, and its hook probe imports setuptools. Preserve the original
+65.5.0 lock and E32 failure; removal is not appropriate. A separately selected
+[candidate build lock](../experiments/workbook/requirements-build-python314-candidate.lock)
+changes only setuptools to **80.9.0**, testing the already prepared wheel.
+Exact pins, direct build imports, `pip check` and the isolated hook probe pass on
+standard CPython 3.14.8 x64. The same packaging approach builds without the prior
+import/probe failure; scoped bundle results and commands are in
+[development](development.md#python-314-candidate-build-lock). Actual candidate
+license/vendor notices are retained in the [inventory](dependency-licenses.md#python-314-candidate-build-dependency).
+
+Recommend this tested replacement for maintainer review, not adoption of Python
+3.14 or a license/security endorsement of 80.9.0. Original recipe defaults,
+Python 3.11 environment and all established locks remain. Runtime browser evidence
+is reused because app/runtime pins are unchanged. M0-06 remains partial, NiceGUI
+provisional, environment proposals unadopted and release gates unverified.

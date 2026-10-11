@@ -13,11 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "outputs/workbook-windows")
+    parser.add_argument("--build-lock", type=Path,
+                        default=ROOT / "experiments/workbook/requirements-build.lock",
+                        help="Explicit candidate build lock; the established lock remains the default.")
     args = parser.parse_args()
     if sys.platform != "win32":
         parser.error("This recipe is a Windows experiment only.")
-    for lock in ("requirements.lock", "requirements-build.lock"):
-        for line in (ROOT / "experiments/workbook" / lock).read_text().splitlines():
+    for lock in (ROOT / "experiments/workbook/requirements.lock", args.build_lock):
+        for line in lock.read_text().splitlines():
             if "==" in line and not line.startswith("#"):
                 package, expected = line.split("==")
                 if version(package) != expected:

@@ -627,7 +627,7 @@ The prior successful application checks apply because application code/assets an
 locks are unchanged. Raw preparation evidence is ignored under
 `outputs/m0-06-preparation-2026-10-11/`. This preparation was kept local and
 uncommitted until the maintainer authorized publication on Sunday, 11 October.
-The Berlin 08:00?16:30 publishing restriction applies Monday?Friday only.
+The Berlin 08:00–16:30 publishing restriction applies Monday–Friday only.
 
 On 11 October the maintainer authorized integrating PR #4 into main with a merge
 commit, preserving all existing commits and without a release/tag/binary
@@ -735,7 +735,7 @@ browser cases** passed; the original recipe built successfully in about 52 secon
 The complete copy contains **69,778,736 bytes (66.55 MiB), 1190 files**; one
 observed startup to HTTP 200 was **2.62 seconds**, not a benchmark.
 All **eight standalone-bundle browser cases passed** as well, covering both
-routes/themes at 1366?657 and 1280?800, local assets, validation/recovery,
+routes/themes at 1366×657 and 1280×800, local assets, validation/recovery,
 provenance/drafts, fixed previews/counts and canonical save/reload. Both runs
 recorded zero external HTTP/WebSocket attempts and page errors; both server stderr
 logs were empty. Trial servers on 8092/8093 were stopped by verified process
@@ -790,6 +790,96 @@ stale. Browser interaction and visual review remain separate checks. These
 commands verify project tracking and the workbook configuration/count contracts;
 they do not establish generation or clinical validation or release readiness.
 
+### Python 3.14 candidate build lock
+
+Follow-up to E32 on `experiment/m0-06-python314`, starting at `e0bb48a`.
+PyInstaller 6.20.0's installed `METADATA` explicitly requires
+`setuptools>=42.0.0`; its `utils/hooks/setuptools.py` imports setuptools in an
+isolated probe. It is **not removable as an unused pin**. The original
+65.5.0 `pkgutil.ImpImporter` failure and successful fallback build remain E32
+evidence. The separate [candidate lock](../experiments/workbook/requirements-build-python314-candidate.lock)
+changes only `setuptools==65.5.0` to `setuptools==80.9.0`. The prepared wheel is
+tested here, not accepted as the supported version or a security-reviewed choice.
+Its installed metadata requires Python >=3.9; no latest-version upgrade was attempted.
+See the [dependency inventory](dependency-licenses.md#python-314-candidate-build-dependency)
+for inspected source files and retained notices.
+
+Reproduction from `C:\Git\ravel` (choose a new output folder and unused port on
+repeat; previous logs/environments/binaries must not be overwritten):
+
+```powershell
+Set-Location C:\Git\ravel
+$candidateRoot = Join-Path (Get-Location) 'outputs\python314-setuptools-candidate-2026-10-11'
+$python314 = Join-Path (Get-Location) 'outputs\python314-trial-2026-10-11\python\python.exe'
+& $python314 -m venv "$candidateRoot\build-env"
+$candidatePython = "$candidateRoot\build-env\Scripts\python.exe"
+& $candidatePython -m pip install --no-index --find-links .\outputs\m0-06-preparation-2026-10-11\cp314-wheel-probe --find-links .\outputs\python314-trial-2026-10-11\candidate-wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build-python314-candidate.lock
+& $candidatePython -m pip check
+& $candidatePython -c "from importlib.metadata import version; from pathlib import Path; locks=[Path('experiments/workbook/requirements.lock'),Path('experiments/workbook/requirements-build-python314-candidate.lock')]; pins=[line.split('==') for lock in locks for line in lock.read_text().splitlines() if '==' in line and not line.startswith('#')]; assert all(version(name)==expected for name,expected in pins); print(len(pins),'exact pins')"
+& $candidatePython -c "import setuptools, altgraph, packaging, pefile, PyInstaller, _pyinstaller_hooks_contrib, win32ctypes, nicegui.scripts.pack; from PyInstaller.utils.hooks.setuptools import setuptools_info; assert setuptools_info.available and setuptools_info.version == (80,9,0); print('build imports and probe passed')"
+& $candidatePython scripts/build_workbook_windows.py --build-lock experiments/workbook/requirements-build-python314-candidate.lock --output "$candidateRoot\build"
+New-Item -ItemType Directory -Path "$candidateRoot\standalone" -ErrorAction Stop
+Copy-Item -LiteralPath "$candidateRoot\build\dist\Ravel-workbook" -Destination "$candidateRoot\standalone\Ravel-workbook" -Recurse
+```
+
+For new prepared wheels, download the unchanged runtime lock plus candidate build
+lock using the isolated interpreter's `pip download --only-binary=:all: -r ...`;
+the actual run used the two existing wheel folders shown above. The recipe's
+default remains `requirements-build.lock`; explicit `--build-lock` is required.
+Three focused tests verify original default acceptance, candidate rejection under
+the default and explicit candidate acceptance. Runtime/application code and pins
+are unchanged: E32's eight runtime browser cases are reused.
+
+Start the copied bundle from its own folder with Python environment variables
+removed and Windows-only PATH as in the preceding trial; use port **8094** and
+`--runtime-info`. Frozen executable/app/fixture and all import paths (now also
+`_internal/setuptools/_vendor`) must stay inside that copied folder. Check the
+five CSS/SVG/CSV assets and `python314.dll` against the unchanged source and
+official 3.14.8 installation, as in E32.
+
+In a dedicated terminal (discard its environment changes when finished):
+
+```powershell
+Set-Location C:\Git\ravel\outputs\python314-setuptools-candidate-2026-10-11\standalone\Ravel-workbook
+$env:PYTHONPATH = $null
+$env:PYTHONHOME = $null
+$env:VIRTUAL_ENV = $null
+$env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
+.\Ravel-workbook.exe --port 8094 --runtime-info
+```
+
+Run the check from a second terminal with normal environment variables:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8094 --output outputs/python314-setuptools-candidate-2026-10-11/bundle-browser
+```
+
+Use Ctrl+C in the dedicated bundle terminal when finished. The automated trial
+instead verified the recorded executable path before stopping its process tree.
+
+Actual raw evidence is in ignored `outputs/python314-setuptools-candidate-2026-10-11`:
+`candidate-inspection.json`/`imports.log`, `build/build.log`, `bundle-launch.json`,
+`verify_bundle_launch.py`, `bundle-browser/results.json` and cleanup/check logs.
+All **55 exact pins**, `pip check`, eight build-tool imports and the isolated
+setuptools probe passed. The build finished in about **56 seconds** without
+`ImpImporter` or `SetuptoolsInfo: failed to obtain` errors; the optional `tzdata`
+warning remains. Complete copied bundle: **71,204,215 bytes (67.91 MiB), 1,198
+files**, one **2.67-second** HTTP startup observation. Frozen paths/DLL/assets
+passed. Bundle browser and final documentation results are recorded in E33.
+All eight cases passed; browser external HTTP/WebSocket attempts and page errors
+were empty, as was bundle stderr. The existing browser script's invalid-escape
+SyntaxWarning remains (PowerShell records it as a native error even though the
+browser results pass); no application/test-driver behavior repair was needed.
+Only this trial's verified bundle process tree is stopped; preserve port 8080
+and Python 3.11. No appearance change; published screenshots remain current.
+
+Recommendation: review this tested candidate replacement rather than remove a
+declared dependency. Keep original locks/defaults and Python 3.11 until maintainer
+adoption. This does not establish clean-machine, other-platform, physical-offline,
+native-dialog, benchmark, security or redistribution approval. New setuptools
+vendor inclusion still needs artifact/source-obligation mapping. M0-06 partial,
+NiceGUI provisional, proposals unadopted and release gates unchanged.
+
 ## Maintain progress
 
 [progress.json](progress.json) is the authoritative record of statuses, tasks,
@@ -814,19 +904,17 @@ Preserve historical evidence and its stated scope and limitations.
 
 ## Review documentation
 
-The [README](../README.md) introduces the project; the
-[clinical specification](baseline-specification.md) is the source for its four
-reference cases, and [specification.md](specification.md) defines the accepted
-recipe architecture. The clinical contracts and numeric prerequisites remain
-separate from presentation changes. Examples are specification reference
-expectations, not executed application outputs or independent clinical validation.
-
-Optional presentation check: view the README in a Markdown renderer with
-Mermaid support. Expect four case rows with baseline/change pairs 10/+3, 8/+3,
-null/null and 10/+5, plus one diagram explicitly labelled as planned architecture.
-Follow the local document and license links. This checks presentation and links,
-not clinical correctness. In the dashboard, check filtering, task-link navigation,
-keyboard expansion and visible focus after changes that affect those behaviours.
+The [README](../README.md) introduces Ravel's purpose, two intended workflows,
+current fixture workbook and quickstart. Optional presentation check: view it
+in a Markdown renderer and expect one Dark workbench image, compact rules/example
+workflows, explicitly planned generation, license and AI disclosure. Follow its
+local document/image links; it no longer contains a clinical table or diagram.
+The four reference cases remain in the [clinical specification](baseline-specification.md),
+and [specification.md](specification.md) defines the accepted recipe architecture.
+Those contracts and numeric prerequisites remain separate from presentation;
+examples are expectations, not executed outputs or independent validation.
+In the dashboard, check filtering, task-link navigation, keyboard expansion and
+visible focus after changes that affect those behaviours.
 
 ## Contributor and release preparation
 
