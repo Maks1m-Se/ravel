@@ -142,18 +142,24 @@ and distribution. This task introduces no plugin framework, dependencies, or cod
 
 ## Explicit settings and editable assumptions
 
-Directly entered settings populate the recipe. Later sample profiling may offer
-editable estimates for the same fields, categories, missingness, and distribution
+Directly entered settings populate the recipe. Basic sample profiling in the
+first usable slice offers editable estimates for the same fields, categories,
+missingness, and distribution
 parameters. Show their source and proposed values, let users accept or override
 them, and save the resulting explicit settings before generation. Record which
 assumptions were sample-derived and which were overridden; the representation
-of that provenance remains to be specified in M3.
+of that provenance must be specified for the basic M1 workflow and extended in
+M3. The M0-06 workbook experiment uses a separately labelled provisional format;
+it does not establish the application recipe schema.
 
 Do not silently add dependencies, clinical rules, quotas, or new categories.
 Identifier fields are excluded from fitting by default, and independent marginal
 estimates must not imply preserved associations. Unsupported assumptions must
 be reported. Both entry paths feed the same validation and engine; detailed
-profiling and generated-only/retain-and-extend behaviour remain M3 work.
+profiling refinements remain M3 work. Basic editable sample assumptions and both
+generated-only/retain-and-extend paths belong in M1's first usable slice, alongside
+explicit-rule generation. The optional clinical template and future domain packs
+keep the ownership boundary above; public add-on infrastructure remains later work.
 
 ## Accepted clinical specification and deferred work
 
