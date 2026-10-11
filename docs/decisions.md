@@ -216,6 +216,94 @@ remains wider than the reference to fit complete errors and origin/draft state.
 This is not acceptance of the later aligned build or framework adoption; M0-06
 remains partial, NiceGUI provisional and PR #4 draft.
 
+## Proposed M0-06 environment and benchmark (11 October 2026)
+
+**For maintainer review, not adopted.** Keep the tested CPython 3.11.0 Windows
+experiment unchanged. Recommend standard GIL-enabled **CPython 3.14** for the
+next isolated candidate environment, then pin its current security patch and
+platform-specific locks after tests. The [official support table](https://devguide.python.org/versions/)
+places 3.14 in bugfix support through October 2030, 3.13 in security-only support
+through October 2029 and 3.11 through October 2027. Python 3.15 has just released;
+our PyInstaller 6.20.0 metadata explicitly requires Python `<3.15`. This favors
+3.14 over either the old tested interpreter or the newly released minor.
+
+**Compatibility facts:** installed metadata for all 48 runtime pins, seven build
+pins and four review pins permits 3.14 (one shared pin). A Windows x64 `cp314`
+wheel-only resolver/download succeeded for all **58 distinct pins** on 11 October,
+without installing anything. NiceGUI declares `>=3.10,<4`; PyInstaller declares
+`>=3.8,<3.15`. This is metadata/wheel evidence, not an import, runtime or bundle
+test on 3.14; setuptools 65.5.0 and build hooks still need actual build validation.
+Do not reuse the Windows experiment lock as a tested cross-platform release lock.
+The original 3.11.0 patch remains historical experiment evidence, not a recommended
+security baseline. No interpreter or dependency upgrade is implemented here.
+
+| Proposed target | Architecture and native execution | Available evidence |
+| --- | --- | --- |
+| Windows 11 Home/Pro **25H2**, build family **26200**, current security update | x86-64; native CPython/bundle | Same-host prototype tested on Home **10.0.26300**, not this proposed clean target |
+| Ubuntu Desktop **24.04.5 LTS** | amd64/x86-64; native CPython/bundle | No Ubuntu test environment verified in this work |
+| macOS **Tahoe 26.7.1** | arm64 Apple silicon, native; no Rosetta dependency | No Mac hardware/test environment available |
+| macOS **Tahoe 26.7.1** | x86-64 Intel on Apple-supported hardware; separate native artifact | No Mac hardware/test environment available |
+
+These are exact proposed starting images, not support claims. Record complete
+OS build/patch, browser, interpreter and artifact versions for each future run;
+refresh security patches before distributing artifacts. Windows ARM64 and Linux
+ARM64 are outside this initial proposal. Microsoft lists [25H2 in support](https://learn.microsoft.com/en-us/lifecycle/products/windows-11-home-and-pro);
+Canonical lists [24.04.5](https://ubuntu.com/project/docs/release-team/list-of-releases/)
+and [24.04 LTS security maintenance](https://ubuntu.com/security/esm) through May
+2029. Apple lists [26.7.1 security updates](https://support.apple.com/en-us/100100)
+and [Tahoe-compatible computers](https://support.apple.com/en-us/122867), including
+Apple silicon and selected Intel models. Older Intel models are not implied.
+Native Apple silicon is a required target, not an emulated Windows substitute.
+
+**UI/distribution recommendation:** continue NiceGUI 3.18.0 as the provisional
+candidate for the initial local browser interface, subject to aligned visual
+acceptance, native cross-platform checks and the license gaps below. Recommend
+per-platform **one-folder console bundles**, local loopback server and an existing
+supported browser as the first alpha distribution experiment. The tested Windows
+folder is 60.95 MiB with one 2.68-second startup observation, passed both routes,
+themes and automated save/reload, and the maintainer passed native JSON and
+shutdown checks. This supports continuing the approach, not adopting NiceGUI or
+claiming R7. Build natively on each target; do not assume Windows binaries cross-
+compile. Defer installer/signing selection until native launch, offline and
+redistribution checks; public artifacts still need explicit browser prerequisites,
+checksums, notices and macOS signing/notarization/quarantine evaluation. The
+[prototype inventory](dependency-licenses.md) records unresolved redistribution
+work. No clean-machine or new cross-platform application evidence exists.
+
+**Available reference hardware, queried locally on 11 October:** AMD Ryzen 7
+5825U (8 cores/16 logical processors); physical RAM **16,483,872,768 bytes**
+(15.35 GiB reported usable physical memory); Windows 11 Home 10.0.26300 x64;
+Micron 2210S NVMe 512GB SSD, reported capacity **512,110,190,592 bytes**. Propose
+this named laptop as the R6 reference machine, on AC power with Windows Balanced
+power mode, local NVMe output and unrelated workloads closed. Record power mode,
+free memory/storage, OS patch and versions at measurement time. No benchmark has
+run; confirm stable hardware availability before accepting it.
+
+**Proposed frozen R6 workload:** one invented table, exactly **100,000 rows and
+20 scalar columns**, ordered `row_id`, `normal_01`?`normal_10`, `flag_01`?`flag_05`,
+`integer_01`?`integer_04`. IDs 1?100000 unique/nonmissing; ten independent standard
+normal floats, five independent Bernoulli(0.30) booleans and four independent
+uniform integers 0?999 inclusive. Missingness zero; no sample/profile, clinical
+rules, quotas, linked tables or UI. Fixed seed **20261011**, stable field streams;
+freeze recipe/schema/hash and CSV contract before implementation/measurement.
+Proposed CSV: UTF-8 without BOM, LF, header in that order, decimal IDs/integers,
+booleans `0`/`1`, float round-trip `.17g`, no index. This generic benchmark proposal
+does not select clinical arithmetic or export policy.
+
+Run five fresh processes with that same recipe/seed and pinned environment;
+time generation plus CSV export from immediately before generation until the
+file is flushed and closed, on local SSD (ordinary OS buffering, no forced cache
+reset). Exclude process startup, profiling, UI and reports and record those
+separately. Verify counts/types/hash for every output. Record all five timings,
+CSV sizes, recipe/hash, versions, CPU/RAM/OS/storage and process-tree memory.
+Use a process-tree monitor and retain raw samples; supplement simultaneous RSS
+with per-process peak working-set counters to expose missed spikes, using the
+sum of per-process peaks as a conservative bound until a verified tree-peak
+measurement is available. Reject unexplained monitor gaps. **R6 is unchanged:
+median elapsed ?60 seconds across five runs and peak process-tree memory ?2 GiB
+in every run.** No weaker threshold or benchmark result is proposed. R3/R5 need
+their own specified seeds/fixtures; this speed workload does not satisfy them.
+
 ## Unresolved
 
 - Public PyPI distribution name.

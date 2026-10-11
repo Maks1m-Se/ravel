@@ -1,0 +1,9 @@
+# Windows / CPython 3.11 build tools only; install alongside requirements.lock.
+# This is an experiment lock, not a release environment or framework decision.
+altgraph==0.17.5
+packaging==26.3
+pefile==2024.8.26
+pyinstaller==6.20.0
+pyinstaller-hooks-contrib==2026.8
+pywin32-ctypes==0.2.3
+setuptools==65.5.0

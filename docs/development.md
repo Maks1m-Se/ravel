@@ -495,6 +495,140 @@ For an already running isolated review server, pass its loopback URL with
 `--base-url`; this pass used `http://127.0.0.1:8081`. M0-06 remains partial,
 NiceGUI provisional and PR #4 draft, pending maintainer visual/source review.
 
+### Fresh-checkout smoke
+
+On 11 October 2026 the actual local starting commit was
+`55f02e5b92fc20d044ac575cba8c6a48fd2bd14e`, on
+`experiment/m0-06-nicegui-workbook`, with a clean working tree. A local isolated
+clone and new virtual environment passed all **48 runtime pin checks**, `pip
+check`, **18 unit tests**, dashboard freshness and **eight maintained browser
+cases** (both entry paths/themes at 1366×657 and 1280×800). Browser checks include
+local assets/icons, validation, drafts, count meanings and canonical save/reload;
+no external HTTP/WebSocket attempts or page errors were observed. This is a
+fresh checkout on the **same Windows host**, not a clean-machine test.
+
+Recorded commands from `C:\Git\ravel` (use unused destination/output paths when
+repeating; runtime wheel preparation is documented above):
+
+```powershell
+git -c safe.directory=C:/Git/ravel clone --no-hardlinks --branch experiment/m0-06-nicegui-workbook C:/Git/ravel outputs/m0-06-packaging-2026-10-11/checkout
+.\.venv\Scripts\python.exe -m venv outputs/m0-06-packaging-2026-10-11/checkout/.venv
+.\outputs\m0-06-packaging-2026-10-11\checkout\.venv\Scripts\python.exe -m pip install --no-index --find-links outputs/nicegui-review/wheels -r outputs/m0-06-packaging-2026-10-11/checkout/experiments/workbook/requirements.lock
+Set-Location outputs/m0-06-packaging-2026-10-11/checkout
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe scripts/build_dashboard.py --check
+.\.venv\Scripts\python.exe -c "from nicegui import ui; import experiments.workbook.app; ui.run(host='127.0.0.1', port=8082, title='Ravel | Workbook experiment', dark=True, reload=False, show=False, prod_js=True, on_air=False)"
+```
+
+In a second terminal, from `C:\Git\ravel`, reuse the existing review environment:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe outputs/m0-06-packaging-2026-10-11/checkout/scripts/check_workbook_browser.py --base-url http://127.0.0.1:8082 --output outputs/m0-06-packaging-2026-10-11/fresh-browser
+```
+
+The ordinary development server was preserved; the port-8082 test server was
+stopped after checking. Raw environment evidence and results stay in ignored
+`outputs/m0-06-packaging-2026-10-11/`. Native chooser, physical disconnection,
+screen readers and other platforms were not retested. Existing screenshots apply.
+
+### Windows folder-bundle experiment
+
+The single approach uses the installed [NiceGUI 3.18.0 packaging wrapper](https://github.com/zauberzeug/nicegui/blob/v3.18.0/nicegui/scripts/pack.py)
+with [PyInstaller one-folder mode](https://pyinstaller.org/en/v6.20.0/operating-mode.html#bundling-to-one-folder).
+The [build recipe](../scripts/build_workbook_windows.py) verifies the runtime and
+[separate build lock](../experiments/workbook/requirements-build.lock), includes
+CSS/icons/fixture data and saves the command/log/spec under a new output directory.
+It directs user-site and PyInstaller cache paths into that directory. The pinned
+wrapper calls `pyinstaller` by name on Windows and does not propagate its exit
+status; the recipe supplies the environment's Scripts path and checks artifacts.
+The [console launcher](../experiments/workbook/bundle_entry.py) keeps the existing
+app behavior, binds loopback, defaults to port 8083 and supports `--runtime-info`
+for verifying frozen import paths. Runtime/review dependencies are unchanged.
+
+Reusable build commands from the repository root (installation may use network):
+
+```powershell
+py -3.11 -m venv outputs/workbook-build-env
+.\outputs\workbook-build-env\Scripts\python.exe -m pip install -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build.lock
+.\outputs\workbook-build-env\Scripts\python.exe -m pip check
+.\outputs\workbook-build-env\Scripts\python.exe scripts/build_workbook_windows.py --output outputs/workbook-windows
+```
+
+The recorded build instead reused the fresh checkout's newly created environment,
+copied only the three new packaging files into it, installed PyInstaller 6.20.0
+and verified the captured build pins. Its successful invocation was:
+
+```powershell
+.\outputs\m0-06-packaging-2026-10-11\checkout\.venv\Scripts\python.exe outputs/m0-06-packaging-2026-10-11/checkout/scripts/build_workbook_windows.py --output outputs/m0-06-packaging-2026-10-11/build-2
+Copy-Item -LiteralPath outputs/m0-06-packaging-2026-10-11/build-2/dist/Ravel-workbook -Destination outputs/m0-06-packaging-2026-10-11/standalone/Ravel-workbook -Recurse
+```
+
+Wait for the whole folder copy to finish; distribute the **entire folder**, not
+just the executable. First build failure: `PermissionError: [WinError 5]` probing
+the roaming Python user-site directory. Isolating user-site/cache paths resolved
+it within the same approach. The build retains an optional `tzdata` hidden-import
+warning. A launch before copying finished failed on missing extension modules;
+the completed copy passed, with no rebuild or dependency changes. Failed logs
+are retained alongside `build-2/build.log`.
+
+The copied bundle was tested while the original checkout/build environment was
+temporarily renamed, with Python environment variables removed, Windows-only
+PATH and a working directory outside the checkout. Frozen app, fixture and import
+paths all resolved inside the bundle; five assets were byte-identical to source.
+It contains **63,915,291 bytes (60.95 MiB), 1187 files**. One observed startup
+to first HTTP 200 was **2.68 seconds**; this is not a startup benchmark.
+All **eight maintained browser cases passed** at port 8083, including both routes,
+themes, validation and canonical save/reload. No external browser HTTP/WebSocket
+attempts or page errors occurred; final bundle stderr was empty. The review
+environment was a separate test driver, not a dependency of the executable.
+
+Reproducible launch of the already built result (the maintainer completed the
+validation correction, native JSON save/reload and shutdown checks on 11 October):
+
+```powershell
+.\outputs\m0-06-packaging-2026-10-11\standalone\Ravel-workbook\Ravel-workbook.exe --port 8083
+```
+
+Open `http://127.0.0.1:8083/`, try both entry paths/themes, reject Minimum `200`,
+correct it to `5`, then Save and Reload JSON. Expect complete inline errors,
+preserved applied/draft state and saved settings/origins to return. Ctrl+C in
+the console stops the server. An existing browser is required. This same-host
+Windows experiment does not supply an installer/signature, clean-machine or
+cross-platform evidence, or framework adoption. M0-06 remains partial, NiceGUI
+provisional and visual/source acceptance pending. Build/test artifacts are ignored;
+the useful recipe, launcher, build lock and evidence were prepared locally for review.
+Published UI screenshots are reused. The original development server is preserved.
+
+On 11 October the maintainer reported bundled validation correction, native JSON
+save/reload, Ctrl+C shutdown and preservation of the original development server
+all passed. This applies to the tested same-host folder bundle; it does not accept
+visuals or establish clean-machine/cross-platform readiness. ChatGPT source review
+of the packaging archive against `55f02e5` reproduced all six changed files and
+passed nine tracking tests and dashboard freshness; the malformed Windows paths
+found in that review are corrected here. These are reported review results, not
+new independent application tests.
+Final handoff checks passed: nine tracking tests, dashboard regeneration/freshness,
+64 local links/anchors, Python compilation and Git whitespace. Historical evidence
+and all task/milestone/release-gate statuses are preserved.
+
+Preparation follow-up on 11 October: nine tracking tests, dashboard freshness,
+85 local Markdown links/anchors and source-preservation checks passed. The
+repaired setup blocks were extracted from this document and parsed as PowerShell;
+directories, executable/script/lock paths and `--version`/bundle `--help` checks
+passed. Only an isolated empty build environment was created for path checking;
+installation, builds and application browser tests were not repeated. Host policy
+blocked running the checker as a script file; its checks ran inline without
+changing that policy. The notice collection was corrected after its first audit
+found newline duplication and implementation files under a directory named
+`licenses`; all 77 retained installed notice texts and five retrieved frontend
+license texts now match their source texts after declared whitespace normalization.
+The prior successful application checks apply because application code/assets and
+locks are unchanged. Raw preparation evidence is ignored under
+`outputs/m0-06-preparation-2026-10-11/`. This preparation was kept local and
+uncommitted until the maintainer authorized publication on Sunday, 11 October.
+The Berlin 08:00?16:30 publishing restriction applies Monday?Friday only.
+
 ## View and check the dashboard
 
 Open [dashboard.html](dashboard.html) directly in a browser. It uses no external
@@ -564,10 +698,14 @@ of version control. Local Codex implements changes; the ChatGPT Project handles
 planning and review, and the maintainer accepts results. Critical clinical
 choices and important user-facing behaviour require maintainer review.
 
-The approved [MIT license](../LICENSE) is present. M0-07 still requires the
-remaining contributor/release rules and dependency/license review before public
-alpha; adding the license and this guide does not complete the task or any
-release gate. Consult [progress.json](progress.json) for current blockers and the
+The approved [MIT license](../LICENSE) is present. Follow
+[CONTRIBUTING.md](../CONTRIBUTING.md) for focused PRs, invented data and responsibility
+for AI assistance. The [prototype dependency inventory](dependency-licenses.md)
+and [notice collection](third-party-notices.txt) preserve inspected package terms
+and identify unresolved frontend/native redistribution work. M0-07 is partial;
+this preparation does not complete dependency/license review or any release gate.
+The [environment and benchmark proposal](decisions.md#proposed-m0-06-environment-and-benchmark-11-october-2026)
+requires maintainer review before adoption; the working environment is unchanged. Consult [progress.json](progress.json) for current blockers and the
 required next action. The maintainer accepted residual email discoverability in
 retained GitHub history; the [decision record](decisions.md) preserves that
 acceptance and the earlier findings without claiming complete removal.

@@ -150,4 +150,8 @@ and unresolved choices.
 Development, including code and documentation, is AI-assisted. The maintainer
 reviews and accepts changes; AI assistance does not establish clinical correctness.
 
+Contributor setup and PR expectations are in [CONTRIBUTING.md](CONTRIBUTING.md).
+The [prototype dependency inventory](docs/dependency-licenses.md) records open
+redistribution gaps; it is not a completed release license review.
+
 Licensed under the [MIT License](LICENSE). Copyright 2026 Maksim Sendetski.
