@@ -627,7 +627,7 @@ The prior successful application checks apply because application code/assets an
 locks are unchanged. Raw preparation evidence is ignored under
 `outputs/m0-06-preparation-2026-10-11/`. This preparation was kept local and
 uncommitted until the maintainer authorized publication on Sunday, 11 October.
-The Berlin 08:00?16:30 publishing restriction applies Monday?Friday only.
+The Berlin 08:00–16:30 publishing restriction applies Monday–Friday only.
 
 On 11 October the maintainer authorized integrating PR #4 into main with a merge
 commit, preserving all existing commits and without a release/tag/binary
@@ -639,6 +639,133 @@ fixtures, assets and dependency locks are unchanged, so recorded browser evidenc
 is reused. Earlier draft-PR instructions describe the historical review stage.
 Merge authorization does not accept visual alignment, adopt the proposed
 platform/environment choices or satisfy any release gate.
+
+### Isolated Python 3.14 compatibility trial
+
+On 11 October 2026, branch `experiment/m0-06-python314` started from clean main
+`a6abeb97d032f4b0143600b189ac22a6af7bea43`. The [official release page](https://www.python.org/downloads/release/python-3148/)
+and [Windows downloads](https://www.python.org/downloads/windows/) confirmed
+3.14.8 before installation. The x64 installer SHA-256 was
+`759be887b96e736a3ca886daf8d575f18fcae1a09efab6902f42d59e8999f8ef`;
+Authenticode was Valid with Python Software Foundation as signer. Installation
+used an ignored trial directory without PATH, launcher binary, file association
+or shortcut changes. The existing `.venv` and explicit `py -3.11` remain 3.11.0;
+this does not replace the documented working setup.
+
+These PowerShell commands run from `C:\Git\ravel`. The paths below identify the
+recorded run; use a new trial root/output directory when repeating, so old results
+and bundles are not overwritten. Keep the existing development server running;
+this trial verified ports 8092/8093 were unused before starting.
+
+```powershell
+$trialRoot = Join-Path (Get-Location) 'outputs/python314-trial-2026-10-11'
+New-Item -ItemType Directory -Path $trialRoot
+$installer = Join-Path $trialRoot 'python-3.14.8-amd64.exe'
+Invoke-WebRequest https://www.python.org/ftp/python/3.14.8/python-3.14.8-amd64.exe -OutFile $installer
+if ((Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLower() -ne '759be887b96e736a3ca886daf8d575f18fcae1a09efab6902f42d59e8999f8ef') { throw 'Installer hash mismatch' }
+if ((Get-AuthenticodeSignature -LiteralPath $installer).Status -ne 'Valid') { throw 'Installer signature invalid' }
+$installerArgs = @('/quiet', 'InstallAllUsers=0', ('TargetDir=' + $trialRoot + '\python'), 'Include_launcher=0', 'InstallLauncherAllUsers=0', 'PrependPath=0', 'AssociateFiles=0', 'Shortcuts=0', 'Include_test=0', 'Include_doc=0', 'Include_tcltk=0', 'Include_pip=1', 'Include_freethreaded=0', '/log', ($trialRoot + '\install.log'))
+$installProcess = Start-Process -FilePath $installer -ArgumentList $installerArgs -WindowStyle Hidden -Wait -PassThru
+if ($installProcess.ExitCode -notin @(0, 3010)) { throw ('Installer exit ' + $installProcess.ExitCode) }
+.\outputs\python314-trial-2026-10-11\python\python.exe -c "import sys,sysconfig,struct; print(sys.version); assert sys.version_info[:3] == (3,14,8); assert struct.calcsize('P')*8 == 64; assert sys._is_gil_enabled(); assert not sysconfig.get_config_var('Py_GIL_DISABLED')"
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/runtime-env
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/build-env
+.\outputs\python314-trial-2026-10-11\python\python.exe -m venv outputs/python314-trial-2026-10-11/review-env
+```
+
+The recorded install used `--no-index --find-links
+outputs/m0-06-preparation-2026-10-11/cp314-wheel-probe`, reusing prepared wheels.
+To prepare those exact pins on a repeat (network needed), download with the new
+interpreter before the following installs:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\python\python.exe -m pip download --only-binary=:all: --dest outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build.lock -r experiments/workbook/requirements-review.lock
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build.lock
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe -m pip install --no-index --find-links outputs/python314-trial-2026-10-11/wheels -r experiments/workbook/requirements-review.lock
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe -m pip check
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m unittest discover -s tests -v
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe scripts/build_dashboard.py --check
+.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe -m experiments.workbook.bundle_entry --port 8092 --runtime-info
+```
+
+In another terminal at the same root, check the runtime server:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8092 --output outputs/python314-trial-2026-10-11/runtime-browser
+```
+
+Stop only that trial server after its checks (Ctrl+C in its terminal), then use
+one unchanged packaging approach:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe scripts/build_workbook_windows.py --output outputs/python314-trial-2026-10-11/build-original
+New-Item -ItemType Directory -Path outputs/python314-trial-2026-10-11/standalone
+Copy-Item -LiteralPath outputs/python314-trial-2026-10-11/build-original/dist/Ravel-workbook -Destination outputs/python314-trial-2026-10-11/standalone/Ravel-workbook -Recurse
+Set-Location outputs/python314-trial-2026-10-11/standalone/Ravel-workbook
+$env:PYTHONPATH = $null
+$env:PYTHONHOME = $null
+$env:VIRTUAL_ENV = $null
+$env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
+.\Ravel-workbook.exe --port 8093 --runtime-info
+```
+
+Run the browser check in a separate terminal with normal environment variables,
+from `C:\Git\ravel`; the test driver is not an executable dependency:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8093 --output outputs/python314-trial-2026-10-11/bundle-browser
+```
+
+`--runtime-info` must show `frozen: true` and executable/app/fixture/import paths
+inside the copied folder. The trial also byte-compared the bundled
+`_internal/python314.dll` to the verified official installation's DLL and CSS,
+three SVG icons and CSV to source. Stop only this trial bundle after checking.
+Distribute the entire folder for any later review, not just its executable.
+
+Observed environment: standard GIL-enabled CPython **3.14.8**,
+`MSC v.1944 64 bit (AMD64)`; Windows 11 Home **26H2 build 26300.9550**; NiceGUI 3.18.0,
+PyInstaller 6.20.0/hooks 2026.8, Playwright 1.58.0 and installed headless
+**Chrome 154.0.8037.98**.
+All 48 runtime, seven build and four review pin/version checks and all three
+`pip check` runs passed. All **18 unit/tracking tests** and **eight runtime
+browser cases** passed; the original recipe built successfully in about 52 seconds.
+The complete copy contains **69,778,736 bytes (66.55 MiB), 1190 files**; one
+observed startup to HTTP 200 was **2.62 seconds**, not a benchmark.
+All **eight standalone-bundle browser cases passed** as well, covering both
+routes/themes at 1366×657 and 1280×800, local assets, validation/recovery,
+provenance/drafts, fixed previews/counts and canonical save/reload. Both runs
+recorded zero external HTTP/WebSocket attempts and page errors; both server stderr
+logs were empty. Trial servers on 8092/8093 were stopped by verified process
+identity, including their children only. Original port-8080 server PID 15316 was
+preserved and still returned HTTP 200. No native chooser/disconnection check was
+performed in this trial.
+
+The separate diagnostic command below failed on pinned setuptools 65.5.0 with `pkgutil.ImpImporter` absent. This is a
+real tooling limitation despite successful metadata checks; PyInstaller logged the same failure as a nonfatal
+`SetuptoolsInfo` warning and continued. The artifact passes do not establish
+setuptools API compatibility. A candidate setuptools 80.9.0 wheel was prepared
+but not installed. **No pin, candidate lock, recipe or application repair was
+needed for the tested pipeline.** Keep the unsupported import explicit when
+reviewing a future build environment. The existing review script emits a
+SyntaxWarning for a JavaScript `\d` escape; this does not fail its cases. Build
+logs retain the setuptools probe warning and optional hidden-import `tzdata` warning.
+
+```powershell
+.\outputs\python314-trial-2026-10-11\build-env\Scripts\python.exe -c "import setuptools"
+```
+
+Raw installer/install/build logs, environment/version data, browser results,
+DLL/path/asset verification, diagnostic failure, captures and binaries remain in
+ignored `outputs/python314-trial-2026-10-11/`. This is a **same-host** Windows
+trial, not a clean-machine, other-platform, physical-offline, native-chooser or
+redistribution approval. Appearance is unchanged; published screenshots are
+reused. Python 3.11 setup, original locks and historical evidence are preserved;
+M0-06 remains partial, NiceGUI provisional, proposals unadopted and gates unverified.
+Final documentation checks passed: 81 local links/images/anchors, extracted
+PowerShell command syntax, dashboard regeneration/freshness and Git whitespace.
 
 ## View and check the dashboard
 
@@ -662,6 +789,96 @@ isolation. `--check` validates inputs and fails if the generated snapshot is
 stale. Browser interaction and visual review remain separate checks. These
 commands verify project tracking and the workbook configuration/count contracts;
 they do not establish generation or clinical validation or release readiness.
+
+### Python 3.14 candidate build lock
+
+Follow-up to E32 on `experiment/m0-06-python314`, starting at `e0bb48a`.
+PyInstaller 6.20.0's installed `METADATA` explicitly requires
+`setuptools>=42.0.0`; its `utils/hooks/setuptools.py` imports setuptools in an
+isolated probe. It is **not removable as an unused pin**. The original
+65.5.0 `pkgutil.ImpImporter` failure and successful fallback build remain E32
+evidence. The separate [candidate lock](../experiments/workbook/requirements-build-python314-candidate.lock)
+changes only `setuptools==65.5.0` to `setuptools==80.9.0`. The prepared wheel is
+tested here, not accepted as the supported version or a security-reviewed choice.
+Its installed metadata requires Python >=3.9; no latest-version upgrade was attempted.
+See the [dependency inventory](dependency-licenses.md#python-314-candidate-build-dependency)
+for inspected source files and retained notices.
+
+Reproduction from `C:\Git\ravel` (choose a new output folder and unused port on
+repeat; previous logs/environments/binaries must not be overwritten):
+
+```powershell
+Set-Location C:\Git\ravel
+$candidateRoot = Join-Path (Get-Location) 'outputs\python314-setuptools-candidate-2026-10-11'
+$python314 = Join-Path (Get-Location) 'outputs\python314-trial-2026-10-11\python\python.exe'
+& $python314 -m venv "$candidateRoot\build-env"
+$candidatePython = "$candidateRoot\build-env\Scripts\python.exe"
+& $candidatePython -m pip install --no-index --find-links .\outputs\m0-06-preparation-2026-10-11\cp314-wheel-probe --find-links .\outputs\python314-trial-2026-10-11\candidate-wheels -r experiments/workbook/requirements.lock -r experiments/workbook/requirements-build-python314-candidate.lock
+& $candidatePython -m pip check
+& $candidatePython -c "from importlib.metadata import version; from pathlib import Path; locks=[Path('experiments/workbook/requirements.lock'),Path('experiments/workbook/requirements-build-python314-candidate.lock')]; pins=[line.split('==') for lock in locks for line in lock.read_text().splitlines() if '==' in line and not line.startswith('#')]; assert all(version(name)==expected for name,expected in pins); print(len(pins),'exact pins')"
+& $candidatePython -c "import setuptools, altgraph, packaging, pefile, PyInstaller, _pyinstaller_hooks_contrib, win32ctypes, nicegui.scripts.pack; from PyInstaller.utils.hooks.setuptools import setuptools_info; assert setuptools_info.available and setuptools_info.version == (80,9,0); print('build imports and probe passed')"
+& $candidatePython scripts/build_workbook_windows.py --build-lock experiments/workbook/requirements-build-python314-candidate.lock --output "$candidateRoot\build"
+New-Item -ItemType Directory -Path "$candidateRoot\standalone" -ErrorAction Stop
+Copy-Item -LiteralPath "$candidateRoot\build\dist\Ravel-workbook" -Destination "$candidateRoot\standalone\Ravel-workbook" -Recurse
+```
+
+For new prepared wheels, download the unchanged runtime lock plus candidate build
+lock using the isolated interpreter's `pip download --only-binary=:all: -r ...`;
+the actual run used the two existing wheel folders shown above. The recipe's
+default remains `requirements-build.lock`; explicit `--build-lock` is required.
+Three focused tests verify original default acceptance, candidate rejection under
+the default and explicit candidate acceptance. Runtime/application code and pins
+are unchanged: E32's eight runtime browser cases are reused.
+
+Start the copied bundle from its own folder with Python environment variables
+removed and Windows-only PATH as in the preceding trial; use port **8094** and
+`--runtime-info`. Frozen executable/app/fixture and all import paths (now also
+`_internal/setuptools/_vendor`) must stay inside that copied folder. Check the
+five CSS/SVG/CSV assets and `python314.dll` against the unchanged source and
+official 3.14.8 installation, as in E32.
+
+In a dedicated terminal (discard its environment changes when finished):
+
+```powershell
+Set-Location C:\Git\ravel\outputs\python314-setuptools-candidate-2026-10-11\standalone\Ravel-workbook
+$env:PYTHONPATH = $null
+$env:PYTHONHOME = $null
+$env:VIRTUAL_ENV = $null
+$env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"
+.\Ravel-workbook.exe --port 8094 --runtime-info
+```
+
+Run the check from a second terminal with normal environment variables:
+
+```powershell
+.\outputs\python314-trial-2026-10-11\review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8094 --output outputs/python314-setuptools-candidate-2026-10-11/bundle-browser
+```
+
+Use Ctrl+C in the dedicated bundle terminal when finished. The automated trial
+instead verified the recorded executable path before stopping its process tree.
+
+Actual raw evidence is in ignored `outputs/python314-setuptools-candidate-2026-10-11`:
+`candidate-inspection.json`/`imports.log`, `build/build.log`, `bundle-launch.json`,
+`verify_bundle_launch.py`, `bundle-browser/results.json` and cleanup/check logs.
+All **55 exact pins**, `pip check`, eight build-tool imports and the isolated
+setuptools probe passed. The build finished in about **56 seconds** without
+`ImpImporter` or `SetuptoolsInfo: failed to obtain` errors; the optional `tzdata`
+warning remains. Complete copied bundle: **71,204,215 bytes (67.91 MiB), 1,198
+files**, one **2.67-second** HTTP startup observation. Frozen paths/DLL/assets
+passed. Bundle browser and final documentation results are recorded in E33.
+All eight cases passed; browser external HTTP/WebSocket attempts and page errors
+were empty, as was bundle stderr. The existing browser script's invalid-escape
+SyntaxWarning remains (PowerShell records it as a native error even though the
+browser results pass); no application/test-driver behavior repair was needed.
+Only this trial's verified bundle process tree is stopped; preserve port 8080
+and Python 3.11. No appearance change; published screenshots remain current.
+
+Recommendation: review this tested candidate replacement rather than remove a
+declared dependency. Keep original locks/defaults and Python 3.11 until maintainer
+adoption. This does not establish clean-machine, other-platform, physical-offline,
+native-dialog, benchmark, security or redistribution approval. New setuptools
+vendor inclusion still needs artifact/source-obligation mapping. M0-06 partial,
+NiceGUI provisional, proposals unadopted and release gates unchanged.
 
 ## Maintain progress
 
@@ -687,19 +904,17 @@ Preserve historical evidence and its stated scope and limitations.
 
 ## Review documentation
 
-The [README](../README.md) introduces the project; the
-[clinical specification](baseline-specification.md) is the source for its four
-reference cases, and [specification.md](specification.md) defines the accepted
-recipe architecture. The clinical contracts and numeric prerequisites remain
-separate from presentation changes. Examples are specification reference
-expectations, not executed application outputs or independent clinical validation.
-
-Optional presentation check: view the README in a Markdown renderer with
-Mermaid support. Expect four case rows with baseline/change pairs 10/+3, 8/+3,
-null/null and 10/+5, plus one diagram explicitly labelled as planned architecture.
-Follow the local document and license links. This checks presentation and links,
-not clinical correctness. In the dashboard, check filtering, task-link navigation,
-keyboard expansion and visible focus after changes that affect those behaviours.
+The [README](../README.md) introduces Ravel's purpose, two intended workflows,
+current fixture workbook and quickstart. Optional presentation check: view it
+in a Markdown renderer and expect one Dark workbench image, compact rules/example
+workflows, explicitly planned generation, license and AI disclosure. Follow its
+local document/image links; it no longer contains a clinical table or diagram.
+The four reference cases remain in the [clinical specification](baseline-specification.md),
+and [specification.md](specification.md) defines the accepted recipe architecture.
+Those contracts and numeric prerequisites remain separate from presentation;
+examples are expectations, not executed outputs or independent validation.
+In the dashboard, check filtering, task-link navigation, keyboard expansion and
+visible focus after changes that affect those behaviours.
 
 ## Contributor and release preparation
 

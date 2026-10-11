@@ -1,7 +1,7 @@
 # Prototype dependency and license inventory
 
 Inspected **11 October 2026**; scoped to the current Windows workbook experiment,
-not a completed release/legal review. Runtime/build/review versions are unchanged.
+not a completed release/legal review. Established runtime/build/review locks are unchanged; a separate build candidate is recorded below.
 Sources: actual installed `METADATA`, `RECORD`, license/NOTICE files from `.venv`,
 the isolated packaging checkout environment and `outputs/workbook-review-env`.
 Tables cover **48 runtime**, **7 build**, **4 review** pins (**58 distinct**).
@@ -148,5 +148,44 @@ review vendored components and source obligations; decide whether unused assets
 can be omitted safely in a separately tested build; then include required notices
 and source references in the artifact and verify them against its manifest.
 Setuptools' vendored code and PyInstaller runtime hooks need artifact-specific
-review as well. No license-based removal, new package or rebuild was performed.
+review as well. The initial inventory did not perform a license-based removal,
+new package or rebuild; the candidate build follow-up is recorded below.
 M0-07 is partial; R10 and all other release gates remain unverified.
+
+## Python 3.14 candidate build dependency
+
+The [candidate lock](../experiments/workbook/requirements-build-python314-candidate.lock)
+differs only in **setuptools 80.9.0**, replacing 65.5.0 for the isolated trial.
+PyInstaller 6.20.0 installed `METADATA` requires `setuptools>=42.0.0`; its
+`PyInstaller/utils/hooks/setuptools.py` isolated import/probe uses this dependency.
+Removal would violate that requirement. The original lock/table/notices remain
+historical evidence and the default setup. See [trial commands](development.md#python-314-candidate-build-lock).
+
+Inspected actual candidate environment files under
+`outputs/python314-setuptools-candidate-2026-10-11/build-env/Lib/site-packages`:
+`setuptools-80.9.0.dist-info/METADATA` declares Python >=3.9 and MIT;
+`licenses/LICENSE` contains the MIT permission/disclaimer text.
+[Versioned distribution](https://pypi.org/project/setuptools/80.9.0/),
+[tagged source](https://github.com/pypa/setuptools/tree/v80.9.0) and
+[upstream history](https://setuptools.pypa.io/en/stable/history.html#v80-9-0)
+identify the candidate, not a latest-version or adoption claim.
+
+All **24 actual wheel license/notice files** are appended to
+[third-party-notices.txt](third-party-notices.txt) with source paths and original
+SHA-256 hashes, preserving prior sections. Besides the top-level MIT license,
+these cover vendored autocommand, backports.tarfile, importlib_metadata, inflect,
+jaraco collections/context/functools/text, more_itertools, packaging, platformdirs,
+tomli, typeguard, typing_extensions, wheel (including its vendored packaging),
+zipp and two configuration notices. Retain each component's supplied conditions,
+copyright/disclaimer and applicable Apache license/NOTICE attribution. The
+configuration notices identify MPL-2.0 validate-pyproject schemas and BSD-3-Clause
+fastjsonschema-derived code; retain those notices and review MPL corresponding
+source obligations for the files actually shipped. Do not
+flatten all vendored terms to setuptools' MIT classification.
+
+The candidate bundle now includes a setuptools vendor import path. Collection of
+wheel notices does not establish that all embedded/vendor files have been mapped,
+that source obligations are discharged or that notices accompany the artifact.
+The recipe still does not copy this notice collection. Existing frontend/native
+gaps remain; redistribution approval and R10 remain unverified. No runtime/review
+pin change or general dependency upgrade is proposed.
