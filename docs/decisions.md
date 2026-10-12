@@ -386,3 +386,16 @@ is Instrument Sans SemiBold. The master drawing and pixel-fitted 32, 24 and 16 p
 drawings form one set. The mark has no closed letterform or ring, which keeps it
 distinct from the R language logo. Files, colours, geometry and export checks
 are in [brand/README.md](../brand/README.md).
+
+## Fichte interface palette review (12 October 2026)
+
+After accepting PR #6 branding, the maintainer requested a separate interface
+palette task. Shared tokens start from `#3A6B57` in Light and `#8DBAA2` in Dark;
+related text/background shades provide normal, hover and pressed states.
+Selection uses a Fichte edge as well as its tinted background, and focus keeps
+the existing keyboard rings. Neutral surfaces, geometry, validation colours and
+editor callbacks stay unchanged. The logo artwork remains canonical in `brand/`.
+On 12 October 2026, the maintainer accepted the palette and actual captures in
+PR #7 at `220d730a93393ad9f11e0b43b2cbd45fb4d4e009`. This does not adopt
+NiceGUI, complete M0-06 or change release gates; outstanding native/platform
+reviews remain required.
