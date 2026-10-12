@@ -1070,7 +1070,13 @@ could not determine the Windows browser URL confidently enough to enforce its
 policy. Native tab appearance under both browser themes remains for maintainer
 review; automated favicon pixel checks do not establish native tab inspection.
 
-Visual review procedure (the required action is recorded in progress.json):
+On 12 October 2026, the maintainer approved the branding shown in PR #6 at
+`3db208e86dd147a06942c4cfde5c9edcd1700efa` and authorized its merge. This
+acceptance retains E35 browser/capture evidence and does not establish native
+tab inspection, adopt NiceGUI or complete M0-06. Broader workbook and environment
+review remains open.
+
+Retained visual checks and remaining native-tab review (recorded in progress.json):
 
 1. Launch with the README quickstart and open `/sample` and `/scratch`. Switch
    app themes: expect the approved native-size mark, the existing layout and blue
@@ -1081,7 +1087,8 @@ Visual review procedure (the required action is recorded in progress.json):
    the graphite/Fichte favicon. In a Dark browser theme, reload a fresh tab with
    the app in Light; expect light ink/Fichte light. The app's selector must not
    choose the favicon. Record actual tab appearance and visual accept/change
-   feedback on draft PR #6. This does not adopt NiceGUI or complete M0-06.
+   feedback separately from the accepted PR #6 branding. This does not adopt
+   NiceGUI or complete M0-06.
 
 Recorded checks from the repository root, against the isolated review server:
 
