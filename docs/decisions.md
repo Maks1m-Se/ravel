@@ -395,5 +395,7 @@ related text/background shades provide normal, hover and pressed states.
 Selection uses a Fichte edge as well as its tinted background, and focus keeps
 the existing keyboard rings. Neutral surfaces, geometry, validation colours and
 editor callbacks stay unchanged. The logo artwork remains canonical in `brand/`.
-The proposed palette and actual captures require visual approval of the separate
-draft PR; this does not adopt NiceGUI, complete M0-06 or change release gates.
+On 12 October 2026, the maintainer accepted the palette and actual captures in
+PR #7 at `220d730a93393ad9f11e0b43b2cbd45fb4d4e009`. This does not adopt
+NiceGUI, complete M0-06 or change release gates; outstanding native/platform
+reviews remain required.

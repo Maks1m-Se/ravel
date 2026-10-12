@@ -1108,8 +1108,14 @@ or public binary was published.
 PR #6 branding was accepted at `3db208e86dd147a06942c4cfde5c9edcd1700efa`
 and merged as `90e5f59de5d3459a70c0654cd9dc07d1d1ec6d7c`. The separate
 `ui/fichte-palette` task applies Fichte to the interface through shared tokens
-in `workbook.css`; it requires its own visual approval. The artwork remains
-unchanged. Neutral surfaces, layout, validation colours and editor callbacks
+in `workbook.css`. On 12 October 2026, the maintainer accepted the palette in
+PR #7 at `220d730a93393ad9f11e0b43b2cbd45fb4d4e009` and authorized readiness
+and merge initially after 16:30 Europe/Berlin. The maintainer subsequently
+granted an explicit one-time timing exception for immediate PR #7 publication
+and merge; the normal window remains for other work. Acceptance reuses the
+evidence below and does not complete outstanding native/platform reviews or
+adopt NiceGUI.
+The artwork, neutral surfaces, layout, validation colours and editor callbacks
 remain unchanged.
 
 | Interaction token | Light | Dark |
@@ -1129,16 +1135,16 @@ remain. Explicit hover/pressed styles replace Quasar's generic focus overlay;
 keyboard rings remain visible. Help-button hover/pressed borders use Fichte to
 keep their boundaries distinct against the new state backgrounds.
 
-Actual 1366?657 app captures retain Maximum `20` as an unapplied draft, Sample
-origin, and applied Settings `9.8?12.2 ? 0% missing` across the theme change:
-[Light workbook](images/m0-06-fichte-light.png) ?
+Actual 1366×657 app captures retain Maximum `20` as an unapplied draft, Sample
+origin, and applied Settings `9.8–12.2 · 0% missing` across the theme change:
+[Light workbook](images/m0-06-fichte-light.png) ·
 [Dark workbook](images/m0-06-fichte-dark.png).
 The README keeps one actual Dark image. Earlier captures and evidence remain
 at their original paths.
 
 One complete maintained browser run passed all **eight cases** on the existing
 CPython 3.11.0 / NiceGUI 3.18.0 / Playwright 1.58.0 / Chrome 154.0.8037.98
-Windows host: both routes/themes at 1366?657 and 1280?800, state text and
+Windows host: both routes/themes at 1366×657 and 1280×800, state text and
 boundaries, selection, focus, branding, validation, drafts/theme preservation,
 counts and canonical save/reload. No external HTTP/WebSocket attempts or page
 errors were observed. Computed contrast minima include the new states:
@@ -1167,17 +1173,18 @@ The earlier private clean-Windows archive retains its earlier palette. Native
 tab inspection remains unrun; M0-06 stays partial, NiceGUI provisional and release
 gates unchanged.
 
-Required visual review is recorded in `progress.json`'s next action:
+Retained visual try-out for the accepted palette:
 
 1. Launch the README quickstart and open `/sample` and `/scratch` in both app
    themes. Inspect Apply and toolbar actions, selected row/table, active tab,
    links, hover/pressed states and Tab focus. Expect coordinated greens, unchanged
    neutral surfaces/layout and distinct red validation messages.
 2. On `/sample`, set Maximum to `20` without Apply and switch themes. Expect the
-   draft/Sample origin and applied `9.8?12.2` Settings to remain. Set Minimum to
+   draft/Sample origin and applied `9.8–12.2` Settings to remain. Set Minimum to
    `200`, Apply, and expect clear errors/focus; correct to `5` and Apply to recover.
-   Compare the captures and record accept/change feedback on the separate draft
-   palette PR. Keep it draft and unmerged pending approval.
+   Compare the accepted captures above. Remaining native/platform reviews are
+   recorded in `progress.json`'s next action; palette acceptance does not establish
+   those checks or release readiness.
 
 Recorded final browser command, with the source app running on port 8096:
 
