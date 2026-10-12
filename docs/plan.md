@@ -94,6 +94,15 @@ verify text contrast ≥4.5:1 and enabled boundaries/focus ≥3:1 in both themes
 The 10 October seven-check maintainer report applies to the earlier tested build;
 visual acceptance of the aligned build remains a separate required review.
 
+The 12 October Fichte palette follow-up applies the approved greens to shared
+interaction tokens for buttons, selected rows, active tabs, links, hover/pressed
+states and keyboard focus. Preserve neutral surfaces, layout, editor behaviour
+and validation colours. Check normal and state text contrast ≥4.5:1 and control
+boundaries, selection indicators and focus ≥3:1 in both themes; run the maintained
+browser cases and retain actual Light/Dark captures. This separate draft PR
+requires maintainer visual approval and leaves M0-06 partial, NiceGUI provisional
+and all release gates unchanged.
+
 Initial planning allowance from revision 1: roughly 120–180 focused hours, including review, learning, documentation, and packaging. At eight hours per week that is about 15–23 weeks. Adding native macOS validation introduces work not yet estimated; review the budget after the M0 packaging experiment and M1 implementation. Public add-on infrastructure is outside this v0.1 budget. Publish the alpha and use its demonstrated work in applications before the entire plan is finished.
 
 **Clinical specification.** The first rule is: select the last nonmissing biomarker measurement strictly before the first actual dose, within subject and parameter. Calculate change as follow-up value minus baseline in compatible units. Absence of an eligible baseline produces a missing baseline and change with an explicit reason. Ties require a declared rule or a clear error. This is the example project's rule, not a universal clinical convention.

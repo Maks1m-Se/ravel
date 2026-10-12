@@ -1103,3 +1103,88 @@ Use a new build output path on repeat; the recipe preserves existing evidence.
 The private clean-Windows review archive described above remains its earlier
 tested build and does not contain this integration. No updated private archive
 or public binary was published.
+## Fichte interface palette (12 October 2026)
+
+PR #6 branding was accepted at `3db208e86dd147a06942c4cfde5c9edcd1700efa`
+and merged as `90e5f59de5d3459a70c0654cd9dc07d1d1ec6d7c`. The separate
+`ui/fichte-palette` task applies Fichte to the interface through shared tokens
+in `workbook.css`; it requires its own visual approval. The artwork remains
+unchanged. Neutral surfaces, layout, validation colours and editor callbacks
+remain unchanged.
+
+| Interaction token | Light | Dark |
+| --- | --- | --- |
+| Fichte action/link/focus/selection edge | `#3A6B57` | `#8DBAA2` |
+| Strong hover/pressed text | `#2B5543` | `#B2D6C2` |
+| Button background | `#DCEBE3` | `#31533F` |
+| Selected row/menu background | `#E0EDE5` | `#2B4036` |
+| Hover background | `#CBDED2` | `#354D40` |
+| Pressed background | `#B7D1C1` | `#3D5C4B` |
+| Browser text-selection ink | `#FFFFFF` | `#1C2026` |
+
+Buttons, links, active tabs, selected rows/menu items and keyboard rings share
+the theme tokens. The selected field also has a 3 px inset Fichte edge so its
+subtle tint is not the only selection indicator; existing pressed semantics
+remain. Explicit hover/pressed styles replace Quasar's generic focus overlay;
+keyboard rings remain visible. Help-button hover/pressed borders use Fichte to
+keep their boundaries distinct against the new state backgrounds.
+
+Actual 1366?657 app captures retain Maximum `20` as an unapplied draft, Sample
+origin, and applied Settings `9.8?12.2 ? 0% missing` across the theme change:
+[Light workbook](images/m0-06-fichte-light.png) ?
+[Dark workbook](images/m0-06-fichte-dark.png).
+The README keeps one actual Dark image. Earlier captures and evidence remain
+at their original paths.
+
+One complete maintained browser run passed all **eight cases** on the existing
+CPython 3.11.0 / NiceGUI 3.18.0 / Playwright 1.58.0 / Chrome 154.0.8037.98
+Windows host: both routes/themes at 1366?657 and 1280?800, state text and
+boundaries, selection, focus, branding, validation, drafts/theme preservation,
+counts and canonical save/reload. No external HTTP/WebSocket attempts or page
+errors were observed. Computed contrast minima include the new states:
+
+| Check | Required | Light minimum | Dark minimum |
+| --- | --- | --- | --- |
+| Text, including hover/pressed/menu | 4.5:1 | 4.76:1 | 4.69:1 |
+| Enabled control boundaries, including states | 3:1 | 3.41:1 | 3.42:1 |
+| Row/table/tab selection indicators | 3:1 | 5.09:1 | 5.12:1 |
+| Browser text selection | 4.5:1 | 6.14:1 | 7.54:1 |
+| Keyboard focus | 3:1 | 5.09:1 | 5.12:1 |
+
+Focused checks caught a Dark pressed-state link below 4.5:1 and help-button
+state boundaries below 3:1; stronger state text and Fichte state borders fix
+those readings. The earlier interrupted partial browser run is not acceptance
+evidence. Final captures, validation/focus screenshots and raw measurements
+were inspected. Logs/results are retained locally in ignored
+`outputs/fichte-palette-2026-10-12/`.
+
+Nine tracking tests, regenerated dashboard freshness, 99 local documentation
+links/anchors and whitespace checks pass. The owned source review server was
+stopped and port 8096 verified closed. Packaging and dependency pins did
+not change; E35 evidence is reused for unchanged logo/favicon and bundle
+behaviour. No build was rerun, binary published or native-tab inspection claimed.
+The earlier private clean-Windows archive retains its earlier palette. Native
+tab inspection remains unrun; M0-06 stays partial, NiceGUI provisional and release
+gates unchanged.
+
+Required visual review is recorded in `progress.json`'s next action:
+
+1. Launch the README quickstart and open `/sample` and `/scratch` in both app
+   themes. Inspect Apply and toolbar actions, selected row/table, active tab,
+   links, hover/pressed states and Tab focus. Expect coordinated greens, unchanged
+   neutral surfaces/layout and distinct red validation messages.
+2. On `/sample`, set Maximum to `20` without Apply and switch themes. Expect the
+   draft/Sample origin and applied `9.8?12.2` Settings to remain. Set Minimum to
+   `200`, Apply, and expect clear errors/focus; correct to `5` and Apply to recover.
+   Compare the captures and record accept/change feedback on the separate draft
+   palette PR. Keep it draft and unmerged pending approval.
+
+Recorded final browser command, with the source app running on port 8096:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8096 --output outputs/fichte-palette-2026-10-12/browser-final
+```
+
+Palette implementation, verification and review preparation were AI-assisted
+with Codex. Logo creation with Claude and its earlier AI-assisted review remain
+recorded in PR #6 and the existing branding evidence.

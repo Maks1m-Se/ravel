@@ -207,6 +207,80 @@ def contrast(page, selector):
     return readings
 
 
+def interaction_palette(page, theme, *, menu=False):
+    expected = '#3a6b57' if theme == 'Light' else '#8dbaa2'
+    assert page.locator('body').evaluate("e => getComputedStyle(e).getPropertyValue('--fichte').trim()") == expected
+    readings = page.evaluate('''() => {
+        const rgb = c => c.match(/[\\d.]+/g).map(Number).slice(0, 3);
+        const lum = c => rgb(c).map(v => {
+            v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
+        }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+        const ratio = (a, b) => (Math.max(lum(a), lum(b)) + .05) / (Math.min(lum(a), lum(b)) + .05);
+        const bg = e => {
+            while (e) {
+                const c = getComputedStyle(e).backgroundColor;
+                if (!c.endsWith(', 0)')) return c;
+                e = e.parentElement;
+            }
+        };
+        const indicators = [...document.querySelectorAll('.table-button, .active-view, .selected-row td:first-child')].map(e => {
+            const s = getComputedStyle(e);
+            const color = e.matches('.table-button') ? s.borderLeftColor : s.boxShadow.match(/rgba?\\([^)]+\\)/)[0];
+            return {element: e.className || 'selected field cell', color,
+                inside: ratio(color, bg(e)), outside: ratio(color, bg(e.parentElement))};
+        });
+        const selection = getComputedStyle(document.querySelector('body'), '::selection');
+        return {indicators, selection: {fg: selection.color, bg: selection.backgroundColor,
+            ratio: ratio(selection.color, selection.backgroundColor)}};
+    }''')
+    assert readings['selection']['ratio'] >= 4.5, readings
+    assert all(min(r['inside'], r['outside']) >= 3 for r in readings['indicators']), readings
+    readings['states'] = []
+    selectors = ('.q-menu .q-item',) if menu else ('.primary-action', '.home-link', '.action-toolbar button', '.active-view', '.table-button', '.field-button', '.context-help > button')
+    for selector in selectors:
+        target = page.locator(selector).first
+        if not target.count() or not target.is_visible():
+            continue
+        page.mouse.move(0, 0)
+        normal = contrast(page, selector)
+        boundaries = [interaction_boundary(target)]
+        target.hover()
+        hover = contrast(page, selector)
+        boundaries.append(interaction_boundary(target))
+        page.mouse.down()
+        pressed = contrast(page, selector)
+        boundaries.append(interaction_boundary(target))
+        # Release outside the target so probing :active does not invoke its action.
+        page.mouse.move(0, 0)
+        page.mouse.up()
+        readings['states'].append({'selector': selector, 'normal': normal, 'hover': hover, 'pressed': pressed, 'boundaries': boundaries})
+    return readings
+
+
+def interaction_boundary(target):
+    if not target.evaluate("e => e.matches('.primary-action, .context-help > button')"):
+        return None
+    reading = target.evaluate('''e => {
+        const rgb = c => c.match(/[\\d.]+/g).map(Number).slice(0, 3);
+        const lum = c => rgb(c).map(v => {
+            v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
+        }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+        const ratio = (a, b) => (Math.max(lum(a), lum(b)) + .05) / (Math.min(lum(a), lum(b)) + .05);
+        const bg = e => {
+            while (e) {
+                const c = getComputedStyle(e).backgroundColor;
+                if (!c.endsWith(', 0)')) return c;
+                e = e.parentElement;
+            }
+        };
+        const s = e.matches('.primary-action') ? getComputedStyle(e, '::before') : getComputedStyle(e);
+        return {color: s.borderTopColor, width: parseFloat(s.borderTopWidth),
+            inside: ratio(s.borderTopColor, bg(e)), outside: ratio(s.borderTopColor, bg(e.parentElement))};
+    }''')
+    assert reading['width'] >= 1 and min(reading['inside'], reading['outside']) >= 3, reading
+    return reading
+
+
 def unfocused_borders(page):
     keyboard_to(page, page.get_by_role('button', name='Save configuration', exact=True))
     page.mouse.move(0, 0)
@@ -291,12 +365,14 @@ def exercise(page, out, width, height, entry, theme, results):
     results['cases'].append(observations)
     page.goto(results['base_url'] + '/')
     set_theme(page, theme)
+    observations['entry_palette'] = interaction_palette(page, theme)
     activate(page, 'Create from scratch' if entry == 'scratch' else 'Start from a sample')
     name = 'value' if entry == 'scratch' else 'length_mm'
     expect(page.get_by_label('Field name', exact=True)).to_have_value(name)
     expect(page.locator('body')).to_have_class(re.compile('body--' + theme.lower()))
     assert_branding(page, theme)
     observations['branding'] = 'native 32-px theme mark; local SVG favicon and ICO fallback'
+    observations['workbook_palette'] = interaction_palette(page, theme)
     for title in ['Configuration', 'Fields', 'Properties', 'Counts']:
         check_help(page, title)
     expect(page.locator('.action-icon')).to_have_count(3)
@@ -338,6 +414,7 @@ def exercise(page, out, width, height, entry, theme, results):
     page.keyboard.press('Enter')  # the field-type selector is focused
     popup_ready(page, '.q-menu')
     observations['contrast'] += contrast(page, '.q-menu .q-item')
+    observations['menu_palette'] = interaction_palette(page, theme, menu=True)
     page.screenshot(path=out / f'{prefix}-menu.png')
     page.keyboard.press('Escape')
     expect(page.locator('.q-menu')).to_be_hidden()

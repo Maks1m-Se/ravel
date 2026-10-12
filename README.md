@@ -10,7 +10,7 @@ current implementation is a fixture-based workbook prototype.**
 
 **Compose the data you need.**
 
-![Ravel Dark workbench showing sample fields, applied settings and an unfinished edit](docs/images/m0-06-branding-dark.png)
+![Ravel Dark workbench showing Fichte controls, sample fields, applied settings and an unfinished edit](docs/images/m0-06-fichte-dark.png)
 
 ## Intended workflows
 
