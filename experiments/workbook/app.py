@@ -10,7 +10,11 @@ from . import config as model
 
 
 CSS = Path(__file__).with_name("workbook.css").read_text(encoding="utf-8")
+BRAND = Path(__file__).resolve().parents[2] / "brand"
 app.add_static_files("/workbook-icons", Path(__file__).with_name("icons"))
+app.add_static_files("/ravel-brand", BRAND / "svg")
+app.add_static_file(url_path="/favicon.svg", local_file=BRAND / "favicon/favicon.svg")
+app.add_static_file(url_path="/favicon.ico", local_file=BRAND / "favicon/favicon.ico")
 
 
 def action_icon(name):
@@ -45,13 +49,21 @@ def context_help(title, text):
 
 def chrome(theme="dark"):
     ui.add_css(CSS)
+    ui.add_head_html('<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">')
     dark = ui.dark_mode(theme != "light")
     with ui.element("header").classes("toolbar") as toolbar:
-        ui.label("R").classes("mark")
+        mark = ui.element("img").props(
+            f'src=/ravel-brand/ravel-mark-32-{"light" if theme == "light" else "dark"}.svg '
+            'width=32 height=32 alt="" aria-hidden=true').classes("mark")
         ui.label("Ravel").classes("brand-name")
         ui.label("Prototype").classes("muted edition")
+
+        def change_theme(event):
+            dark.set_value(event.value == "Dark")
+            mark.props(f'src=/ravel-brand/ravel-mark-32-{event.value.lower()}.svg')
+
         theme_choice = ui.select(["Light", "Dark"], value="Light" if theme == "light" else "Dark",
-                                 label="Theme", on_change=lambda e: dark.set_value(e.value == "Dark")).props(
+                                 label="Theme", on_change=change_theme).props(
                                      "outlined dense options-dense").classes("theme-select")
     return toolbar, theme_choice
 
@@ -456,4 +468,5 @@ def workbook(entry: str, theme: str = "dark"):
 
 if __name__ == "__main__":
     ui.run(host="127.0.0.1", port=8080, title="Ravel | Workbook experiment",
+           favicon=BRAND / "favicon/favicon.ico",
            dark=True, reload=False, show=False, prod_js=True, on_air=False)

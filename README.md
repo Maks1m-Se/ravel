@@ -1,4 +1,8 @@
-# Ravel
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="brand/lockup/ravel-lockup-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="brand/lockup/ravel-lockup-light.svg">
+  <img src="brand/lockup/ravel-lockup-light.svg" alt="Ravel" width="225" height="64">
+</picture>
 
 Ravel is an open-source tool for composing reproducible synthetic test datasets
 from explicit rules or examples. **Dataset generation is still planned; the
@@ -6,7 +10,7 @@ current implementation is a fixture-based workbook prototype.**
 
 **Compose the data you need.**
 
-![Ravel Dark workbench showing sample fields, applied settings and an unfinished edit](docs/images/m0-06-workbench-dark.png)
+![Ravel Dark workbench showing sample fields, applied settings and an unfinished edit](docs/images/m0-06-branding-dark.png)
 
 ## Intended workflows
 

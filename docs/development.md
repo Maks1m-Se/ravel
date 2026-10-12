@@ -538,7 +538,8 @@ The single approach uses the installed [NiceGUI 3.18.0 packaging wrapper](https:
 with [PyInstaller one-folder mode](https://pyinstaller.org/en/v6.20.0/operating-mode.html#bundling-to-one-folder).
 The [build recipe](../scripts/build_workbook_windows.py) verifies the runtime and
 [separate build lock](../experiments/workbook/requirements-build.lock), includes
-CSS/icons/fixture data and saves the command/log/spec under a new output directory.
+CSS/icons/fixture data and the runtime marks/favicons from canonical `brand/`,
+and saves the command/log/spec under a new output directory.
 It directs user-site and PyInstaller cache paths into that directory. The pinned
 wrapper calls `pyinstaller` by name on Windows and does not propagate its exit
 status; the recipe supplies the environment's Scripts path and checks artifacts.
@@ -975,7 +976,8 @@ Preserve historical evidence and its stated scope and limitations.
 
 The [README](../README.md) introduces Ravel's purpose, two intended workflows,
 current fixture workbook and quickstart. Optional presentation check: view it
-in a Markdown renderer and expect one Dark workbench image, compact rules/example
+in a Markdown renderer and expect one theme-appropriate Ravel lockup, one actual
+Dark workbench image, compact rules/example
 workflows, explicitly planned generation, license and AI disclosure. Follow its
 local document/image links; it no longer contains a clinical table or diagram.
 The four reference cases remain in the [clinical specification](baseline-specification.md),
@@ -1004,3 +1006,100 @@ requires maintainer review before adoption; the working environment is unchanged
 required next action. The maintainer accepted residual email discoverability in
 retained GitHub history; the [decision record](decisions.md) preserves that
 acceptance and the earlier findings without claiming complete removal.
+
+## Reviewed branding integration (11 October 2026)
+
+The workbook uses the approved `ravel-mark-32-light.svg` and
+`ravel-mark-32-dark.svg` at their native 32 px size. App theme changes update the
+image source alongside dark mode without rebuilding the editor. The SVG favicon
+uses the browser's `prefers-color-scheme`, independently of the app's Theme
+selector; the supplied ICO is the fallback. Both favicon routes precede the
+workbook's catch-all route. Required assets are served locally from canonical
+`brand/`; the Windows recipe includes the same four files under `_internal/brand`
+and rejects incomplete bundles. Artwork, blue accents, validation colours,
+configuration logic and layout are preserved.
+
+The README replaces its text title with a theme-appropriate outlined wordmark
+lockup and keeps one refreshed Dark workbook image. These actual 1366×657
+captures show the sample route with Maximum `20` still a draft:
+[Light workbook](images/m0-06-branding-light.png) ·
+[Dark workbook](images/m0-06-branding-dark.png).
+Older screenshots and their historical evidence remain unchanged.
+
+Verification on the existing Windows host:
+
+- One complete maintained browser run passed all **eight cases** on the integrated
+  CPython 3.11.0 / NiceGUI 3.18.0 app, with Playwright 1.58.0 and Chrome
+  154.0.8037.98: both routes/themes at 1366×657 and 1280×800, native-size local
+  marks, favicon links, validation, drafts, theme preservation, focus, counts and
+  canonical save/reload. No external HTTP/WebSocket attempts or page errors.
+- A separate **eight-case matrix** checked both routes and app themes against
+  light/dark browser colour schemes. All 16×16 SVG favicon pixels match the
+  expected palette/geometry; app theme changes preserve both favicon pixels and
+  editor drafts. Canonical mark/SVG/ICO HTTP responses match source bytes.
+- All **four affected build tests** passed, including rejection of a missing
+  favicon. The existing isolated CPython 3.14.8 / setuptools 80.9.0 candidate
+  environment built the updated recipe with its explicit candidate lock. Defaults
+  and dependency pins remain unchanged. Only the existing optional `tzdata`
+  hidden-import warning remains.
+- The full **1202-file** bundle was copied and launched from its own folder with
+  Python environment variables removed and Windows-only PATH. Frozen import paths
+  stay inside the copy; the four brand assets match canonical source bytes.
+  Its local asset responses and all **eight branding matrix cases** passed.
+  The full maintained suite was run once against the source app; unchanged
+  configuration-unit and E33 bundle evidence retain their original scope. Native
+  dialogs, physical-offline and clean-machine checks were not rerun or newly
+  claimed here.
+- Nine tracking tests, dashboard regeneration/freshness, 97 local documentation,
+  image and HTML asset links/anchors, and Git whitespace checks passed. Canonical
+  artwork, model/fixtures/locks/plan/decisions, historical screenshot bytes and
+  E1–E34 evidence/status records were checked unchanged.
+
+Initial ICO routing returned HTML and was corrected before the complete browser
+run and final build; the interrupted partial run and superseded build are not
+acceptance evidence. The focused draft comparison needed to wait for the draft
+indicator before measuring state; the final matrix passed. Raw logs/results,
+focused review drivers and binaries remain ignored under
+`outputs/branding-integration-2026-10-11/`.
+Both owned review ports closed after stopping the servers. Source server output
+collected at Ctrl+C shutdown included an asyncio pipe `ConnectionResetError`
+(`[WinError 10054]`); this was separate from the passing browser cases.
+
+Native browser-tab visual inspection was stopped by Computer Use because it
+could not determine the Windows browser URL confidently enough to enforce its
+policy. Native tab appearance under both browser themes remains for maintainer
+review; automated favicon pixel checks do not establish native tab inspection.
+
+On 12 October 2026, the maintainer approved the branding shown in PR #6 at
+`3db208e86dd147a06942c4cfde5c9edcd1700efa` and authorized its merge. This
+acceptance retains E35 browser/capture evidence and does not establish native
+tab inspection, adopt NiceGUI or complete M0-06. Broader workbook and environment
+review remains open.
+
+Retained visual checks and remaining native-tab review (recorded in progress.json):
+
+1. Launch with the README quickstart and open `/sample` and `/scratch`. Switch
+   app themes: expect the approved native-size mark, the existing layout and blue
+   controls. On `/sample`, change Maximum to `20` without Apply, then switch
+   themes: expect the draft and Sample origin to stay while Settings remains
+   `9.8–12.2 · 0% missing`. Compare the actual captures above.
+2. In a browser using a Light theme, inspect the tab with the app in Dark; expect
+   the graphite/Fichte favicon. In a Dark browser theme, reload a fresh tab with
+   the app in Light; expect light ink/Fichte light. The app's selector must not
+   choose the favicon. Record actual tab appearance and visual accept/change
+   feedback separately from the accepted PR #6 branding. This does not adopt
+   NiceGUI or complete M0-06.
+
+Recorded checks from the repository root, against the isolated review server:
+
+```powershell
+.\.venv\Scripts\python.exe -m experiments.workbook.bundle_entry --port 8096
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8096 --output outputs/branding-integration-2026-10-11/browser-final
+python -m unittest discover -s tests -p test_workbook_build.py -v
+.\outputs\python314-setuptools-candidate-2026-10-11\build-env\Scripts\python.exe scripts/build_workbook_windows.py --build-lock experiments/workbook/requirements-build-python314-candidate.lock --output outputs/branding-integration-2026-10-11/build-final
+```
+
+Use a new build output path on repeat; the recipe preserves existing evidence.
+The private clean-Windows review archive described above remains its earlier
+tested build and does not contain this integration. No updated private archive
+or public binary was published.

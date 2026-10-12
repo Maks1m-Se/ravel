@@ -377,3 +377,12 @@ Recommend this tested replacement for maintainer review, not adoption of Python
 Python 3.11 environment and all established locks remain. Runtime browser evidence
 is reused because app/runtime pins are unchanged. M0-06 remains partial, NiceGUI
 provisional, environment proposals unadopted and release gates unverified.
+
+## Logo (11 October 2026)
+
+The maintainer adopted the threaded cell mark: five horizontal threads carry a
+3 × 5 cell pattern, the middle row is Fichte green (`#3A6B57`), and the wordmark
+is Instrument Sans SemiBold. The master drawing and pixel-fitted 32, 24 and 16 px
+drawings form one set. The mark has no closed letterform or ring, which keeps it
+distinct from the R language logo. Files, colours, geometry and export checks
+are in [brand/README.md](../brand/README.md).
