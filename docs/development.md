@@ -65,8 +65,8 @@ recipe schema. Setting origins record defaults, sample suggestions and user
 overrides relative to the original values. Save before leaving the page or
 closing/restarting the server: there is no automatic persistence.
 
-The compact workbench has a Light/Dark selector, fixed panes and Fields/Preview
-tabs. Badges beside each setting show the applied origin: **Default**, **Sample**
+The compact workbench has a Light/Dark selector, a resizable Properties boundary
+and Fields/Preview tabs. Badges beside each setting show the applied origin: **Default**, **Sample**
 or **Edited**. A separate **Draft** marker and **Unapplied field edits** state
 identify unfinished edits; badges do not relabel drafts as applied. The canonical
 JSON origins remain `default`, `sample suggestion` and `user override`. Output
@@ -1195,3 +1195,119 @@ Recorded final browser command, with the source app running on port 8096:
 Palette implementation, verification and review preparation were AI-assisted
 with Codex. Logo creation with Claude and its earlier AI-assisted review remain
 recorded in PR #6 and the existing branding evidence.
+
+## Workspace ergonomics (13 October 2026)
+
+This bounded task starts from clean `main` at the PR #7 merge
+`5b7464a8c2b97219aae4bde19726d02c637663c2`, verified against GitHub.
+The maintainer's priority is that visual quality and UX remain acceptance
+criteria throughout development. The new interaction requires its own visual
+review; M0-06 remains partial and NiceGUI provisional.
+
+Properties defaults to **312 px**. Drag its divider left to enlarge it, or Tab
+to the divider and use the keyboard. A visible Fichte grip, focus ring, nearby
+guidance and toolbar **Reset layout** make the interaction discoverable.
+
+| Action | Result |
+| --- | --- |
+| Left / Right | Widen / narrow Properties by 10 px |
+| Shift + Left / Right | Adjust by 40 px |
+| Home / End | Minimum / maximum Properties width |
+| Escape during drag | Cancel that drag and restore its starting width |
+| Reset layout | Restore the 312 px default without changing edits |
+
+Properties is limited to **300–560 px**, further constrained by available space.
+The central workspace keeps at least **360 px** at the tested laptop sizes;
+the existing narrower-width rule uses 320 px below 1100 px. The new divider is
+10 px wide, so the default remains close to the accepted arrangement. Table
+labels/settings wrap within their columns, origin/draft metadata can wrap, and
+Properties continues to scroll for expanded explanations. Apply is reachable
+with the keyboard. No full docking, generation or dependency changes are added.
+
+The divider uses a focusable vertical ARIA separator, current/min/max width,
+readable value text, a controlled-pane reference and visible help, informed by
+the [WAI window-splitter guidance](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/).
+There is no collapse action: the minimum keeps Properties usable. This is not
+a screen-reader or complete accessibility audit.
+
+Ctrl/Alt/Meta arrow shortcuts are not consumed by the divider; resizing uses
+the documented unmodified/Shift keys.
+
+Layout width belongs to the current workspace DOM. Resizing/reset does not
+replace editor controls or call model validation/application. It survives app
+theme and Fields/Preview changes, and is absent from saved configuration JSON.
+Opening a new page or replacing the workbook through JSON reload starts at the
+default width; this is presentation behaviour, not a recipe format change.
+
+Actual sample-app captures use the same Maximum `20` draft, applied
+`9.8–12.2 · 0% missing` Settings and Sample origin. Before is the accepted
+312 px layout; after has Properties enlarged to 480 px:
+
+| Theme | Before | After |
+| --- | --- | --- |
+| Light | [Actual before](images/m0-06-ergonomics-before-light.png) | [Actual after](images/m0-06-ergonomics-after-light.png) |
+| Dark | [Actual before](images/m0-06-ergonomics-before-dark.png) | [Actual after](images/m0-06-ergonomics-after-dark.png) |
+
+The README keeps one actual Dark image of this interaction. Historical captures
+and their evidence remain unchanged. Additional 1280×800, error, focus and
+long-name captures are retained locally in ignored
+`outputs/workspace-ergonomics-2026-10-13/`.
+
+Verification on the existing Windows host:
+
+- A four-case before walk covered field editing, distinct draft/applied origin,
+  theme preservation and range recovery at both laptop sizes and themes.
+- **One complete maintained browser run passed all eight cases** on CPython
+  3.11.0 / NiceGUI 3.18.0 / Playwright 1.58.0 / Chrome 155.0.8059.40: both routes,
+  themes and 1366×657 / 1280×800 viewports. Added assertions exercise drag,
+  keyboard/Shift steps, limits, cancellation, Reset layout, valid/invalid edit
+  preservation, view/theme changes, visible errors/essential controls and
+  byte-identical JSON after resize. Existing validation, immediate focus,
+  provenance, counts, branding and canonical save/reload assertions passed.
+  No external HTTP/WebSocket attempts or page errors were recorded.
+- Focused checks covered a 38-character invented field name at maximum width,
+  pointer limits, unaltered JSON and keyboard access to Apply with Assumptions
+  expanded. The initial stress fixture exceeded the existing 40-character name
+  limit and was shortened before the final checks; it was not an app failure.
+- Minimum Light/Dark contrast: text **4.76 / 4.69**, enabled boundaries
+  **3.41 / 3.42**, selection/focus **5.09 / 5.12**. New divider grip contrast
+  across normal/hover/drag states is at least **3.77 / 3.42**. All meet the
+  existing 4.5:1 text and 3:1 boundary/selection/focus requirements.
+- Nine tracking tests, dashboard freshness, 103 local documentation links/anchors
+  and Git whitespace checks passed. The owned review server is stopped after
+  verification. A preceding maintained run passed before final keyboard review
+  added the modifier guard; its raw results are retained, with the final run in
+  `browser-final-reviewed/`. The model, fixtures, clinical contracts, accepted
+  palette/artwork, locks and packaging recipe remain unchanged. E35's unaffected packaging
+  evidence is reused within its original scope; no updated bundle was built or
+  published. Native tab/dialog/keyboard, screen-reader, clean-machine,
+  other-browser/platform and broader environment reviews remain outstanding;
+  release gates are unchanged.
+
+Required maintainer try-out is recorded in `progress.json`'s next action:
+
+1. Launch the README quickstart; inspect `/sample` and `/scratch` at both laptop
+   sizes in Light and Dark. On `/sample`, change Maximum to `20` without Apply.
+   Drag left to widen Properties: expect the same selected field, Sample origin,
+   Draft marker and applied `9.8–12.2` Settings, with readable controls and messages.
+2. Tab to the divider and check its visible focus. Try arrows, Shift, Home/End
+   and Reset layout; expect the widths above and unchanged edits. Switch themes
+   and Fields/Preview; the chosen width and editor state must survive.
+3. Set Minimum to `200`, Apply, then resize/reset and switch views/themes. Expect
+   complete errors and retained drafts. Correct Minimum to `5`, Apply and
+   save/reload JSON. Expect Edited origins for applied overrides and no layout
+   setting in the file; JSON reload starts with the default layout. Compare the
+   actual captures and record accept/change feedback. Keep the new PR draft
+   and unmerged for review.
+
+Recorded maintained check against the isolated source server:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8096 --output outputs/workspace-ergonomics-2026-10-13/browser-final-reviewed
+```
+
+Implementation, interaction/contrast checks, captures and documentation were
+AI-assisted with Codex. Local preparation was left uncommitted during the Berlin
+restricted window. On 13 October 2026, the maintainer explicitly authorized
+immediate publication of this task as a separate timing exception. The PR stays
+draft and unmerged for visual/UX review; the normal window remains for other work.

@@ -359,6 +359,88 @@ def check_help(page, title):
     page.mouse.move(0, 0)
 
 
+def properties_width(page, width):
+    divider = page.get_by_role('separator', name='Properties', exact=True)
+    expect(divider).to_have_attribute('aria-valuenow', str(width))
+    expect(divider).to_have_attribute('aria-valuetext', f'Properties {width} pixels')
+    assert abs(page.locator('.properties').bounding_box()['width'] - width) < 1
+    assert page.locator('#' + divider.get_attribute('aria-controls')).count() == 1
+    assert page.locator('#' + divider.get_attribute('aria-describedby')).is_visible()
+    assert page.locator('.sheet').bounding_box()['width'] >= 360
+    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+
+
+def drag_divider(page, distance):
+    box = page.get_by_role('separator', name='Properties', exact=True).bounding_box()
+    x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.move(x - distance, y, steps=8)
+    page.mouse.up()
+
+
+def workspace_layout(page, out, prefix, theme):
+    before = theme_state(page)
+    applied = page.locator('.definition-table').inner_text()
+    divider = page.get_by_role('separator', name='Properties', exact=True)
+    properties_width(page, 312)
+    keyboard_to(page, divider)
+    focus = assert_focus_style(page, divider)
+    page.screenshot(path=out / f'{prefix}-divider-focus.png')
+    for modifier in ['Control', 'Meta']:
+        page.keyboard.press(f'{modifier}+ArrowLeft')
+        properties_width(page, 312)
+    divider.dispatch_event('keydown', {'key': 'ArrowLeft', 'altKey': True})
+    properties_width(page, 312)
+    for key, width in [('ArrowLeft', 322), ('Shift+ArrowLeft', 362), ('ArrowRight', 352),
+                       ('End', 560), ('ArrowLeft', 560), ('Home', 300), ('ArrowRight', 300)]:
+        page.keyboard.press(key)
+        properties_width(page, width)
+        assert theme_state(page) == before
+        assert page.locator('.definition-table').inner_text() == applied
+        # Complete inputs/labels, separate origins/drafts and both errors remain
+        # inside the scrollable pane; check errors before navigating to Apply.
+        for label in ['Field name', 'Type', 'Minimum', 'Maximum', 'Missing %']:
+            expect(page.get_by_label(label, exact=True)).to_be_in_viewport(ratio=1)
+        for error in page.locator('.properties .q-field--error [role=alert]').all():
+            expect(error).to_be_in_viewport(ratio=1)
+        expect(page.get_by_role('button', name='Apply field', exact=True)).to_be_in_viewport(ratio=1)
+    drag_divider(page, 180)
+    properties_width(page, 480)
+    assert theme_state(page) == before
+    box = divider.bounding_box()
+    page.mouse.move(box['x'] + 5, box['y'] + box['height'] / 2)
+    page.mouse.down()
+    page.mouse.move(box['x'] - 65, box['y'] + box['height'] / 2)
+    page.keyboard.press('Escape')
+    page.mouse.up()
+    properties_width(page, 480)
+    assert_theme_round_trip(page, theme)
+    properties_width(page, 480)
+    select_view(page, 'Preview')
+    properties_width(page, 480)
+    select_view(page, 'Fields')
+    assert theme_state(page) == before
+    assert page.locator('.definition-table').inner_text() == applied
+    page.screenshot(path=out / f'{prefix}-expanded-properties.png')
+    activate(page, 'Reset layout')
+    reset_focus = assert_focus_style(page, page.get_by_role('button', name='Reset layout', exact=True))
+    properties_width(page, 312)
+    assert theme_state(page) == before
+    assert page.locator('.definition-table').inner_text() == applied
+    text = contrast(page, '.layout-hint, .action-toolbar button')
+    grip = page.locator('.divider-grip').evaluate('''e => {
+        const lum = c => c.match(/[\\d.]+/g).slice(0, 3).map(Number).map(v => {
+            v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
+        }).reduce((s, v, i) => s + v * [.2126, .7152, .0722][i], 0);
+        const a = lum(getComputedStyle(e).backgroundColor), b = lum(getComputedStyle(e.parentElement).backgroundColor);
+        return (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+    }''')
+    assert grip >= 3, grip
+    return {'pointer_keyboard_limits_cancel_reset': 'passed', 'invalid_edit_theme_view_preservation': 'passed',
+            'text': text, 'grip_contrast': grip, 'focus': [focus, reset_focus]}
+
+
 def exercise(page, out, width, height, entry, theme, results):
     prefix = f'{width}x{height}-{entry}-{theme.lower()}'
     observations = {'viewport': [width, height], 'entry': entry, 'theme': theme, 'errors': [], 'focus': []}
@@ -432,6 +514,7 @@ def exercise(page, out, width, height, entry, theme, results):
     expect(page.get_by_label('Minimum', exact=True)).to_have_value('200')
     page.screenshot(path=out / f'{prefix}-range-error.png')
     observations['contrast'] += contrast(page, '.q-field--error [role=alert]')
+    observations['workspace_layout'] = workspace_layout(page, out, prefix, theme)
     assert_theme_round_trip(page, theme)
     type_value(page, 'Minimum', '5')
     activate(page, 'Apply field')
@@ -527,6 +610,13 @@ def exercise(page, out, width, height, entry, theme, results):
     observations['atomic_save_retry'] = 'passed'
     assert_theme_round_trip(page, theme)
     assert save_json(page, out / f'{prefix}-theme-saved.json') == saved
+    drag_divider(page, 168)
+    properties_width(page, 480)
+    assert save_json(page, out / f'{prefix}-layout-saved.json') == saved
+    assert (out / f'{prefix}-layout-saved.json').read_bytes() == saved_path.read_bytes()
+    observations['layout_separate_from_configuration'] = 'byte-identical JSON after resize'
+    activate(page, 'Reset layout')
+    properties_width(page, 312)
     observations['unfocused_borders'] += unfocused_borders(page)
 
     # Import errors must preserve both drafts and the applied provenance.

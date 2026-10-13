@@ -18,6 +18,10 @@ This document defines proposed release criteria. Nothing here is a claim that so
 
 Work one reviewable task at a time. GitHub Issues may hold discussions, bug reports, and linked implementation tasks; avoid a separately maintained status board. Track milestone and task status in `docs/progress.json`. A separate website can wait; the README and a working release are the first public presentation.
 
+The maintainer's priority is that **visual quality and UX are acceptance criteria
+throughout development**. Review user-facing work with actual app captures and a
+short try-out alongside meaningful technical checks.
+
 **First-release boundaries.**
 
 | Include in v0.1 | Schedule after v0.1 |
@@ -102,6 +106,17 @@ boundaries, selection indicators and focus ≥3:1 in both themes; run the mainta
 browser cases and retain actual Light/Dark captures. This separate draft PR
 requires maintainer visual approval and leaves M0-06 partial, NiceGUI provisional
 and all release gates unchanged.
+
+The 13 October workspace-ergonomics task adds one resizable boundary between the
+central workspace and Properties, keyboard adjustment, sensible width limits and
+a visible Reset layout action. Preserve the accepted Fichte workbench, a close
+default arrangement, readable labels/origins/drafts/errors and reachable Apply
+at 1366×657 and 1280×800 in both themes. Layout state stays separate from saved
+configuration; drafts, selection, validation and applied settings survive layout,
+theme and Fields/Preview changes. Maintain text contrast ≥4.5:1 and enabled
+boundaries/selection/focus ≥3:1, run the maintained browser cases and retain
+before/after captures for maintainer review. Full docking, generation changes and
+dependency changes remain outside this bounded task; M0-06 stays partial.
 
 Initial planning allowance from revision 1: roughly 120–180 focused hours, including review, learning, documentation, and packaging. At eight hours per week that is about 15–23 weeks. Adding native macOS validation introduces work not yet estimated; review the budget after the M0 packaging experiment and M1 implementation. Public add-on infrastructure is outside this v0.1 budget. Publish the alpha and use its demonstrated work in applications before the entire plan is finished.
 
