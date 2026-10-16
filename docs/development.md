@@ -65,8 +65,8 @@ recipe schema. Setting origins record defaults, sample suggestions and user
 overrides relative to the original values. Save before leaving the page or
 closing/restarting the server: there is no automatic persistence.
 
-The compact workbench has a Light/Dark selector, fixed panes and Fields/Preview
-tabs. Badges beside each setting show the applied origin: **Default**, **Sample**
+The compact workbench has a Light/Dark selector, a resizable Properties boundary
+and Fields/Preview tabs. Badges beside each setting show the applied origin: **Default**, **Sample**
 or **Edited**. A separate **Draft** marker and **Unapplied field edits** state
 identify unfinished edits; badges do not relabel drafts as applied. The canonical
 JSON origins remain `default`, `sample suggestion` and `user override`. Output
@@ -1195,3 +1195,242 @@ Recorded final browser command, with the source app running on port 8096:
 Palette implementation, verification and review preparation were AI-assisted
 with Codex. Logo creation with Claude and its earlier AI-assisted review remain
 recorded in PR #6 and the existing branding evidence.
+
+## Workspace ergonomics (13 October 2026)
+
+This bounded task starts from clean `main` at the PR #7 merge
+`5b7464a8c2b97219aae4bde19726d02c637663c2`, verified against GitHub.
+The maintainer's priority is that visual quality and UX remain acceptance
+criteria throughout development. The new interaction requires its own visual
+review; M0-06 remains partial and NiceGUI provisional.
+
+Properties defaults to **312 px**. Drag its divider left to enlarge it, or Tab
+to the divider and use the keyboard. A visible Fichte grip, focus ring, nearby
+guidance and toolbar **Reset layout** make the interaction discoverable.
+
+| Action | Result |
+| --- | --- |
+| Left / Right | Widen / narrow Properties by 10 px |
+| Shift + Left / Right | Adjust by 40 px |
+| Home / End | Minimum / maximum Properties width |
+| Escape during drag | Cancel that drag and restore its starting width preference |
+| Reset layout | Restore the 312 px preference without changing edits |
+
+Properties is limited to **300–560 px**, further constrained by available space.
+The central workspace keeps at least **360 px** at the tested laptop sizes;
+the existing narrower-width rule uses 320 px below 1100 px. The new divider is
+10 px wide, so the default remains close to the accepted arrangement. Table
+labels/settings wrap within their columns, origin/draft metadata can wrap, and
+Properties continues to scroll for expanded explanations. Apply is reachable
+with the keyboard. No full docking, generation or dependency changes are added.
+
+The divider uses a focusable vertical ARIA separator, current/min/max width,
+readable value text, a controlled-pane reference and visible help, informed by
+the [WAI window-splitter guidance](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/).
+There is no collapse action: the minimum keeps Properties usable. This is not
+a screen-reader or complete accessibility audit.
+
+Ctrl/Alt/Meta arrow shortcuts are not consumed by the divider; resizing uses
+the documented unmodified/Shift keys.
+
+Layout width belongs to the current workspace DOM. Resizing/reset does not
+replace editor controls or call model validation/application. It survives app
+theme and Fields/Preview changes, and is absent from saved configuration JSON.
+Opening a new page or replacing the workbook through JSON reload starts at the
+default width; this is presentation behaviour, not a recipe format change.
+
+Actual sample-app captures use the same Maximum `20` draft, applied
+`9.8–12.2 · 0% missing` Settings and Sample origin. Before is the accepted
+312 px layout; after has Properties enlarged to 480 px:
+
+| Theme | Before | After |
+| --- | --- | --- |
+| Light | [Actual before](images/m0-06-ergonomics-before-light.png) | [Actual after](images/m0-06-ergonomics-after-light.png) |
+| Dark | [Actual before](images/m0-06-ergonomics-before-dark.png) | [Actual after](images/m0-06-ergonomics-after-dark.png) |
+
+The README keeps one actual Dark image of this interaction. Historical captures
+and their evidence remain unchanged. Additional 1280×800, error, focus and
+long-name captures are retained locally in ignored
+`outputs/workspace-ergonomics-2026-10-13/`.
+
+Verification on the existing Windows host:
+
+- A four-case before walk covered field editing, distinct draft/applied origin,
+  theme preservation and range recovery at both laptop sizes and themes.
+- **One complete maintained browser run passed all eight cases** on CPython
+  3.11.0 / NiceGUI 3.18.0 / Playwright 1.58.0 / Chrome 155.0.8059.40: both routes,
+  themes and 1366×657 / 1280×800 viewports. Added assertions exercise drag,
+  keyboard/Shift steps, limits, cancellation, Reset layout, valid/invalid edit
+  preservation, view/theme changes, visible errors/essential controls and
+  byte-identical JSON after resize. Existing validation, immediate focus,
+  provenance, counts, branding and canonical save/reload assertions passed.
+  No external HTTP/WebSocket attempts or page errors were recorded.
+- Focused checks covered a 38-character invented field name at maximum width,
+  pointer limits, unaltered JSON and keyboard access to Apply with Assumptions
+  expanded. The initial stress fixture exceeded the existing 40-character name
+  limit and was shortened before the final checks; it was not an app failure.
+- Minimum Light/Dark contrast: text **4.76 / 4.69**, enabled boundaries
+  **3.41 / 3.42**, selection/focus **5.09 / 5.12**. New divider grip contrast
+  across normal/hover/drag states is at least **3.77 / 3.42**. All meet the
+  existing 4.5:1 text and 3:1 boundary/selection/focus requirements.
+- Nine tracking tests, dashboard freshness, 103 local documentation links/anchors
+  and Git whitespace checks passed. The owned review server is stopped after
+  verification. A preceding maintained run passed before final keyboard review
+  added the modifier guard; its raw results are retained, with the final run in
+  `browser-final-reviewed/`. The model, fixtures, clinical contracts, accepted
+  palette/artwork, locks and packaging recipe remain unchanged. E35's unaffected packaging
+  evidence is reused within its original scope; no updated bundle was built or
+  published. Native tab/dialog/keyboard, screen-reader, clean-machine,
+  other-browser/platform and broader environment reviews remain outstanding;
+  release gates are unchanged.
+
+Required maintainer try-out is recorded in `progress.json`'s next action:
+
+1. Launch the README quickstart; inspect `/sample` and `/scratch` at both laptop
+   sizes in Light and Dark. On `/sample`, change Maximum to `20` without Apply.
+   Drag left to widen Properties: expect the same selected field, Sample origin,
+   Draft marker and applied `9.8–12.2` Settings, with readable controls and messages.
+2. Tab to the divider and check its visible focus. Try arrows, Shift, Home/End
+   and Reset layout; expect the widths above and unchanged edits. Switch themes
+   and Fields/Preview; the chosen width and editor state must survive.
+3. Set Minimum to `200`, Apply, then resize/reset and switch views/themes. Expect
+   complete errors and retained drafts. Correct Minimum to `5`, Apply and
+   save/reload JSON. Expect Edited origins for applied overrides and no layout
+   setting in the file; JSON reload starts with the default layout. Compare the
+   actual captures and record accept/change feedback. Keep the new PR draft
+   and unmerged for review.
+
+Recorded maintained check against the isolated source server:
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --base-url http://127.0.0.1:8096 --output outputs/workspace-ergonomics-2026-10-13/browser-final-reviewed
+```
+
+Implementation, interaction/contrast checks, captures and documentation were
+AI-assisted with Codex. Local preparation was left uncommitted during the Berlin
+restricted window. On 13 October 2026, the maintainer explicitly authorized
+immediate publication of this task as a separate timing exception. The PR stays
+draft and unmerged for visual/UX review; the normal window remains for other work.
+
+### Viewport width regression repair (15 October 2026)
+
+Claude's **reported Linux review**, supplied by the maintainer, identified lost
+Properties width after viewport narrowing and restoration on PR #8's reviewed
+head `abcfb5c50e9591e43e37ac733316ab1bd8d78a0c`. This is attributed review
+evidence, separate from the Windows observations below. No Linux rerun or Linux
+suite result is claimed here.
+
+Before editing, Codex independently reproduced **560 → 446 → 446** in Windows
+Chrome 155.0.8059.40: at 1366×657 choose End (560 px), narrow to 900 px, then
+restore 1366 px. A fresh 760×657 page rendered 306 px while its untouched ARIA
+current/max were incorrectly 312/560. Raw reproduction JSON and capture are in
+ignored `outputs/viewport-resize-2026-10-15/`.
+
+The inline CSS width now retains the user's preference while CSS constrains the
+rendered width. Viewport changes never write the rendered width back into that
+preference. A ResizeObserver synchronises ARIA from actual layout, observing the
+grid and Properties pane; it is installed after Vue renders the initial shell
+and each valid JSON workbook replacement. The previous observer is disconnected
+on replacement. Focus is not required to initialise metadata. Reset restores
+the 312 px preference even when only 306 px can render. Drag start records both
+rendered width and preference, so Escape and pointer cancellation restore the
+pre-drag preference even when it was temporarily constrained.
+
+The maintained browser script adds focused assertions for the exact resize
+sequence, untouched fresh-page ARIA at 760 px, constrained Reset, Escape and
+pointercancel with 480/560 px preferences in wide/constrained windows, retained
+input identities/drafts/errors/selection/applied settings, byte-identical saved
+JSON after layout operations, and valid reload from 480 px back to the default.
+Both original laptop viewports, entry paths and themes retain their existing
+checks. Pointer cancellation is dispatched by the harness after a real mouse
+drag; this does not establish native touch-device cancellation behaviour.
+
+Final maintained run command (existing Windows runtime and review environments):
+
+```powershell
+.\outputs\workbook-review-env\Scripts\python.exe scripts/check_workbook_browser.py --output outputs/viewport-resize-2026-10-15/browser-final
+```
+
+All **22 unit tests** passed (nine tracking, nine configuration and four packaging
+recipe tests with mocked build subprocesses). The affected Markdown documents'
+61 local file links resolve, and Git whitespace checks passed. No new packaging
+build is implied by the recipe unit tests.
+
+Exactly **one complete maintained browser run** against the final Windows
+implementation passed all **eight cases**: CPython 3.11.0, NiceGUI 3.18.0,
+Playwright 1.58.0 and Chrome 155.0.8059.40 headless on the existing Windows
+build 26300 host. All new regression assertions and existing checks passed.
+Browser HTTP/WebSocket and owned server socket/DNS guards recorded zero external
+attempts; no browser page errors or server stderr diagnostics were observed.
+The focused final capture was inspected. The dashboard was regenerated and
+passes freshness plus all nine tracking tests after the progress update. The
+owned server was stopped after verification.
+
+Maintainer try-out procedure retained for reproducibility; acceptance is recorded
+below:
+
+1. Launch the README quickstart. On `/sample` at 1366×657, Tab to the divider
+   and choose End. Narrow to 900 px and restore: expect **560 → 446 → 560**.
+   Repeat with an unfinished Maximum `20` and invalid Minimum `200`; selection,
+   Draft markers, errors and applied Settings must survive.
+2. Open a fresh workbook at 760 px before focusing the divider. Its rendered
+   width and ARIA current/max must be **306/306/306**. Reset while constrained,
+   then widen: expect the **312 px** preference. With a 560 px preference
+   constrained at 900 px, start a drag and Escape; widening must restore 560 px.
+3. Save valid JSON, widen Properties to 480 px, then reload with the native
+   chooser. Expect default 312 px and unchanged configuration content. Review
+   both themes/routes and original laptop sizes using the earlier captures;
+   record accept/change feedback.
+
+Unaffected E35 packaging evidence is reused within its original scope. No bundle
+was rebuilt; runtime/build locks, packaging recipe, model, fixtures and clinical
+rules are unchanged. Native chooser/touch/screen-reader, clean-machine and other
+platform checks remain outstanding. M0-06 stays partial and NiceGUI provisional.
+
+### Workspace maintainer acceptance (15 October 2026)
+
+The maintainer reports checking and accepting the locally fixed PR #8, including
+viewport resizing, draft preservation, Reset layout and theme/Fields-Preview
+switching. Acceptance includes the uncommitted viewport repair on
+`ui/workspace-ergonomics` based on
+`abcfb5c50e9591e43e37ac733316ab1bd8d78a0c`, rather than only that published head.
+This supersedes the pending workspace try-out above; it does not claim checks
+outside the maintainer's reported scope.
+
+Before recording acceptance, Codex compared the app and maintained browser-check
+sources with cached Python code written before E41's browser run. Both match,
+and both source/cache modification times precede the recorded run start. Their
+SHA-256 values are recorded in E42. Application/check sources are unchanged by
+this acceptance update, so E41's eight Windows browser cases and existing unit
+evidence are reused. Claude's reported Linux finding remains separately
+attributed in E40. Unaffected E35 packaging evidence retains its original scope;
+no new app/browser/build or binary-publication claim is made.
+
+The maintainer authorizes committing the fix and acceptance documentation with
+the established noreply identity, pushing, marking PR #8 ready and merging with
+a merge commit under branch protection, then synchronising local main. These
+actions are pending until after **16:30 Europe/Berlin on 15 October 2026**, with a
+fresh live-clock check immediately before each commit or GitHub write. Local
+preparation is saved uncommitted during the restricted window; publication is
+neither scheduled nor performed early. The existing progress record carries the
+publication handoff and the subsequent separate Windows preview build environment
+selection task. No environment or distribution decision is adopted here. M0-06
+remains partial, NiceGUI provisional and all release gates unchanged.
+
+Acceptance preparation passed all nine tracking tests, dashboard regeneration
+and freshness, 64 affected local documentation links/anchors and evidence
+references, and Git whitespace checks. Accepted source hashes, historical
+evidence and task/milestone/gate preservation were checked. Valid application,
+browser and packaging evidence was reused for unchanged code; those runs were
+not repeated for this acceptance update.
+
+### Publication authorization (16 October 2026)
+
+The maintainer reaffirms acceptance of the locally fixed PR #8 and explicitly
+authorizes committing, pushing, readiness, merge under branch protection and
+main synchronization during the usual restricted Berlin period for the current
+publication batch. The normal 08:00-16:30 Europe/Berlin rule remains for subsequent
+work, and a live Berlin clock is checked immediately before every commit or
+GitHub write. E42 and its accepted source hashes remain unchanged. This timing
+authorization and maintainer report are distinct from automated verification;
+no broader native, installation or release acceptance is implied.

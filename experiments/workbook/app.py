@@ -10,6 +10,79 @@ from . import config as model
 
 
 CSS = Path(__file__).with_name("workbook.css").read_text(encoding="utf-8")
+WORKSPACE_LAYOUT = '''<script>
+window.ravelWorkspaceLayout = {
+    grid: () => document.querySelector('.workbook-grid'),
+    limits(grid) {
+        const minimumWorkspace = parseFloat(getComputedStyle(grid).getPropertyValue('--workspace-min'));
+        const available = grid.clientWidth - grid.querySelector('.navigator').getBoundingClientRect().width
+            - grid.querySelector('.workspace-divider').getBoundingClientRect().width;
+        return {minimum: 300, maximum: Math.max(300, Math.min(560, available - minimumWorkspace))};
+    },
+    width(grid) { return grid.querySelector('.properties').getBoundingClientRect().width; },
+    preference(grid) { return parseFloat(grid.style.getPropertyValue('--properties-width')) || 312; },
+    sync(grid) {
+        const divider = grid.querySelector('.workspace-divider'), width = Math.round(this.width(grid));
+        divider.setAttribute('aria-valuemax', Math.floor(this.limits(grid).maximum));
+        divider.setAttribute('aria-valuenow', width);
+        divider.setAttribute('aria-valuetext', 'Properties ' + width + ' pixels');
+    },
+    init() {
+        this.observer?.disconnect();
+        const grid = this.grid();
+        this.observer = new ResizeObserver(() => this.sync(grid));
+        this.observer.observe(grid);
+        this.observer.observe(grid.querySelector('.properties'));
+        this.sync(grid);
+    },
+    prefer(grid, width) {
+        grid.style.setProperty('--properties-width', width + 'px');
+        this.sync(grid);
+    },
+    set(grid, width) {
+        const limits = this.limits(grid);
+        width = Math.round(Math.max(limits.minimum, Math.min(limits.maximum, width)));
+        this.prefer(grid, width);
+    },
+    start(event) {
+        if (event.button !== 0 || !event.isPrimary) return;
+        event.preventDefault();
+        const divider = event.currentTarget, grid = divider.closest('.workbook-grid');
+        divider.focus();
+        divider._resizeStart = {x: event.clientX, width: this.width(grid),
+                                preference: this.preference(grid), pointer: event.pointerId};
+        grid.dataset.resizing = 'true';
+        divider.setPointerCapture(event.pointerId);
+    },
+    move(event) {
+        const divider = event.currentTarget, start = divider._resizeStart;
+        if (start && event.pointerId === start.pointer)
+            this.set(divider.closest('.workbook-grid'), start.width + start.x - event.clientX);
+    },
+    finish(event, cancel = false) {
+        const divider = event.currentTarget, start = divider._resizeStart;
+        if (!start) return;
+        divider._resizeStart = null;
+        const grid = divider.closest('.workbook-grid');
+        if (cancel) this.prefer(grid, start.preference);
+        grid.dataset.resizing = 'false';
+        if (divider.hasPointerCapture(start.pointer)) divider.releasePointerCapture(start.pointer);
+    },
+    key(event) {
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+        const grid = event.currentTarget.closest('.workbook-grid');
+        const step = event.shiftKey ? 40 : 10, limits = this.limits(grid);
+        const widths = {ArrowLeft: this.width(grid) + step, ArrowRight: this.width(grid) - step,
+                        Home: limits.minimum, End: limits.maximum};
+        if (event.key === 'Escape' && event.currentTarget._resizeStart) {
+            event.preventDefault(); this.finish(event, true);
+        } else if (event.key in widths) {
+            event.preventDefault(); this.set(grid, widths[event.key]);
+        }
+    },
+    reset() { const grid = this.grid(); if (grid) this.prefer(grid, 312); }
+};
+</script>'''
 BRAND = Path(__file__).resolve().parents[2] / "brand"
 app.add_static_files("/workbook-icons", Path(__file__).with_name("icons"))
 app.add_static_files("/ravel-brand", BRAND / "svg")
@@ -104,6 +177,7 @@ def workbook(entry: str, theme: str = "dark"):
     badges = {}
     drafts = {}
     toolbar, theme_choice = chrome(theme)
+    ui.add_head_html(WORKSPACE_LAYOUT)
 
     def update_drafts():
         if not controls or not badges:
@@ -297,6 +371,8 @@ def workbook(entry: str, theme: str = "dark"):
         with ui.button(color=None, on_click=open_upload).props('flat no-caps aria-label="Reload configuration"'):
             action_icon("reload")
             ui.label("Reload")
+        ui.button("Reset layout", color=None).props('flat no-caps').on(
+            "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
         with ui.row().classes("label-help session-note"):
             ui.label("Session only · Download to keep").classes("muted")
             context_help("Configuration", "Save applies valid field edits and downloads provisional ravel-workbook-experiment/1 JSON. Failed Save keeps applied settings and drafts. Reload replaces the workbook only after validation. No automatic persistence.")
@@ -455,9 +531,24 @@ def workbook(entry: str, theme: str = "dark"):
                     with ui.row().classes("count-strip"):
                         count_note = ui.label(count_description()).props('role=status aria-live=polite').classes("count-note")
                         count_state = ui.label("Applied counts").classes("count-state")
-            with ui.element("aside").classes("properties").props('aria-label="Selected field settings"'):
+            divider = ui.element("div").classes("workspace-divider").props(
+                'role=separator tabindex=0 aria-label=Properties aria-orientation=vertical '
+                'aria-valuemin=300 aria-valuemax=560 aria-valuenow=312 '
+                'aria-valuetext="Properties 312 pixels" '
+                'title="Drag to resize. Left widens Properties, Right narrows; Shift moves 40 pixels. '
+                'Home sets minimum, End maximum. Escape cancels a drag."')
+            with divider:
+                ui.element("span").classes("divider-grip").props('aria-hidden=true')
+            for event, handler in (("pointerdown", "start(e)"), ("pointermove", "move(e)"),
+                                   ("pointerup", "finish(e)"), ("pointercancel", "finish(e, true)"),
+                                   ("lostpointercapture", "finish(e)"), ("keydown", "key(e)")):
+                divider.on(event, js_handler=f"e => window.ravelWorkspaceLayout.{handler}")
+            with ui.element("aside").classes("properties").props('aria-label="Selected field settings"') as pane:
+                hint = ui.label("Resize: drag the divider or Tab to it, then ← / →.").classes("layout-hint muted")
+                divider.props(f'aria-controls={pane.html_id} aria-describedby={hint.html_id}')
                 properties()
         ui.label("Provisional configuration · Local only · NiceGUI evaluation").classes("footer-note")
+        ui.run_javascript('await Vue.nextTick(); window.ravelWorkspaceLayout.init();')
 
     count_note = None
     field_notice = None

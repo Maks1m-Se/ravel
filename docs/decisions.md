@@ -399,3 +399,37 @@ On 12 October 2026, the maintainer accepted the palette and actual captures in
 PR #7 at `220d730a93393ad9f11e0b43b2cbd45fb4d4e009`. This does not adopt
 NiceGUI, complete M0-06 or change release gates; outstanding native/platform
 reviews remain required.
+
+## Workspace ergonomics and UX acceptance (13 October 2026)
+
+The maintainer's priority is that visual quality and UX are acceptance criteria
+throughout development. Technical checks support actual visual/interaction
+review; they do not replace it. Record the required review in the existing
+progress record rather than creating a separate backlog.
+
+One bounded task adds a draggable, focusable Properties divider and Reset layout
+to the accepted Fichte workbench. Properties defaults to 312 px and adjusts from
+300 to 560 px while keeping a usable central workspace. Arrow keys move the
+divider, with Shift for larger steps; width limits, help and visible keyboard
+focus make the control discoverable. Field names and applied summaries wrap
+within the central table when it narrows. Width is presentation state on the
+current workspace, separate from the configuration model and saved JSON.
+
+Preserve the model, validation, provenance and edit-application behaviour. Full
+docking, generation and dependency changes are outside this task. The new
+behaviour requires maintainer review of the separate draft PR; it does not adopt
+NiceGUI, complete M0-06 or close native/platform reviews or release gates.
+
+The 15 October viewport regression repair retains the chosen width independently
+of CSS's temporary available-space constraint. Layout observation updates ARIA
+after rendering without changing that preference; Reset and drag cancellation
+also restore preferences rather than constrained widths. This preserves the
+existing session-only layout and configuration-reload defaults. On 15 October,
+the maintainer accepted the locally fixed version, including viewport resizing,
+draft preservation, Reset layout and theme/view switching. Acceptance includes
+the uncommitted repair based on `abcfb5c`; E42 identifies the verified sources.
+Commit/push/readiness/merge and local main synchronisation are authorized only
+after 16:30 Europe/Berlin on 15 October 2026, respecting branch protection. The next separate
+bounded task will select and record the Windows preview build environment; no
+environment adoption occurs in this acceptance. M0-06 remains partial, NiceGUI
+provisional and distribution/release gates unchanged. No binary publication.

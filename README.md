@@ -10,7 +10,7 @@ current implementation is a fixture-based workbook prototype.**
 
 **Compose the data you need.**
 
-![Ravel Dark workbench showing Fichte controls, sample fields, applied settings and an unfinished edit](docs/images/m0-06-fichte-dark.png)
+![Ravel Dark workbench with widened Properties, applied settings and an unfinished edit](docs/images/m0-06-ergonomics-after-dark.png)
 
 ## Intended workflows
 
@@ -36,6 +36,10 @@ You can edit settings, distinguish applied values from drafts, correct inline
 validation errors and save/reload a provisional JSON configuration. Light and
 Dark themes are available.
 
+Drag the divider beside Properties to give editing more room. Tab to the divider
+and use Left/Right arrows for keyboard adjustment; **Reset layout** restores the
+default width. Layout changes preserve edits and are separate from saved JSON.
+
 The preview contains fixed illustrations and output controls calculate counts
 only. The prototype does not generate data, infer settings or import arbitrary
 samples. NiceGUI remains provisional; this is an early development preview,
@@ -56,7 +60,7 @@ py -3.11 -m venv .venv
 Open **http://127.0.0.1:8080/**; stop with Ctrl+C. Port 8080 must be free.
 Installation needs network access; the running prototype serves assets locally.
 Save configuration before closing the page: state is session-only.
-Tested on Windows 11 with CPython 3.11.0, NiceGUI 3.18.0 and Chrome 154.
+Tested on Windows 11 with CPython 3.11.0, NiceGUI 3.18.0 and Chrome 155.
 
 See the [development guide](docs/development.md#workbook-experiment) for setup,
 checks, packaging evidence, review history and technical limitations.
