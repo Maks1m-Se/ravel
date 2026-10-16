@@ -14,7 +14,7 @@
     {
       "id": "M1",
       "title": "Working slice",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria_ref": "docs/plan.md",
       "evidence_refs": [],
       "blockers": []
@@ -181,7 +181,8 @@
         "E39",
         "E40",
         "E41",
-        "E42"
+        "E42",
+        "E43"
       ],
       "blockers": []
     },
@@ -243,7 +244,7 @@
       "id": "M1-01",
       "milestone_id": "M1",
       "title": "Implement generic entry paths and optional clinical CLI slice",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria": [
         "The first usable slice supports both generic explicit-rule generation and basic single-table sample-assisted generation/extension through one recipe. Basic profiling proposes editable types, categories, missingness and ranges with provenance, excludes identifiers by default, and reports unsupported inputs. Both paths save/load and export; ten source rows produce exactly 1,000 new rows or extend to 1,000 total with 990 generated rows, preserved source values and row origins. The clinical template is optional and generic screens use general terms.",
         "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.",
@@ -252,14 +253,20 @@
       "release_gate_ids": [
         "R2"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E43",
+        "E44",
+        "E45",
+        "E46",
+        "E47"
+      ],
       "blockers": []
     },
     {
       "id": "M1-02",
       "milestone_id": "M1",
       "title": "Verify repeatability and actionable errors",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria": [
         "Repeat runs reproduce content; infeasible requests fail clearly without silent relaxation or partial success.",
         "Stable entity/field random streams support independent-field addition."
@@ -268,7 +275,12 @@
         "R2",
         "R3"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E44",
+        "E45",
+        "E46",
+        "E47"
+      ],
       "blockers": []
     },
     {
@@ -735,12 +747,38 @@
       "id": "E42",
       "reference": "15 October 2026 explicit maintainer acceptance of locally fixed PR #8, including uncommitted regression repair based on abcfb5c50e9591e43e37ac733316ab1bd8d78a0c; docs/development.md#workspace-maintainer-acceptance-15-october-2026",
       "scope": "Maintainer reports checking and accepting viewport resizing, draft preservation, Reset layout and theme/Fields-Preview switching in the locally fixed app. Acceptance includes the saved uncommitted regression repair on ui/workspace-ergonomics, not only the published abcfb5c head. Local/live PR heads verified at that base; PR remains draft and unmerged pending allowed publication. Before this documentation-only acceptance follow-up, app and maintained browser-check sources matched cached Python code written before E41 browser execution, with source/cache modification times preceding its recorded start. Accepted app SHA-256 06b2d5dfb59dd066d820072732cf609700a7cc2289b0c523f776b9785016876b (Git blob d6b34225a101c02c499c9ba907dbc3dd54ad8ae3); browser-check SHA-256 0baa83f0a7f62875c9ae7fecaea2fc903636c6cab734e43e0ffe88d1dc827888 (Git blob 1c24eacaea19afa3f89e5f68df50b1aa189820e1). Neither source changed during acceptance preparation. E41 Windows eight-case browser and existing unit evidence reused for unchanged code; Claude Linux report remains E40 and unaffected E35 packaging evidence retains its original scope. No new application/browser/build check or binary publication claimed. Maintainer authorizes noreply fix/acceptance commit, push, PR #8 readiness and merge commit respecting branch protection, then local main synchronization, only after 16:30 Europe/Berlin on 15 October with a fresh live clock before each commit/GitHub write. Prepared locally and left uncommitted during the restricted window; publication not scheduled. Next separate bounded task: select and record the Windows preview build environment. Python 3.11 defaults/original locks and existing environment proposals remain unchanged pending that decision. M0-06 partial, NiceGUI provisional, all task/milestone/distribution/release-gate statuses preserved; outstanding platform/native/clean-machine/license scope unchanged. AI-assisted acceptance documentation and tracking only."
+    },
+    {
+      "id": "E43",
+      "reference": "15 October 2026 approved staged generic sequencing and source environment selection; docs/plan.md; docs/single-table.md; docs/decisions.md#staged-single-table-source-increment-15-october-2026",
+      "scope": "Maintainer authorizes a substantial sequential M1-01/M1-02 explicit-rule single-table batch before joint review while remaining M0 packaging/platform work stays open. Explicit rules first, sample import/profiling next, then linked tables; both generic entry paths remain required for the first usable release. Contract and hand reference established before coding: IDs 1-3, constant demo, numeric sequence 10/12/14. Numeric bounds, fixed decimal grid, Bernoulli missingness rather than exact quotas, validation, versioning, limits and CSV representation documented. Standard CPython 3.14.8 x64 with GIL selected for source development using prior 3.14/setuptools candidate evidence and official Python/NiceGUI information checked 15 October. New isolated venv recreated from prepared cp314 wheels with no index; all 48 existing UI and four review pins installed, pip check/direct imports and core/CLI/session checks passed. New source locks preserve dependency versions; core uses only standard library. Original experiment/build locks and Python 3.11 remain unchanged. No binary build-environment adoption, build, release or distribution claim. Approved sequencing exception recorded in existing plan/decisions/instructions; M0 and full M1 remain incomplete, NiceGUI provisional, gates unchanged."
+    },
+    {
+      "id": "E44",
+      "reference": "15-16 October 2026 single-table headless engine, CLI and session stages; ravel/; tests/test_generation.py; tests/test_workspace.py; examples/three-rows.recipe.json; docs/single-table.md",
+      "scope": "Implemented versioned ravel-single-table/1 recipe with strict supported keys/rules, stable table/field identities, sequential IDs, constant text, integer sequences, bounded uniform integers/fixed-grid decimals, explicit categories/probabilities, count/seed and per-cell missingness. SHA-256-derived field value/missingness Random streams preserve existing columns on independent addition/rename/reorder; duplicates get new identities. Explicit local decimal precision and exact probability sums prevent caller-context rounding from changing rules. Immutable results retain canonical recipe/environment; UI and CLI use one validator, engine and all-quoted UTF-8/LF CSV serializer preserving CR/LF/quotes/Unicode and missing cells. CLI writes CSV/recipe/run sidecars, rejects existing/colliding paths and preserves originals. Nineteen focused engine/session tests passed: hand arithmetic, exactly 1000 rows/types/bounds/categories, inclusive/singleton and zero/negative-step rules, independently derived binomial properties, probability endpoints/zero weights, save/reload repeatability, field stream/duplicate independence, preview/CSV, strict/old/impossible-input rejection, atomic Apply and draft/stale-export protection. Existing configuration, tracking and mocked packaging tests retained. No clinical derivation, sample profiling, linked tables, exact quotas or binary distribution. Implementation and tests AI-assisted with Codex; new user-facing behaviour awaits maintainer acceptance. The full selected-environment suite subsequently passed all 41 tests (13 engine/CLI, six session, nine existing configuration, nine tracking and four mocked build tests)."
+    },
+    {
+      "id": "E45",
+      "reference": "16 October 2026 single-table UI/export verification; scripts/check_generator_browser.py; docs/development.md#single-table-source-development; docs/images/m1-single-table-fields-dark.png; docs/images/m1-single-table-generated-light.png",
+      "scope": "Compact source start screen and explicit-rule table builder retain accepted Fichte CSS/branding and E42 Properties preference/ARIA/cancellation behaviour. Add/duplicate/rename/configure/remove, confirmation, count/seed, explicit Apply/discard, generation status, actual first-100-row preview, current-result CSV, recipe and run-record downloads, invalid/old-file preservation and valid reload reset are connected to the headless engine/session state. Final maintained Windows Chrome run passes all four 1366x657/1280x800 Light/Dark cases on CPython 3.14.8, NiceGUI 3.18.0, Playwright 1.58.0, Chrome 155.0.8059.82, Windows-11-10.0.26300-SP0. Checks include 1000 rows, hand reference, all rule editors, independent-field and duplicate identities/values, preview/CSV agreement, JSON reload repeatability, invalid-input recovery, blocked stale/unapplied export and E42 viewport/initial-ARIA/reset/cancellation/theme/view regressions. Zero external browser HTTP/WebSocket attempts and page errors. New text contrast minima Light/Dark 6.14/6.99, divider focus 5.52/6.83; existing accepted palette/boundary evidence reused for unchanged tokens. Four actual unaltered source captures inspected/retained; historical captures preserved. Initial launch static-file keyword error fixed; an initial browser snapshot raced the server draft acknowledgement, so the harness now awaits Unapplied edits before comparing state; an intermediate four-case run passed. A final CSV review added correct CR/LF quoting coverage, followed by the final four-case run. Raw runs remain ignored under outputs/single-table-2026-10-15/. No new server socket/DNS guard, native chooser/touch/screen-reader, OS-disconnected, clean-machine or other-platform UI claim. Read-only hosted Python core workflow added; remote CI results pending publication, separate from native installation evidence. E42 accepted source and E1-E42 remain preserved separately in the original worktree; generator implementation is isolated on feature/single-table-generator. Normal Berlin publishing window leaves local work uncommitted, PR #8 publication/merge and the single batch issue/new draft PR pending. New generator PR must remain unmerged for joint review; M0/M1 incomplete, NiceGUI provisional, distribution/release gates unchanged. The final expanded browser-final-reviewed run also verifies ID start/negative-step sequence editing, contextual help, start-screen recipe loading and Home theme preservation. The help harness touch-context configuration was corrected before this passing run. All 102 affected local documentation/reference checks, source/lock/gate preservation checks, dashboard regeneration/freshness and whitespace passed. Owned source review server stopped and port 8090 confirmed closed. GitHub read-only recheck on 16 October still shows PR #8 draft/unmerged at abcfb5c; no publication occurred during the restricted window."
+    },
+    {
+      "id": "E46",
+      "reference": "16 October 2026 maintainer acceptance of the current local single-table generator; docs/development.md#single-table-maintainer-acceptance-16-october-2026",
+      "scope": "The maintainer reports testing the current app and that everything works fine, and accepts its current local behavior. Acceptance is recorded against the saved uncommitted feature/single-table-generator tree: all 15 source/test/lock/reference hashes match the 16 October 09:34 saved tested-source manifest. Runtime source SHA-256 values: ravel/engine.py=755c45e80cd8363eeb3526d238b258e6252aecede1027fcd503f444baa0074c5; ravel/recipe.py=b8ce4b7dca2f566ca8f29e7ca85e9ccd68c918a2fa3375843ec75061c305c07f; ravel/ui.py=e01bca32a170fb186391815e93be67c0ae7f0162f5a18cf7773a35bd0eafbd7e; ravel/workspace.py=e5b38b80f9919b076e5a100ddb6d7f8ddbd6d0a04cd034f4757c4848c7061833; ravel/__init__.py=0a18677514357536b4385b5d521aeda5f90cf3ddf3cd016b85b1e606d30ef4f3; ravel/__main__.py=3788f7e9cfdfeb37e0a48380c4348418241583d6715c238501923543cfe65b5b; ravel/static/generator.css=4ad0a4c7920e269606be2f6428f7649ed1b67f2fc840edb638e18222ecfe5c91; ravel/static/layout.js=a8ceed34458b6273d1440ea40100243512d7dc57b38739f564f71694909e5e3b. This is attributed human acceptance, separate from E44/E45 automated checks; the report does not enumerate native chooser, every viewport/theme or clean-machine installation checks. A separate new CPython 3.14.8 x64 environment without pip/NiceGUI/third-party packages passed all 41 unit tests and dashboard freshness on 16 October; the first attempt failed on sandbox temporary-directory permissions, then passed with a task-local writable temporary directory. Five literal-category edit/Apply/recipe round trips passed. E1-E42 and both accepted PR #8 source hashes remain preserved. The maintainer explicitly grants a timing exception for the current publication batch; normal Berlin restrictions remain for subsequent work and actual timestamps/history remain unchanged. The new generator PR must remain draft and unmerged for joint code review. Native installation, broader platform/accessibility checks, M0/full M1 and release gates remain incomplete; NiceGUI provisional."
+    },
+    {
+      "id": "E47",
+      "reference": "16 October 2026 verified PR #8 publication and generator batch issue; https://github.com/Maks1m-Se/ravel/pull/8; https://github.com/Maks1m-Se/ravel/issues/9",
+      "scope": "Accepted PR #8 repair/acceptance committed separately as cce10944339f6c857129fba9832d49d10e70a66d. Both published source Git blobs were read back from GitHub and matched E42 before readiness and merge. The first immediate PR lookup briefly showed the pre-push head; a subsequent ref/head/source verification confirmed cce1094 before any readiness/merge action. PR #8 merged with a merge commit d7d42f8bd183fd4bb3e7b9005ac7324b7a3d0b90 under normal protections, and original local main synchronized cleanly. Nine tracking tests, dashboard regeneration/freshness, 64 affected documentation/reference checks, six-file acceptance scope and whitespace passed. Generator baseline advanced by a mixed reset preserving tracked/untracked files and all 15 tested-source hashes; both trees were snapshotted first. Completed generator work split into core/contract/source-environment commit c4f3cf00be2fd74f0da22551427ca57b0f1a4092 and UI/session commit 935c05095307d183e8ab14933c06c063c2b88857. The intermediate headless commit passed all 13 engine/CLI tests, and the restored UI stage passed all six session tests; the full 41-test suite passed after acceptance records. Exactly one batch issue #9 tracks the completed three stages and joint review. Hosted CI results remain pending. Maintainer authorizes only the current publication batch timing exception; live Berlin clocks checked before each commit/GitHub write. Historical E1-E42, accepted appearance, clinical/packaging locks and release gates preserved; no native installation or binary claim."
     }
   ],
   "blockers": [],
-  "next_action": "The maintainer accepts the local PR #8 viewport repair and ergonomics (E42). On 16 October 2026 the maintainer explicitly authorizes the current publication batch during the usual restricted Berlin period; check a live Berlin clock immediately before every commit or GitHub write and keep the normal rule for subsequent work. Commit and push only the accepted six-file repair/acceptance scope, verify the published application/browser source hashes against E42, then mark PR #8 ready and merge with a merge commit respecting branch protection; synchronize local main. Do not merge the older remote abcfb5c version without the accepted repair. The implemented single-table generator remains separate on feature/single-table-generator for its own draft PR and joint code review. M0-06 stays partial, NiceGUI provisional and native/platform/clean-machine/license and distribution/release gates remain open.",
-  "current_task_id": "M0-06",
+  "next_action": "Joint code review of the completed explicit-rule generator batch (issue #9: https://github.com/Maks1m-Se/ravel/issues/9). Current app behavior is accepted by the maintainer (E46), separate from automated checks; keep the new generator PR draft and unmerged. All engine/recipe, column editing, real generation/preview, CSV and reproducible recipe stages are complete; do not restart them. PR #8 is merged at d7d42f8bd183fd4bb3e7b9005ac7324b7a3d0b90 after published E42 source verification; original main is synchronized. Record the hosted Windows/Linux/macOS core results when available. While reviewing, prepare the next sample-assisted issue and invented ten-row reference fixtures locally: editable assumptions, 1000 generated-only rows or extension to 1000 total preserving originals and row origin. The current publication batch has the maintainer timing exception; normal 08:00-16:30 Berlin restrictions apply to subsequent work. M0/full M1 and native/platform/clean-machine/license/distribution/release gates remain incomplete, NiceGUI provisional.",
+  "current_task_id": "M1-01",
   "next_task_ids": [
-    "M0-07"
+    "M1-02",
+    "M0-06"
   ]
 }

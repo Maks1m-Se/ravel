@@ -1,0 +1,37 @@
+.generator-welcome { max-width: 760px; margin-top: 80px; }
+.generator-welcome .intro { margin-bottom: 24px; }
+.start-actions { gap: 12px; }
+.sample-next { margin-top: 32px; }
+.generator-grid { height: calc(100dvh - 128px); }
+.generator-grid .output-panel { padding-block: 8px; }
+.generator-grid .output-controls { flex-wrap: wrap; }
+.generator-grid .output-controls .q-field { width: 160px; }
+.generator-grid .output-controls .q-field:first-child { width: 240px; }
+.generator-grid .output-controls > .context-help { margin-top: 8px; }
+.table-name-label { overflow-wrap: anywhere; padding: 8px 10px; font-size: 12px; }
+.column-actions { padding: 4px 8px; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+.column-actions .q-btn { font-size: 12px; padding-inline: 6px; }
+.column-actions .q-icon { font-size: 17px; }
+.result-state { padding: 6px 10px; min-height: 31px; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); }
+.result-state.stale { color: var(--ink); background: var(--raised); border-left: 3px solid var(--accent); }
+.generator-definitions th:nth-child(1) { width: 26%; }
+.generator-definitions th:nth-child(2) { width: 23%; }
+.generator-definitions th:nth-child(3) { width: 51%; }
+.generator-grid .preview-scroll { max-height: calc(100dvh - 345px); }
+.preview-table td { white-space: pre-wrap; min-width: 80px; }
+.empty-preview { padding: 50px 20px; color: var(--muted); text-align: center; }
+.empty-preview .q-icon { font-size: 32px; margin-bottom: 12px; }
+.rule-help-label { font-size: 11px; }
+.generator-grid .properties .label-help { margin-top: 2px; }
+.generator-grid .properties .apply-button, .generator-grid .properties .discard-button { width: 100%; }
+.generator-grid .properties textarea { font: 12px Consolas, monospace; line-height: 1.5; }
+.generator-grid .properties .q-textarea .q-field__control { min-height: 110px; }
+.generator-grid .properties > .label-help .help-content { left: 0; right: auto; top: auto; bottom: 100%; }
+.action-toolbar { flex-wrap: wrap; }
+.action-toolbar .q-btn { padding-inline: 8px; }
+.action-toolbar > .context-help { margin-left: auto; }
+.remove-dialog { padding: 20px; max-width: 430px; gap: 16px; }
+@media (max-width: 1100px) {
+  .action-toolbar .q-btn { font-size: 12px; padding-inline: 5px; }
+  .action-toolbar .q-icon { font-size: 17px; }
+}

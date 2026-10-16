@@ -18,6 +18,8 @@
   plan criteria; regenerate and commit it alongside changes to either source.
 - Local Codex implements changes; the ChatGPT Project handles planning and
   review. Work one reviewable task at a time; the maintainer accepts results.
+  An explicitly approved staged batch may contain several sequential stages
+  before joint maintainer review.
 - Recommend useful skills or plugins when they solve a concrete need. Issues may
   support discussion without creating a duplicate status record.
 - Give a concise handoff containing branch/commit, changes, verification,
@@ -37,4 +39,6 @@
 - Dashboard commands from the repository root (Python 3.11+, standard library):
   `python scripts/build_dashboard.py`, `python scripts/build_dashboard.py --check`,
   `python -m unittest discover -s tests -v`, and `git diff --check`.
-  These checks cover tracking tooling, not application or clinical validation.
+  Unit checks cover tracking, headless generation/session/CLI and mocked build
+  recipes. Browser checks and source setup are in docs/development.md; these
+  checks do not establish native installation or clinical validation.
