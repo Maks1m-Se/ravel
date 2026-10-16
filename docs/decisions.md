@@ -419,3 +419,17 @@ Preserve the model, validation, provenance and edit-application behaviour. Full
 docking, generation and dependency changes are outside this task. The new
 behaviour requires maintainer review of the separate draft PR; it does not adopt
 NiceGUI, complete M0-06 or close native/platform reviews or release gates.
+
+The 15 October viewport regression repair retains the chosen width independently
+of CSS's temporary available-space constraint. Layout observation updates ARIA
+after rendering without changing that preference; Reset and drag cancellation
+also restore preferences rather than constrained widths. This preserves the
+existing session-only layout and configuration-reload defaults. On 15 October,
+the maintainer accepted the locally fixed version, including viewport resizing,
+draft preservation, Reset layout and theme/view switching. Acceptance includes
+the uncommitted repair based on `abcfb5c`; E42 identifies the verified sources.
+Commit/push/readiness/merge and local main synchronisation are authorized only
+after 16:30 Europe/Berlin on 15 October 2026, respecting branch protection. The next separate
+bounded task will select and record the Windows preview build environment; no
+environment adoption occurs in this acceptance. M0-06 remains partial, NiceGUI
+provisional and distribution/release gates unchanged. No binary publication.

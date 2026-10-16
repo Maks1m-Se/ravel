@@ -359,14 +359,17 @@ def check_help(page, title):
     page.mouse.move(0, 0)
 
 
-def properties_width(page, width):
+def properties_width(page, width, maximum=560):
     divider = page.get_by_role('separator', name='Properties', exact=True)
+    expect(divider).to_have_attribute('aria-valuemin', '300')
+    expect(divider).to_have_attribute('aria-valuemax', str(maximum))
     expect(divider).to_have_attribute('aria-valuenow', str(width))
     expect(divider).to_have_attribute('aria-valuetext', f'Properties {width} pixels')
     assert abs(page.locator('.properties').bounding_box()['width'] - width) < 1
     assert page.locator('#' + divider.get_attribute('aria-controls')).count() == 1
     assert page.locator('#' + divider.get_attribute('aria-describedby')).is_visible()
-    assert page.locator('.sheet').bounding_box()['width'] >= 360
+    minimum_workspace = 320 if page.viewport_size['width'] <= 1100 else 360
+    assert page.locator('.sheet').bounding_box()['width'] >= minimum_workspace
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
 
 
@@ -379,11 +382,69 @@ def drag_divider(page, distance):
     page.mouse.up()
 
 
+def viewport_layout(page):
+    original_viewport = page.viewport_size
+    before = theme_state(page)
+    applied = page.locator('.definition-table').inner_text()
+    divider = page.get_by_role('separator', name='Properties', exact=True)
+
+    def check(width, maximum=560):
+        properties_width(page, width, maximum)
+        assert theme_state(page) == before
+        assert page.locator('.definition-table').inner_text() == applied
+
+    keyboard_to(page, divider)
+    page.keyboard.press('End')
+    check(560)
+    page.set_viewport_size({'width': 900, 'height': 657})
+    check(446, 446)
+    page.set_viewport_size(original_viewport)
+    check(560)
+
+    # Cancellation must restore the preference, even when the drag began clamped.
+    for preferred in [480, 560]:
+        for constrained in [False, True]:
+            for cancellation in ['Escape', 'pointercancel']:
+                divider.focus()
+                page.keyboard.press('End')
+                if preferred == 480:
+                    page.keyboard.press('Shift+ArrowRight')
+                    page.keyboard.press('Shift+ArrowRight')
+                check(preferred)
+                if constrained:
+                    page.set_viewport_size({'width': 900, 'height': 657})
+                    check(446, 446)
+                box = divider.bounding_box()
+                x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+                page.mouse.move(x, y)
+                page.mouse.down()
+                page.mouse.move(x + 70, y, steps=8)
+                check((446 if constrained else preferred) - 70, 446 if constrained else 560)
+                if cancellation == 'Escape':
+                    page.keyboard.press('Escape')
+                else:
+                    divider.dispatch_event('pointercancel')
+                page.mouse.up()
+                expect(page.locator('.workbook-grid')).to_have_attribute('data-resizing', 'false')
+                check(446 if constrained else preferred, 446 if constrained else 560)
+                page.set_viewport_size(original_viewport)
+                check(preferred)
+
+    page.set_viewport_size({'width': 760, 'height': 657})
+    check(306, 306)
+    activate(page, 'Reset layout')
+    check(306, 306)
+    page.set_viewport_size(original_viewport)
+    check(312)
+    return 'passed: preference restoration, initial limits, constrained reset, Escape/pointercancel, editor state'
+
+
 def workspace_layout(page, out, prefix, theme):
     before = theme_state(page)
     applied = page.locator('.definition-table').inner_text()
     divider = page.get_by_role('separator', name='Properties', exact=True)
     properties_width(page, 312)
+    viewport_checks = viewport_layout(page)
     keyboard_to(page, divider)
     focus = assert_focus_style(page, divider)
     page.screenshot(path=out / f'{prefix}-divider-focus.png')
@@ -438,6 +499,7 @@ def workspace_layout(page, out, prefix, theme):
     }''')
     assert grip >= 3, grip
     return {'pointer_keyboard_limits_cancel_reset': 'passed', 'invalid_edit_theme_view_preservation': 'passed',
+            'viewport_regressions': viewport_checks,
             'text': text, 'grip_contrast': grip, 'focus': [focus, reset_focus]}
 
 
@@ -445,6 +507,15 @@ def exercise(page, out, width, height, entry, theme, results):
     prefix = f'{width}x{height}-{entry}-{theme.lower()}'
     observations = {'viewport': [width, height], 'entry': entry, 'theme': theme, 'errors': [], 'focus': []}
     results['cases'].append(observations)
+    original_viewport = page.viewport_size
+    page.set_viewport_size({'width': 760, 'height': 657})
+    page.goto(results['base_url'] + f'/{entry}?theme={theme.lower()}')
+    # No focus/resize action may be needed to initialise accessibility metadata.
+    properties_width(page, 306, 306)
+    expect(page.get_by_role('separator', name='Properties', exact=True)).not_to_be_focused()
+    page.set_viewport_size(original_viewport)
+    properties_width(page, 312)
+    observations['fresh_constrained_aria'] = 'passed: current/max 306 before interaction'
     page.goto(results['base_url'] + '/')
     set_theme(page, theme)
     observations['entry_palette'] = interaction_palette(page, theme)
@@ -612,9 +683,11 @@ def exercise(page, out, width, height, entry, theme, results):
     assert save_json(page, out / f'{prefix}-theme-saved.json') == saved
     drag_divider(page, 168)
     properties_width(page, 480)
+    viewport_layout(page)
+    properties_width(page, 312)
     assert save_json(page, out / f'{prefix}-layout-saved.json') == saved
     assert (out / f'{prefix}-layout-saved.json').read_bytes() == saved_path.read_bytes()
-    observations['layout_separate_from_configuration'] = 'byte-identical JSON after resize'
+    observations['layout_separate_from_configuration'] = 'byte-identical JSON after drag, viewport resize, cancellation and constrained reset'
     activate(page, 'Reset layout')
     properties_width(page, 312)
     observations['unfocused_borders'] += unfocused_borders(page)
@@ -641,11 +714,19 @@ def exercise(page, out, width, height, entry, theme, results):
     expect(settings).to_have_text('5–20 · 15% missing')
     observations['oversized_import_preservation'] = 'passed'
 
+    drag_divider(page, 168)
+    properties_width(page, 480)
     reload_json(page, saved_path)
     expect(page.locator('.status-line')).to_contain_text('Configuration reloaded')
     expect(page.locator('.load-dialog')).to_be_hidden()
     expect(page.get_by_label('Maximum', exact=True)).to_have_value(re.compile(r'20(?:\.0)?'))
     expect(page.get_by_label('Field name', exact=True)).to_have_value(name)
+    properties_width(page, 312)
+    page.set_viewport_size({'width': 760, 'height': 657})
+    properties_width(page, 306, 306)
+    page.set_viewport_size(original_viewport)
+    properties_width(page, 312)
+    observations['reload_default_layout'] = 'passed: 480 to default 312, retained through viewport constraint'
     again = save_json(page, out / f'{prefix}-reloaded.json')
     assert again == saved
     assert (out / f'{prefix}-reloaded.json').read_bytes() == saved_path.read_bytes()

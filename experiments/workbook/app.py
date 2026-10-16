@@ -20,21 +20,37 @@ window.ravelWorkspaceLayout = {
         return {minimum: 300, maximum: Math.max(300, Math.min(560, available - minimumWorkspace))};
     },
     width(grid) { return grid.querySelector('.properties').getBoundingClientRect().width; },
+    preference(grid) { return parseFloat(grid.style.getPropertyValue('--properties-width')) || 312; },
+    sync(grid) {
+        const divider = grid.querySelector('.workspace-divider'), width = Math.round(this.width(grid));
+        divider.setAttribute('aria-valuemax', Math.floor(this.limits(grid).maximum));
+        divider.setAttribute('aria-valuenow', width);
+        divider.setAttribute('aria-valuetext', 'Properties ' + width + ' pixels');
+    },
+    init() {
+        this.observer?.disconnect();
+        const grid = this.grid();
+        this.observer = new ResizeObserver(() => this.sync(grid));
+        this.observer.observe(grid);
+        this.observer.observe(grid.querySelector('.properties'));
+        this.sync(grid);
+    },
+    prefer(grid, width) {
+        grid.style.setProperty('--properties-width', width + 'px');
+        this.sync(grid);
+    },
     set(grid, width) {
         const limits = this.limits(grid);
         width = Math.round(Math.max(limits.minimum, Math.min(limits.maximum, width)));
-        grid.style.setProperty('--properties-width', width + 'px');
-        const divider = grid.querySelector('.workspace-divider');
-        divider.setAttribute('aria-valuemax', Math.floor(limits.maximum));
-        divider.setAttribute('aria-valuenow', width);
-        divider.setAttribute('aria-valuetext', 'Properties ' + width + ' pixels');
+        this.prefer(grid, width);
     },
     start(event) {
         if (event.button !== 0 || !event.isPrimary) return;
         event.preventDefault();
         const divider = event.currentTarget, grid = divider.closest('.workbook-grid');
         divider.focus();
-        divider._resizeStart = {x: event.clientX, width: this.width(grid), pointer: event.pointerId};
+        divider._resizeStart = {x: event.clientX, width: this.width(grid),
+                                preference: this.preference(grid), pointer: event.pointerId};
         grid.dataset.resizing = 'true';
         divider.setPointerCapture(event.pointerId);
     },
@@ -48,7 +64,7 @@ window.ravelWorkspaceLayout = {
         if (!start) return;
         divider._resizeStart = null;
         const grid = divider.closest('.workbook-grid');
-        if (cancel) this.set(grid, start.width);
+        if (cancel) this.prefer(grid, start.preference);
         grid.dataset.resizing = 'false';
         if (divider.hasPointerCapture(start.pointer)) divider.releasePointerCapture(start.pointer);
     },
@@ -64,12 +80,8 @@ window.ravelWorkspaceLayout = {
             event.preventDefault(); this.set(grid, widths[event.key]);
         }
     },
-    reset() { const grid = this.grid(); if (grid) this.set(grid, 312); }
+    reset() { const grid = this.grid(); if (grid) this.prefer(grid, 312); }
 };
-window.addEventListener('resize', () => {
-    const layout = window.ravelWorkspaceLayout, grid = layout.grid();
-    if (grid) layout.set(grid, layout.width(grid));
-});
 </script>'''
 BRAND = Path(__file__).resolve().parents[2] / "brand"
 app.add_static_files("/workbook-icons", Path(__file__).with_name("icons"))
@@ -536,6 +548,7 @@ def workbook(entry: str, theme: str = "dark"):
                 divider.props(f'aria-controls={pane.html_id} aria-describedby={hint.html_id}')
                 properties()
         ui.label("Provisional configuration · Local only · NiceGUI evaluation").classes("footer-note")
+        ui.run_javascript('await Vue.nextTick(); window.ravelWorkspaceLayout.init();')
 
     count_note = None
     field_notice = None
