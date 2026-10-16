@@ -2,11 +2,14 @@
 
 Ravel is an early prototype. Read [AGENTS.md](AGENTS.md), the
 [plan](docs/plan.md) and [current progress](docs/progress.json) before work.
-Production generation is not implemented; NiceGUI and distribution choices
+The bounded explicit-rule single-table generator is implemented; sample and
+clinical generation remain planned. NiceGUI and distribution choices
 remain provisional. Discuss clinical rules, recipe changes, dependency/license
 changes and important interface behavior with the maintainer before acceptance.
 
-Use the [Windows workbook setup](docs/development.md#workbook-experiment),
+Use the [single-table source setup](docs/development.md#single-table-source-development).
+Historical experiment instructions remain in the
+[Windows workbook setup](docs/development.md#workbook-experiment),
 [verified fresh-checkout commands](docs/development.md#fresh-checkout-smoke) and
 [isolated packaging recipe](docs/development.md#windows-folder-bundle-experiment).
 These are same-host Windows instructions, not tested cross-platform setup.

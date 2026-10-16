@@ -1,5 +1,6 @@
 # Python environments
 .venv/
+.venv-source/
 venv/
 env/
 .env/
