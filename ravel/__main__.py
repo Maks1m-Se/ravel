@@ -44,8 +44,13 @@ def main(argv=None):
     run = commands.add_parser("generate", help="Write CSV, canonical recipe and run metadata; never overwrite files.")
     run.add_argument("recipe", type=Path)
     run.add_argument("--csv", type=Path, required=True)
+    commands.add_parser("ui", help="Launch the local table builder (requires requirements-ui.lock).")
     args = parser.parse_args(argv)
     try:
+        if args.command == "ui":
+            from .ui import launch
+            launch()
+            return 0
         recipe = read_recipe(args.recipe)
         if args.command == "validate":
             print(f"Valid {recipe['format']}: {len(recipe['table']['fields'])} columns, {recipe['table']['row_count']:,} rows.")
