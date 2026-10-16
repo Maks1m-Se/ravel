@@ -6,6 +6,11 @@ and stable entity/field random streams. Field names and rule notation below rema
 illustrative, not a stable schema or an implemented generator contract. Scope
 and release criteria remain in [the plan](plan.md).
 
+The bounded explicit-rule implementation now has its own concrete
+[single-table contract](single-table.md), format `ravel-single-table/1`. It does
+not implement the linked/clinical illustrative structure below, sample profiling,
+or the complete planned application recipe.
+
 ## One saved recipe
 
 Use one JSON-compatible recipe shared by the CLI and future Guided and
