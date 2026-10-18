@@ -43,7 +43,9 @@ def main(argv=None):
     check.add_argument("recipe", type=Path)
     run = commands.add_parser("generate", help="Write CSV, canonical recipe and run metadata; never overwrite files.")
     run.add_argument("recipe", type=Path)
-    run.add_argument("--csv", type=Path, required=True)
+    output = run.add_mutually_exclusive_group(required=True)
+    output.add_argument("--csv", type=Path)
+    output.add_argument("--directory", type=Path, help="Write a complete linked dataset into a new directory.")
     sample = commands.add_parser("sample", help="Profile an invented UTF-8 CSV into an editable source-aware recipe.")
     sample.add_argument("source", type=Path)
     sample.add_argument("--recipe", type=Path, required=True)
@@ -71,11 +73,22 @@ def main(argv=None):
             return 0
         recipe = read_recipe(args.recipe)
         if args.command == "validate":
-            print(f"Valid {recipe['format']}: {len(recipe['table']['fields'])} columns, {recipe['table']['row_count']:,} rows.")
+            if 'tables' in recipe:
+                print(f"Valid {recipe['format']}: {len(recipe['tables'])} tables, {sum(table['row_count'] for table in recipe['tables']):,} total rows.")
+            else:
+                print(f"Valid {recipe['format']}: {len(recipe['table']['fields'])} columns, {recipe['table']['row_count']:,} rows.")
         else:
+            if ('tables' in recipe) != (args.directory is not None):
+                raise ValueError('Use --directory for a linked dataset, or --csv for a single table.')
             result = generate(recipe)
-            paths = write_outputs(args.recipe, args.csv, result)
-            print(f"Generated {len(result.rows):,} rows; wrote " + ", ".join(str(p) for p in paths))
+            if args.directory is not None:
+                from .dataset import write_outputs as write_dataset
+                paths=write_dataset(args.directory,result)
+                count=sum(len(table.rows) for _,table in result.tables)
+            else:
+                paths = write_outputs(args.recipe, args.csv, result)
+                count=len(result.rows)
+            print(f"Generated {count:,} rows; wrote " + ", ".join(str(p) for p in paths))
         return 0
     except (ValidationError, OSError, ValueError) as exc:
         print(f"Ravel: {exc}", file=sys.stderr)

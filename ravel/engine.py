@@ -35,6 +35,9 @@ def generate(recipe):
     with localcontext() as context:
         context.prec = 40
         candidate = validate(recipe)
+        if candidate['format']=='ravel-dataset/1':
+            from .dataset import generate as generate_dataset
+            return generate_dataset(candidate)
         if "sample" in candidate:
             from .sample import compose
             return compose(candidate, _generate)
@@ -112,6 +115,9 @@ def csv_text(result):
 
 
 def run_metadata(result):
+    from .dataset import DatasetResult,run_metadata as dataset_metadata
+    if isinstance(result,DatasetResult):
+        return dataset_metadata(result)
     record = dict(environment=dict(result.environment), recipe_sha256=sha256(result.recipe_json.encode()).hexdigest(),
                 csv_sha256=sha256(csv_text(result).encode()).hexdigest(), row_count=len(result.rows),
                 column_count=len(result.headers), format="ravel-run/1")
