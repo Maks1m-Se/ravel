@@ -1653,3 +1653,27 @@ passed 41 tests, dashboard freshness and whitespace on Windows/Linux/macOS
 PR #10 remains draft and unmerged. The normal Berlin publication rule applies
 to the newly authorized sequential issue #11 queue; no new merge or binary
 publication is authorized. M0/full M1 and release gates remain incomplete.
+
+### Sample workflow (17 October 2026)
+
+Issue #12 is implemented locally on the repaired generator baseline. See
+[sample-assisted.md](sample-assisted.md) for the contract, invented references
+and UI/CLI walkthrough. Eleven new tests bring the full local suite to 54.
+The final Chrome run passes eight cases: both workflows at Light/Dark and
+1366×657/1280×800, including keyboard recovery, actual output/CSV and source
+retention, reproducible recipe reload, and the existing layout regressions.
+Use the maintained runner against an isolated development server:
+
+```bash
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow all --output outputs/sample-browser
+```
+
+The initial new browser assertion counted a hidden source table as output;
+the corrected selector checks the actual preview only. Failed attempts are
+retained separately. Current screenshots show the actual imported source and
+retained/generated output, not illustrative data. The import preview feels
+cramped at the shorter laptop height; the next UX package addresses that.
+Tests use Python3.14.8/NiceGUI3.18.0/Playwright1.58.0 and Chrome155.0.8059.82
+on this development host. No page errors or browser external HTTP/WebSocket
+attempts were observed. E50 records scope; E46 remains earlier human acceptance.
+No new hosted CI, native chooser, clean-machine or release claim is made.

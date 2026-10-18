@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 from .engine import csv_text, generate, run_metadata
-from .recipe import MAX_BYTES, ValidationError, loads
+from .recipe import MAX_BYTES, ValidationError, dumps, loads
 
 
 def read_recipe(path):
@@ -44,12 +44,30 @@ def main(argv=None):
     run = commands.add_parser("generate", help="Write CSV, canonical recipe and run metadata; never overwrite files.")
     run.add_argument("recipe", type=Path)
     run.add_argument("--csv", type=Path, required=True)
+    sample = commands.add_parser("sample", help="Profile an invented UTF-8 CSV into an editable source-aware recipe.")
+    sample.add_argument("source", type=Path)
+    sample.add_argument("--recipe", type=Path, required=True)
+    sample.add_argument("--delimiter", choices=["comma", "semicolon", "tab"], default="comma")
+    sample.add_argument("--mode", choices=["new", "extend"], default="new")
+    sample.add_argument("--rows", type=int, default=1000)
+    sample.add_argument("--seed", type=int, default=17)
+    sample.add_argument("--confirm-identifiers", action="store_true", help="Explicitly confirm the suggested sequential identifier policies.")
     commands.add_parser("ui", help="Launch the local table builder (requires requirements-ui.lock).")
     args = parser.parse_args(argv)
     try:
         if args.command == "ui":
             from .ui import launch
             launch()
+            return 0
+        if args.command == "sample":
+            from .sample import profile
+            with args.source.open("rb") as source:
+                payload = source.read(MAX_BYTES + 1)
+            recipe = profile(payload, {"comma": ",", "semicolon": ";", "tab": "\t"}[args.delimiter],
+                             args.mode, args.rows, args.seed, args.confirm_identifiers)
+            with args.recipe.open("xb") as output:
+                output.write(dumps(recipe).encode("utf-8"))
+            print(f"Saved editable sample assumptions to {args.recipe}; inspect them before generating.")
             return 0
         recipe = read_recipe(args.recipe)
         if args.command == "validate":

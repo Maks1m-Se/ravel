@@ -7,6 +7,7 @@ from nicegui import app, run, ui
 
 from .engine import generate, preview_rows, run_metadata
 from .recipe import MAX_BYTES, ValidationError, loads
+from .sample import assumption_origin, context as sample_context, parse_csv, profile
 from .workspace import Workspace, field_form
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +16,7 @@ app.add_static_files("/ravel-brand", ROOT / "brand/svg")
 app.add_static_file(url_path="/favicon.svg", local_file=ROOT / "brand/favicon/favicon.svg")
 app.add_static_file(url_path="/favicon.ico", local_file=ROOT / "brand/favicon/favicon.ico")
 RULES = dict(id="Sequential ID", constant="Constant text", sequence="Numeric sequence",
-             integer="Random integer", decimal="Random decimal", category="Category")
+             integer="Random integer", decimal="Random decimal", category="Category", text_id="Formatted ID")
 
 
 def help_note(title, text):
@@ -76,13 +77,12 @@ def home(theme: str = "dark"):
                    "Build a table from explicit rules", True)
             action("Open recipe", "folder_open", lambda: ui.navigate.to(f"/table?theme={choice.value.lower()}&open_recipe=true"),
                    "Open a saved single-table recipe")
-        with ui.row().classes("sample-next label-help"):
-            ui.label("Sample import · Coming next").classes("muted")
-            help_note("Sample import", "This increment generates from explicit rules. Sample import/profiling and linked tables follow in separate increments.")
+            action("Start from sample", "upload_file", lambda: ui.navigate.to(f"/table?theme={choice.value.lower()}&open_sample=true"),
+                   "Review editable assumptions from a local CSV")
 
 
 @ui.page("/table")
-def table(theme: str = "dark", open_recipe: bool = False):
+def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = False):
     state = Workspace()
     client = ui.context.client
     choice = chrome(theme)
@@ -91,6 +91,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
     view_buttons = {}
     active_view = "Fields"
     busy = False
+    pending_sample = None
 
     def report(message, error=False):
         status.set_text(message)
@@ -117,6 +118,12 @@ def table(theme: str = "dark", open_recipe: bool = False):
             discard_button.set_enabled(state.has_drafts)
         if table_name_label is not None:
             table_name_label.set_text(state.recipe["table"]["name"])
+        if sample_summary is not None:
+            if "sample" in state.recipe:
+                _, rows, retained, generated = sample_context(state.recipe)
+                sample_summary.set_text(f'{len(rows):,} source rows · {retained:,} retained + {generated:,} new = {retained+generated:,} output')
+            else:
+                sample_summary.set_text("")
 
     def wire_error(key, control):
         control.without_auto_validation()
@@ -192,6 +199,8 @@ def table(theme: str = "dark", open_recipe: bool = False):
             await show_error(exc)
             return
         await definitions.refresh()
+        if "sample" in state.recipe:
+            await properties.refresh()
         update_state()
         report("Changes applied. Generate to update the result.")
 
@@ -309,6 +318,106 @@ def table(theme: str = "dark", open_recipe: bool = False):
         load_error.set_text("")
         load_dialog.open()
 
+    async def sample_file(event):
+        nonlocal pending_sample
+        try:
+            pending_sample = profile(await event.file.read(), sample_delimiter.value)
+        except (ValidationError, ValueError) as exc:
+            pending_sample = None
+            sample_error.set_text(str(exc) + " Current table preserved.")
+            sample_uploader.reset()
+            await sample_review.refresh()
+            return
+        sample_error.set_text("")
+        confirm_ids.set_value(False)
+        await sample_review.refresh()
+        use_sample.enable()
+
+    async def use_import():
+        nonlocal active_view
+        if pending_sample is None:
+            return
+        from copy import deepcopy
+        candidate = deepcopy(pending_sample)
+        if confirm_ids.value:
+            candidate["sample"]["confirmed"] = candidate["sample"]["identifiers"][:]
+        try:
+            state.replace(candidate)
+        except ValidationError as exc:
+            sample_error.set_text(str(exc))
+            return
+        active_view = "Fields"
+        sample_dialog.close()
+        await shell.refresh()
+        report("Sample imported. Review assumptions and confirm identifier rules before generating.")
+        await focus_control(controls["name"])
+
+    async def delimiter_changed():
+        nonlocal pending_sample
+        pending_sample = None
+        use_sample.disable()
+        sample_uploader.reset()
+        await sample_review.refresh()
+
+    def open_sample_dialog():
+        sample_error.set_text("")
+        sample_dialog.open()
+
+    async def confirm_id():
+        try:
+            state.confirm_identifier()
+        except ValidationError as exc:
+            await show_error(exc)
+            return
+        await properties.refresh()
+        update_state()
+        report("Identifier rule confirmed. Generate when ready.")
+
+    @ui.refreshable
+    def sample_review():
+        if pending_sample is None:
+            ui.label("Choose a CSV to review its source and suggested assumptions.").classes("muted")
+            return
+        _, headers, rows = parse_csv(pending_sample["sample"]["csv_utf8"], pending_sample["sample"]["delimiter"])
+        ui.label(f'{len(rows):,} rows · {len(headers)} columns · only empty cells count as missing').classes("source-count")
+        with ui.element("div").classes("source-scroll"):
+            with ui.element("table").classes("preview-table sample-source"):
+                with ui.element("thead"), ui.element("tr"):
+                    for header in headers:
+                        with ui.element("th"):
+                            ui.label(header)
+                with ui.element("tbody"):
+                    for row in rows[:10]:
+                        with ui.element("tr"):
+                            for cell in row:
+                                with ui.element("td"):
+                                    ui.label(cell)
+        for field in pending_sample["table"]["fields"]:
+            if field['id'] in pending_sample['sample']['identifiers']:
+                suggestion = f"{RULES[field['kind']]} from {field.get('start', 'explicit rule needed')} · excluded from fitting"
+            elif field['kind'] in {'integer','decimal'}:
+                suggestion = f"uniform {field['minimum']}–{field['maximum']} · missing {field['missing_probability']}"
+            elif field['kind'] == 'category':
+                suggestion = ', '.join(f'{v}: {p}' for v,p in zip(field['values'],field['probabilities']))
+            else:
+                suggestion = f"{RULES[field['kind']]} · missing {field['missing_probability']}"
+            ui.label(f"{field['name']} · {suggestion}").classes("sample-assumption")
+
+    with ui.dialog() as sample_dialog, ui.card().classes("sample-dialog"):
+        ui.label("Start from sample").classes("section-title")
+        ui.label("Review suggestions before replacing this table and its unsaved edits. Original cells are retained exactly in Extend mode.").classes("help")
+        sample_delimiter = ui.select({',':'Comma', ';':'Semicolon', '\t':'Tab'}, value=',', label="CSV delimiter", on_change=delimiter_changed).props("outlined dense options-dense")
+        sample_error = ui.label("").props("role=alert").classes("error")
+        sample_uploader = ui.upload(label="Choose sample CSV", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
+            on_upload=sample_file, on_rejected=lambda: sample_error.set_text("Choose a UTF-8 CSV no larger than 1 MiB.")).props("accept=.csv,.tsv")
+        sample_review()
+        ui.label("Suggestions describe this sample. Review ranges and frequencies; generation treats columns independently.").classes("help")
+        confirm_ids = ui.checkbox("Use the displayed sequential identifier rules", value=False)
+        with ui.row():
+            use_sample = action("Use sample", "check", use_import, "Replace current table with the reviewed sample and assumptions", True)
+            use_sample.disable()
+            action("Cancel import", "close", sample_dialog.close, "Keep the current table and edits")
+
     with ui.dialog() as load_dialog, ui.card().classes("load-dialog"):
         ui.label("Open recipe").classes("section-title")
         ui.label("Loading replaces this table, edits and previous result.").classes("help")
@@ -333,6 +442,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
         export_button = action("Export CSV", "download", export, "Export the current generated result")
         action("Save recipe", "save", save, "Save applied rules as a versioned recipe")
         action("Open recipe", "folder_open", open_load, "Replace the table with a saved recipe")
+        action("Import CSV", "upload_file", open_sample_dialog, "Review a sample before replacing the table")
         record_button = action("Save run record", "description", save_record, "Save the exact recipe, environment and CSV checksum")
         action("Reset layout", "restart_alt", None, "Restore the 312 px Properties preference").on(
             "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
@@ -344,6 +454,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
         active_view = view
         fields_region.set_visibility(view == "Fields")
         preview_region.set_visibility(view == "Preview")
+        source_region.set_visibility(view == "Source")
         for name, button in view_buttons.items():
             button.props(f"aria-pressed={str(name == view).lower()}")
             button.classes(add="active-view" if name == view else "", remove="" if name == view else "active-view")
@@ -367,7 +478,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
                         with ui.element("td").classes("applied-settings"):
                             kind = field["kind"]
                             summary = (f'{field["minimum"]}–{field["maximum"]}' if kind in {"integer", "decimal"} else
-                                       f'Start {field["start"]}' if kind == "id" else
+                                       f'Start {field["start"]}' if kind in {"id", "text_id"} else
                                        f'{field["start"]}, step {field["step"]}' if kind == "sequence" else
                                        field["value"] if kind == "constant" else ", ".join(field["values"]))
                             ui.label(summary + f' · p(missing) {field["missing_probability"]}')
@@ -383,7 +494,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
         with ui.element("div").classes("preview-scroll").props('tabindex=0 role=region aria-label="Generated table; use arrow keys to scroll"'):
             with ui.element("table").classes("preview-table"):
                 with ui.element("caption"):
-                    ui.label(f"First {min(100, len(result.rows)):,} of {len(result.rows):,} generated rows")
+                    ui.label(f"First {min(100, len(result.rows)):,} of {len(result.rows):,} output rows")
                 with ui.element("thead"), ui.element("tr"):
                     for header in result.headers:
                         with ui.element("th").props("scope=col"):
@@ -408,9 +519,10 @@ def table(theme: str = "dark", open_recipe: bool = False):
         with ui.element("div").classes("property-fields"):
             labels = dict(name="Column name", kind="Rule", start="Start", step="Step", minimum="Minimum",
                           maximum="Maximum", places="Decimal places", value="Constant value",
+                          prefix="ID prefix", width="Minimum digits",
                           categories="Categories and probabilities", missing_probability="Missing probability")
             form = state.field_draft
-            order = ["name", "kind"] + [k for k in ["start", "step", "minimum", "maximum", "places", "value", "categories"] if k in form] + ["missing_probability"]
+            order = ["name", "kind"] + [k for k in ["prefix", "width", "start", "step", "minimum", "maximum", "places", "value", "categories"] if k in form] + ["missing_probability"]
             for key in order:
                 with ui.element("div").classes("setting-row").props(f"data-setting={key}"):
                     if key == "kind":
@@ -422,8 +534,14 @@ def table(theme: str = "dark", open_recipe: bool = False):
                     controls[key] = control
                     wire_error(key, control)
                     with ui.row().classes("setting-state"):
-                        ui.label("Explicit").classes("setting-origin")
+                        ui.label(assumption_origin(state.recipe, state.selected, key)).classes("setting-origin")
                         marks[key] = ui.label("Draft").classes("draft-mark")
+        if state.selected in state.recipe.get("sample", {}).get("identifiers", []):
+            ui.label("Identifier · excluded from fitting").classes("muted")
+            if state.selected in state.recipe["sample"]["confirmed"]:
+                ui.label("Identifier rule confirmed").classes("setting-origin")
+            else:
+                action("Confirm identifier rule", "verified", confirm_id, "Confirm the applied sequential identifier policy")
         with ui.row().classes("label-help"):
             help_note("Rule", "Integer bounds include both endpoints. Decimals are uniformly sampled on the chosen decimal grid. Categories use CSV lines such as A,0.25 and B,0.75; probabilities sum to 1. Missing probability is per cell, not an exact quota; IDs cannot be missing. Numeric sequence uses integer start and step, including zero/negative steps.")
             ui.label("Rule help").classes("muted rule-help-label")
@@ -433,7 +551,7 @@ def table(theme: str = "dark", open_recipe: bool = False):
 
     @ui.refreshable
     def shell():
-        nonlocal fields_region, preview_region, result_state, draft_summary, table_name_label
+        nonlocal fields_region, preview_region, source_region, result_state, draft_summary, table_name_label, sample_summary
         table_controls.clear()
         view_buttons.clear()
         with ui.element("main").classes("workbook-grid generator-grid"):
@@ -441,13 +559,13 @@ def table(theme: str = "dark", open_recipe: bool = False):
                 ui.label("Workbook").classes("pane-title")
                 ui.label("1 table").classes("muted")
                 table_name_label = ui.label(state.recipe["table"]["name"]).classes("table-button table-name-label")
-                ui.label("Explicit rules").classes("muted")
+                ui.label("Sample assumptions" if "sample" in state.recipe else "Explicit rules").classes("muted")
             with ui.element("section").classes("sheet"):
                 with ui.row().classes("sheet-heading"):
                     ui.label("Columns & data").classes("sheet-title")
                     draft_summary = ui.label("").classes("draft-summary muted").props("role=status")
                 with ui.row().classes("view-bar"):
-                    for name in ["Fields", "Preview"]:
+                    for name in ["Fields", "Preview"] + (["Source"] if "sample" in state.recipe else []):
                         view_buttons[name] = ui.button(name, color=None, on_click=lambda v=name: switch_view(v)).props(
                             "flat no-caps").classes("view-button")
                     help_note("Preview", "The first 100 rows of the actual generated table, formatted exactly as CSV. Previous data remains visible but export is blocked when edits make it out of date.")
@@ -456,10 +574,26 @@ def table(theme: str = "dark", open_recipe: bool = False):
                     action("Duplicate column", "content_copy", lambda: column_action("duplicate"), "Copy settings with a new identity and random stream")
                     action("Remove selected column", "delete_outline", confirm_remove, "Remove this column after confirmation")
                 result_state = ui.label("").classes("result-state").props("role=status aria-live=polite")
+                sample_summary = ui.label("").classes("sample-summary muted").props("role=status")
                 with ui.element("div").classes("fields-view") as fields_region:
                     definitions()
                 with ui.element("div").classes("preview-view") as preview_region:
                     preview()
+                with ui.element("div").classes("source-view") as source_region:
+                    if "sample" in state.recipe:
+                        _, headers, rows = parse_csv(state.recipe['sample']['csv_utf8'], state.recipe['sample']['delimiter'])
+                        ui.label(f'Original sample · first {min(10,len(rows))} of {len(rows):,} rows').classes("muted")
+                        with ui.element("div").classes("source-scroll"), ui.element("table").classes("preview-table sample-source"):
+                            with ui.element("thead"), ui.element("tr"):
+                                for header in headers:
+                                    with ui.element("th"):
+                                        ui.label(header)
+                            with ui.element("tbody"):
+                                for row in rows[:10]:
+                                    with ui.element("tr"):
+                                        for cell in row:
+                                            with ui.element("td"):
+                                                ui.label(cell)
             divider = ui.element("div").classes("workspace-divider").props(
                 'role=separator tabindex=0 aria-label=Properties aria-orientation=vertical '
                 'aria-valuemin=300 aria-valuemax=560 aria-valuenow=312 aria-valuetext="Properties 312 pixels" '
@@ -476,6 +610,10 @@ def table(theme: str = "dark", open_recipe: bool = False):
                 properties()
             with ui.element("div").classes("output-panel"):
                 with ui.row().classes("output-controls"):
+                    if "sample" in state.recipe:
+                        mode = ui.select({'new':'Generate new rows', 'extend':'Extend to total'}, value=state.table_draft['mode'], label='Sample mode', on_change=lambda e: edit_table('mode', e.value)).props('outlined dense options-dense')
+                        table_controls['mode'] = mode
+                        wire_error('mode', mode)
                     for key, label, control_key in [("name", "Table name", "table_name"), ("row_count", "Rows", "table_row_count"), ("seed", "Seed", "seed")]:
                         control = ui.input(label, value=state.table_draft[key], on_change=lambda e, k=key: edit_table(k, e.value)).props("outlined dense")
                         table_controls[control_key] = control
@@ -486,10 +624,12 @@ def table(theme: str = "dark", open_recipe: bool = False):
         ui.run_javascript("await Vue.nextTick(); window.ravelWorkspaceLayout.init();")
         update_state()
 
-    fields_region = preview_region = result_state = draft_summary = discard_button = table_name_label = None
+    fields_region = preview_region = source_region = result_state = draft_summary = discard_button = table_name_label = sample_summary = None
     shell()
     if open_recipe:
         ui.timer(0, open_load, once=True)
+    elif open_sample:
+        ui.timer(0, open_sample_dialog, once=True)
 
 
 def launch():

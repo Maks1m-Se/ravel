@@ -15,6 +15,7 @@ PARAMETERS = {
     "id": {"start"}, "constant": {"value"}, "sequence": {"start", "step"},
     "integer": {"minimum", "maximum"}, "decimal": {"minimum", "maximum", "places"},
     "category": {"values", "probabilities"},
+    "text_id": {"start", "prefix", "width"},
 }
 
 
@@ -82,6 +83,9 @@ def _canonical_json(recipe):
 
 
 def validate(recipe):
+    if isinstance(recipe, dict) and recipe.get("format") == "ravel-single-table/2":
+        from .sample import validate as validate_sample
+        return validate_sample(recipe)
     if isinstance(recipe, dict) and recipe.get("format") == "ravel-workbook-experiment/1":
         fail("format", "Old workbook experiment JSON is not a generation recipe. Keep the original; recreate its rules explicitly in Ravel. No migration was performed.")
     if not isinstance(recipe, dict) or recipe.get("format") != FORMAT:
@@ -185,6 +189,7 @@ def new_field(kind="integer", existing=()):
         "sequence": {"start": 10, "step": 2}, "integer": {"minimum": 0, "maximum": 100},
         "decimal": {"minimum": "0.00", "maximum": "100.00", "places": 2},
         "category": {"values": ["A", "B"], "probabilities": ["0.5", "0.5"]},
+        "text_id": {"start": 1, "prefix": "", "width": 3},
     }
     used = {f["name"] for f in existing}
     stem, candidate, index = "column", "column", 2
