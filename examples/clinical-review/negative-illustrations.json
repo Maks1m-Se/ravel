@@ -1,0 +1,277 @@
+{
+  "format": "ravel-clinical-review/1",
+  "status": "accepted-reference-transcription-awaiting-review",
+  "source": "docs/baseline-specification.md: Hand-checkable diagnostic illustrations",
+  "declarations": {
+    "treatment": "TX-1",
+    "dose_unit": "dx-unit",
+    "parameters": {
+      "BX-1": "bx-unit",
+      "BX-2": "bx-unit"
+    }
+  },
+  "purpose": "Expected-invalid source review sheets; these are not generator requests. Skipped checks are not manifest failures.",
+  "cases": [
+    {
+      "id": "a",
+      "declared_groups": [
+        [
+          "S-DIAG",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "D-D1",
+          "kind": "actual-dose",
+          "subject": "S-DIAG",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "A-M1",
+          "kind": "measurement",
+          "subject": "S-DIAG",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "A-M2",
+          "kind": "measurement",
+          "subject": "S-DIAG",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 12,
+          "unit": "other-unit"
+        }
+      ],
+      "expected_failures": [
+        {
+          "code": "INCOMPATIBLE_UNIT",
+          "scope": {
+            "subject": "S-DIAG",
+            "parameter": "BX-1"
+          },
+          "source_ids": [
+            "A-M2"
+          ]
+        }
+      ],
+      "not_evaluated": [
+        {
+          "checks": [
+            "baseline eligibility",
+            "baseline selection",
+            "BASELINE_TIE"
+          ],
+          "scope": {
+            "subject": "S-DIAG",
+            "parameter": "BX-1"
+          },
+          "reason": "A-M2 failed record validation"
+        }
+      ],
+      "expected_clinical_status": "failed",
+      "successful_groups": [],
+      "successful_changes": [],
+      "generic_validation_required": true,
+      "declared_subjects": [
+        "S-DIAG"
+      ]
+    },
+    {
+      "id": "b",
+      "declared_groups": [
+        [
+          "S-DIAG",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "D-D1",
+          "kind": "actual-dose",
+          "subject": "S-DIAG",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "B-M1",
+          "kind": "measurement",
+          "subject": "S-DIAG",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "B-M2",
+          "kind": "measurement",
+          "subject": "S-DIAG",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 12,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected_failures": [
+        {
+          "code": "BASELINE_TIE",
+          "scope": {
+            "subject": "S-DIAG",
+            "parameter": "BX-1"
+          },
+          "source_ids": [
+            "B-M1",
+            "B-M2"
+          ]
+        }
+      ],
+      "not_evaluated": [
+        {
+          "checks": [
+            "baseline-dependent checks"
+          ],
+          "scope": {
+            "subject": "S-DIAG",
+            "parameter": "BX-1"
+          },
+          "reason": "Latest eligible tie prevents baseline selection"
+        }
+      ],
+      "expected_clinical_status": "failed",
+      "successful_groups": [],
+      "successful_changes": [],
+      "generic_validation_required": true,
+      "declared_subjects": [
+        "S-DIAG"
+      ]
+    },
+    {
+      "id": "c",
+      "declared_groups": [
+        [
+          "S-DIAG",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "C-D1",
+          "kind": "actual-dose",
+          "subject": "S-DIAG",
+          "parameter": "TX-1",
+          "timestamp": "not-a-time",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "C-M1",
+          "kind": "measurement",
+          "subject": "S-DIAG",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected_failures": [
+        {
+          "code": "INVALID_TIMESTAMP",
+          "scope": {
+            "subject": "S-DIAG"
+          },
+          "source_ids": [
+            "C-D1"
+          ]
+        }
+      ],
+      "not_evaluated": [
+        {
+          "checks": [
+            "dose selection",
+            "EARLIEST_DOSE_TIE",
+            "dose-dependent checks"
+          ],
+          "scope": {
+            "subject": "S-DIAG"
+          },
+          "reason": "Actual-dose timestamp unavailable; no reduced-subset fallback"
+        }
+      ],
+      "expected_clinical_status": "failed",
+      "successful_groups": [],
+      "successful_changes": [],
+      "generic_validation_required": true,
+      "declared_subjects": [
+        "S-DIAG"
+      ]
+    },
+    {
+      "id": "crossed-pair",
+      "declared_subjects": [
+        "S-A",
+        "S-B"
+      ],
+      "declared_parameters": [
+        "BX-1",
+        "BX-2"
+      ],
+      "declared_groups": [
+        [
+          "S-A",
+          "BX-1"
+        ],
+        [
+          "S-B",
+          "BX-2"
+        ]
+      ],
+      "records": [
+        {
+          "id": "X-M1",
+          "kind": "measurement",
+          "subject": "S-A",
+          "parameter": "BX-2",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected_failures": [
+        {
+          "code": "UNDECLARED_GROUP",
+          "scope": {
+            "subject": "S-A",
+            "parameter": "BX-2"
+          },
+          "source_ids": [
+            "X-M1"
+          ]
+        }
+      ],
+      "not_evaluated": [
+        {
+          "checks": [
+            "undeclared group derivation"
+          ],
+          "scope": {
+            "subject": "S-A",
+            "parameter": "BX-2"
+          },
+          "reason": "The undeclared group must not be created"
+        }
+      ],
+      "expected_clinical_status": "failed",
+      "successful_groups": [],
+      "successful_changes": [],
+      "generic_validation_required": true
+    }
+  ]
+}

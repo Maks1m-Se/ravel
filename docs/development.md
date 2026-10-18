@@ -1772,3 +1772,31 @@ python -m ravel generate examples/linked/devices-measurements.recipe.json --dire
 Use a fresh output directory; existing destinations are never overwritten.
 See [linked-tables.md](linked-tables.md) for limits. This remains generic source
 development-host evidence, not native/clean-machine/clinical/release acceptance.
+
+### Clinical review preparation (18 October2026)
+
+Read [the proposal and review sheet](clinical-template-preparation.md) beside
+the accepted [baseline specification](baseline-specification.md). Review the
+numeric choices before clinical implementation; no adoption has been assumed.
+All78 unit methods pass. Two new methods protect name-based nonactivation,
+atomic rejection of reference sheets and structural fixture references. Run:
+
+```bash
+python scripts/check_clinical_review.py
+python -m ravel validate examples/clinical-review/structure-only.recipe.json
+```
+
+The first checks review-sheet references/counts, not clinical derivations. The
+second validates a runnable generic structural example only. The separate four
+accepted-case/negative-illustration JSON sheets are not application recipes.
+No clinical try-out, independent R comparison or clinical validation exists.
+Runtime/UI sources remain exactly the E53 version; its browser checks are reused.
+
+Frozen joint-test instance: http://127.0.0.1:8101/, commit
+`6a50e5fa6c89683aade934260378434cd81b71d3`, snapshot
+`linked-E53-323bae982692`, runtime fingerprint
+`323bae982692f05f72e5fdbb72e0fd9653acabea6a782251eee0335cc3a9351a`.
+Its snapshot is never edited or targeted by automated browser checks. The older
+repair-only instance on8100 is preserved separately. Drafts10/18/19/20/21 stay
+unmerged for joint review; E46 acceptance remains attributed to its original
+tested version.
