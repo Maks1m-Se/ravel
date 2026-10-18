@@ -39,6 +39,15 @@
 .sample-dialog .q-uploader__list { display: none; }
 .icon-action { min-width: 36px; min-height: 32px; }
 .leave-dialog { padding: 24px; max-width: 440px; gap: 16px; }
+.dataset-table-button { width: 100%; justify-content: flex-start; font-size: 12px; border-radius: 0; background: transparent; border-left: 3px solid transparent; }
+.dataset-table-button .q-btn__content { justify-content: flex-start; overflow-wrap: anywhere; }
+.dataset-table-button.selected-table { background: var(--selected); border-left: 3px solid var(--accent); }
+.table-count { font-size: 11px; padding: 0 12px 10px; }
+.relationship-dialog { width: 540px; max-width: 94vw !important; max-height: 90dvh; overflow: auto; padding: 24px; gap: 14px; }
+.relationship-dialog > * { flex-shrink: 0; }
+.relationship-dialog .q-field { width: 100%; }
+.relationship-counts { font-size: 13px; font-family: Consolas, monospace; padding: 8px; border: 1px solid var(--line); }
+.relationships-view { padding: 16px; font-size: 13px; line-height: 2; }
 .source-view { padding: 12px; }
 .sample-summary:empty { display: none; }
 .sample-summary { padding: 5px 10px; font-size: 12px; border-bottom: 1px solid var(--line); }

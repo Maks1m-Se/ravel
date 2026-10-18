@@ -19,6 +19,7 @@ PARAMETERS = {
     "normal": {"mean", "sd", "places"}, "boolean": {"probability"},
     "date": {"minimum", "maximum"}, "date_sequence": {"start", "step"},
     "category_quota": {"values", "counts", "missing_count", "scope"},
+    "foreign_key": set(), "child_index": set(),
 }
 
 
@@ -86,6 +87,9 @@ def _canonical_json(recipe):
 
 
 def validate(recipe):
+    if isinstance(recipe, dict) and recipe.get("format")=="ravel-dataset/1":
+        from .dataset import validate as validate_dataset
+        return validate_dataset(recipe)
     if isinstance(recipe, dict) and recipe.get("format") in ("ravel-single-table/2", "ravel-single-table/3"):
         from .sample import validate as validate_sample
         return validate_sample(recipe)
@@ -198,6 +202,7 @@ def new_field(kind="integer", existing=()):
         "date": {"minimum": "2024-02-28", "maximum": "2024-03-01"},
         "date_sequence": {"start": "2024-02-28", "step": 1},
         "category_quota": {"values": ["A", "B"], "counts": [500, 500], "missing_count": 0, "scope": "generated"},
+        "foreign_key": {}, "child_index": {},
     }
     used = {f["name"] for f in existing}
     stem, candidate, index = "column", "column", 2

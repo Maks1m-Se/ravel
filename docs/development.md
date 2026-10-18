@@ -1745,3 +1745,30 @@ unique integer capacity and exact category counts in the shared UI/CLI. Add a
 normal field, reject SD0 and recover with SD1. In a sample, choose Exact category
 counts with final scope; originals exceeding a category quota must fail rather
 than being rewritten. New behavior remains subject to joint review.
+
+### Linked generic tables (18 October 2026)
+
+All76 unit methods pass, including11 new dataset methods. The final attested
+Chrome matrix passes16 cases across rules/sample/extended/linked, both themes
+and1366x657/1280x800; a focused host Edge linked case passes. Actual screenshots
+were inspected. There are zero page errors/external browser HTTP/WebSockets.
+The complete generated ZIP and CLI directory contain byte-identical per-table
+CSV, recipe, dictionary and run metadata. Prior failed runs remain retained;
+the final snapshot check waits for the server's visible draft acknowledgement.
+
+Try Home > Use template > Devices / measurements. Generate: Devices has D01-D03;
+Measurements has six rows, M01-M06 and pairs D01/1,D01/2,D02/1,D02/2,D03/1,D03/2.
+Switch tables by keyboard; resize Properties and check its preference survives.
+Set child Rows5: Apply must report the required6 and preserve applied data.
+Discard, open Relationship, set3 children: review9 measurements before Apply;
+Cancel must keep6. Export dataset ZIP, save/reload and compare all files.
+Changing either table makes every previous table export stale until Generate.
+
+```bash
+python -m ravel validate examples/linked/devices-measurements.recipe.json
+python -m ravel generate examples/linked/devices-measurements.recipe.json --directory outputs/devices-review
+```
+
+Use a fresh output directory; existing destinations are never overwritten.
+See [linked-tables.md](linked-tables.md) for limits. This remains generic source
+development-host evidence, not native/clean-machine/clinical/release acceptance.
