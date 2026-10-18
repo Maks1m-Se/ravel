@@ -11,10 +11,11 @@ from .recipe import PARAMETERS, ValidationError, dumps, duplicate_field, new_fie
 
 def field_form(field):
     form = {key: str(value) for key, value in field.items() if key not in {"values", "probabilities"}}
-    if field["kind"] == "category":
+    if field["kind"] in {"category", "category_quota"}:
         output = StringIO(newline="")
-        csv.writer(output, lineterminator="\n").writerows(zip(field["values"], field["probabilities"]))
-        form["categories"] = output.getvalue().rstrip("\n")
+        csv.writer(output, lineterminator="\n").writerows(zip(field["values"], field["probabilities" if field["kind"]=="category" else "counts"]))
+        form["categories" if field["kind"]=="category" else "quotas"] = output.getvalue().rstrip("\n")
+        form.pop('counts', None)
     return form
 
 
@@ -27,23 +28,25 @@ def whole(value, path):
 def form_field(form, path):
     kind = form["kind"]
     field = {key: form[key] for key in ("id", "name", "kind", "missing_probability")}
+    if "unique" in form:
+        field["unique"] = form["unique"] == "True"
     field["name"] = field["name"].strip()
     for key in PARAMETERS[kind]:
-        if key in {"values", "probabilities"}:
+        if key in {"values", "probabilities", "counts"}:
             continue
         value = form[key]
-        if key in {"start", "step", "places", "width"} or kind == "integer":
+        if (key in {"start", "step", "places", "width", "missing_count"} and not (kind=="date_sequence" and key=="start")) or kind == "integer":
             value = whole(value, path + "." + key)
         field[key] = value
-    if kind == "category":
+    if kind in {"category", "category_quota"}:
         try:
-            rows = list(csv.reader(StringIO(form["categories"]), strict=True))
+            rows = list(csv.reader(StringIO(form["categories" if kind=="category" else "quotas"]), strict=True))
         except csv.Error as exc:
             raise ValidationError(path + ".categories", "Use CSV lines: category,probability.") from exc
         if not rows or any(len(row) != 2 for row in rows):
             raise ValidationError(path + ".categories", "Use one category,probability pair per CSV line.")
         field["values"] = [row[0] for row in rows]
-        field["probabilities"] = [row[1].strip() for row in rows]
+        field["probabilities" if kind=="category" else "counts"] = [row[1].strip() if kind=="category" else whole(row[1],path+'.counts') for row in rows]
     return field
 
 
@@ -107,7 +110,9 @@ class Workspace:
         candidate["table"]["row_count"] = whole(self.table_draft["row_count"], "table.row_count")
         index = next(i for i, f in enumerate(candidate["table"]["fields"]) if f["id"] == self.selected)
         candidate["table"]["fields"][index] = form_field(self.field_draft, f"table.fields.{index}")
-        if self.field_draft["kind"] == "text_id":
+        if self.field_draft["kind"] in {"normal","boolean","date","date_sequence","category_quota"} or "unique" in self.field_draft:
+            candidate["format"] = "ravel-single-table/3"
+        elif self.field_draft["kind"] == "text_id" and candidate["format"]=="ravel-single-table/1":
             candidate["format"] = "ravel-single-table/2"
         if "sample" in candidate:
             candidate["sample"]["mode"] = self.table_draft["mode"]

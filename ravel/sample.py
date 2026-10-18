@@ -153,7 +153,11 @@ def validate(document):
     projected['format'] = rules.FORMAT
     projected['table']['row_count'] = max(1,count)
     for i,field in enumerate(fields):
-        if isinstance(field,dict) and field.get('kind') == 'text_id':
+        from .extended import project
+        projected_field=project(field,f'table.fields.{i}',count,document['format'])
+        projected['table']['fields'][i]=projected_field
+        if projected_field.get('kind') == 'text_id':
+            field=projected_field
             path=f'table.fields.{i}'
             rules.keys(field, {'id','name','kind','missing_probability','prefix','width','start'},path)
             prefix=field['prefix']
@@ -168,6 +172,8 @@ def validate(document):
                 rules.fail(path+'.missing_probability','Identifiers cannot be missing.')
             projected['table']['fields'][i] = dict(id=field['id'],name=field['name'],kind='constant',value='id',missing_probability='0')
     rules.validate(projected)
+    from .extended import preflight
+    preflight(document,count)
     if source and (len(fields)+1 > 50 or document['table']['row_count']*(len(fields)+1)>2_000_000):
         rules.fail('table.row_count','Output including row origin supports at most 50 columns and 2,000,000 cells.')
     if source and any(field['name']=='row_origin' for field in fields):
@@ -182,21 +188,22 @@ def compose(document, generator):
     headers, rows, retained, count = context(document)
     sample = document['sample']
     for field in document['table']['fields']:
-        if count and field['id'] in sample['identifiers']:
-            if field['id'] not in sample['confirmed'] or field['kind'] not in {'id','text_id'}:
-                rules.fail('sample.identifiers', f'Confirm an explicit sequential identifier rule for {field["name"]}.')
+        if field['id'] in sample['identifiers']:
             original = [row[sample['source_fields'][field['id']]] for row in rows]
             if '' in original or len(set(original)) != len(original):
                 rules.fail('sample.identifiers', f'{field["name"]}: retained identifiers must be nonempty and unique.')
+            if not count:
+                continue
+            if field['id'] not in sample['confirmed'] or field['kind'] not in {'id','text_id'}:
+                rules.fail('sample.identifiers', f'Confirm an explicit sequential identifier rule for {field["name"]}.')
             new = [str(field['start']+i) if field['kind']=='id' else field['prefix']+str(field['start']+i).zfill(field['width']) for i in range(count)]
             if set(new) & set(original):
                 rules.fail('sample.identifiers', f'{field["name"]}: generated identifiers collide with source identifiers; choose another start/prefix.')
     generated = ()
     if count:
-        candidate=deepcopy(document)
-        candidate.pop('sample')
-        candidate['table']['row_count']=count
-        generated=generator(candidate).rows
+        from .extended import generated_recipe
+        candidate=generated_recipe(document,count)
+        generated=generator(candidate,source_document=document).rows
     fields=document['table']['fields']
     output = [tuple(row[sample['source_fields'][f['id']]] if f['id'] in sample['source_fields'] else None for f in fields)+('retained',) for row in rows[:retained]]
     output.extend(tuple(row)+('generated',) for row in generated)
@@ -208,6 +215,7 @@ def assumption_origin(document, identity, key):
     if original is None:
         return 'Explicit'
     field=next(f for f in document['table']['fields'] if f['id']==identity)
-    if key=='categories':
-        return 'Sample' if all(field.get(k)==original.get(k) for k in ['values','probabilities']) else 'Edited'
+    if key in {'categories','quotas'}:
+        parameters=['values','probabilities'] if key=='categories' else ['values','counts']
+        return 'Sample' if field['kind']==original['kind'] and all(field.get(k)==original.get(k) for k in parameters) else 'Edited'
     return 'Sample' if field.get(key)==original.get(key) else 'Edited'

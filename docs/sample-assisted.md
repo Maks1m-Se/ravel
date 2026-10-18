@@ -7,6 +7,9 @@ accepted Fichte appearance, comfortable Properties interaction and completed
 explicit-rule engine. No clinical rules, linked tables or packaging work are
 introduced here.
 
+The later [version3 rules](extended-rules.md) add finite-domain uniqueness and
+exact quotas to this same source-bound flow; version2 semantics remain unchanged.
+
 ## User flow
 
 1. **Start from a sample** selects a local UTF-8 CSV. Parse logical CSV records,
