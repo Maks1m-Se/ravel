@@ -4,66 +4,77 @@
   <img src="brand/lockup/ravel-lockup-light.svg" alt="Ravel" width="225" height="64">
 </picture>
 
-Ravel is an open-source tool for composing reproducible synthetic test datasets
-from explicit rules or examples. **Dataset generation is still planned; the
-current implementation is a fixture-based workbook prototype.**
+Ravel composes reproducible synthetic test data from explicit rules.
+**The current source preview generates one table.** Sample import/profiling and
+linked tables are planned next; this is not a supported application release.
 
 **Compose the data you need.**
 
-![Ravel Dark workbench with widened Properties, applied settings and an unfinished edit](docs/images/m0-06-ergonomics-after-dark.png)
+![Ravel table builder with six configured columns and widened Properties in Dark](docs/images/m1-single-table-fields-dark.png)
 
-## Intended workflows
+## Build a table
 
-Both workflows are planned to use the same editable recipe:
+Add, duplicate, rename, configure and remove columns. Choose sequential IDs,
+constant text, numeric sequences, bounded random integers/decimals or categorical
+values with explicit probabilities. Set row count, seed and per-cell missingness,
+then **Apply changes → Generate table**. Preview shows the first 100 actual rows;
+**Export CSV**, **Save recipe** and **Save run record** retain the data, exact rules,
+generating environment and checksums.
 
-- **Define a dataset from rules.** Specify fields, distributions, categories,
-  missingness and constraints, then generate the requested records.
-- **Start from an example.** Use a sample to guide settings, review its assumptions,
-  and create a new dataset or retain the example rows and extend it to a target count.
+Unapplied or invalid edits cannot be silently ignored. Changed settings mark the
+previous result **Out of date** and block CSV export until a current result is
+generated. Column removal asks for confirmation. Drafts and errors survive theme,
+view and layout changes. Drag the Properties divider or focus it and use arrows;
+**Reset layout** restores its default preference, including after window resizing.
 
-Controlled distributions and missingness make unusual cases repeatable: test a
-rare category, missing value or boundary without waiting for real data to contain
-it. Constraints will express relationships that records must satisfy. Saved
-recipes, seeds and recorded versions will make runs reproducible within a pinned
-environment; validation will check the requested counts and rules and report
-failures. These generation capabilities are **planned**, not implemented yet.
+The headless engine and CLI use the same versioned recipe, validation and CSV
+serializer as the UI. Stable field identities and separate random streams mean
+adding an independent column preserves existing generated columns. Duplicated
+columns get new identities. Reproducibility is scoped to the recorded environment.
 
-## Current workbook prototype
+### Source quickstart
 
-Try the shared editor through **Create from scratch** or **Start from a sample**.
-The sample route uses an invented ten-row CSV with precomputed suggestions.
-You can edit settings, distinguish applied values from drafts, correct inline
-validation errors and save/reload a provisional JSON configuration. Light and
-Dark themes are available.
-
-Drag the divider beside Properties to give editing more room. Tab to the divider
-and use Left/Right arrows for keyboard adjustment; **Reset layout** restores the
-default width. Layout changes preserve edits and are separate from saved JSON.
-
-The preview contains fixed illustrations and output controls calculate counts
-only. The prototype does not generate data, infer settings or import arbitrary
-samples. NiceGUI remains provisional; this is an early development preview,
-not a supported application release.
-
-### Quickstart
-
-From a repository checkout, in PowerShell at the repository root with
-Python 3.11 installed:
+Use standard **CPython 3.14.8 x64**, with the GIL enabled, on Windows. In PowerShell
+at the repository root, create a separate source environment:
 
 ```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r experiments/workbook/requirements.lock
-.\.venv\Scripts\python.exe -m pip check
-.\.venv\Scripts\python.exe -m experiments.workbook.app
+py -3.14 -m venv .venv-source
+.\.venv-source\Scripts\python.exe --version
+.\.venv-source\Scripts\python.exe -m pip install -r requirements-ui.lock
+.\.venv-source\Scripts\python.exe -m pip check
+.\.venv-source\Scripts\python.exe -m ravel ui
 ```
 
-Open **http://127.0.0.1:8080/**; stop with Ctrl+C. Port 8080 must be free.
-Installation needs network access; the running prototype serves assets locally.
-Save configuration before closing the page: state is session-only.
-Tested on Windows 11 with CPython 3.11.0, NiceGUI 3.18.0 and Chrome 155.
+Verify that the version command reports **3.14.8**. Open
+**http://127.0.0.1:8090/** and choose **Create table**. Stop with Ctrl+C.
+Installation needs network access; the app serves assets locally. Save before
+closing the page: state is session-only. NiceGUI remains provisional.
 
-See the [development guide](docs/development.md#workbook-experiment) for setup,
-checks, packaging evidence, review history and technical limitations.
+### Headless example
+
+The core and CLI need only the standard library. With the same interpreter:
+
+```powershell
+New-Item -ItemType Directory -Force outputs/tryout
+.\.venv-source\Scripts\python.exe -m ravel validate examples/three-rows.recipe.json
+.\.venv-source\Scripts\python.exe -m ravel generate examples/three-rows.recipe.json --csv outputs/tryout/reference.csv
+```
+
+Expected rows: `(1, demo, 10)`, `(2, demo, 12)`, `(3, demo, 14)`. The CLI writes
+CSV, canonical `.recipe.json` and `.run.json` sidecars and refuses to overwrite
+existing files. Choose a fresh output filename for another run.
+
+The [single-table contract](docs/single-table.md) defines bounds, decimal scale,
+probability semantics, CSV and limits. The app explicitly rejects the old
+workbook experiment JSON; it never silently migrates or overwrites the original.
+Sample import, exact quotas, arbitrary distributions, dependencies, linked tables,
+clinical derivations and binary distribution are outside this increment. Both
+generic entry paths remain required for the first usable release.
+
+See the [development guide](docs/development.md#single-table-source-development)
+for maintained checks and a short walkthrough. Historical
+[fixture experiment instructions](docs/development.md#workbook-experiment) and
+packaging evidence remain available, with their original scope.
 
 ## Documentation and contributing
 

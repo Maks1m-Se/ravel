@@ -120,6 +120,19 @@ dependency changes remain outside this bounded task; M0-06 stays partial.
 
 Initial planning allowance from revision 1: roughly 120–180 focused hours, including review, learning, documentation, and packaging. At eight hours per week that is about 15–23 weeks. Adding native macOS validation introduces work not yet estimated; review the budget after the M0 packaging experiment and M1 implementation. Public add-on infrastructure is outside this v0.1 budget. Publish the alpha and use its demonstrated work in applications before the entire plan is finished.
 
+**Approved sequencing change, 15 October 2026.** Begin a bounded M1-01/M1-02
+explicit-rule single-table increment while remaining M0 packaging/platform work
+stays open. One batch may contain several sequential implementation stages before
+joint maintainer review: (1) specified versioned recipe, reference fixture, source
+environment and headless engine/CLI; (2) usable table builder retaining accepted
+Fichte appearance and Properties ergonomics; (3) CSV/recipe consistency, automated
+checks, actual captures and a draft PR walkthrough. The supported contract is in
+[single-table.md](single-table.md). Sample import/profiling follows this increment,
+then linked tables. Both generic entry paths remain required for the first usable
+release. Do not mark M0, full M1, NiceGUI adoption or distribution/release gates
+complete on the strength of this narrower increment. Clinical derivations and
+Windows binary distribution remain outside this batch.
+
 **Clinical specification.** The first rule is: select the last nonmissing biomarker measurement strictly before the first actual dose, within subject and parameter. Calculate change as follow-up value minus baseline in compatible units. Absence of an eligible baseline produces a missing baseline and change with an explicit reason. Ties require a declared rule or a clear error. This is the example project's rule, not a universal clinical convention.
 
 The twelve reference cases cover: ordinary baseline; multiple eligible measurements; latest pre-dose value missing; no eligible baseline; an observation exactly at first dose; a post-dose observation labelled baseline; duplicate eligible timestamps; out-of-order input; missing actual dose; incompatible units; no usable measurements; and multiple subjects/parameters requiring correct grouping. Fix each expected result by hand before implementing the derivation. Mark intentionally invalid cases separately from valid unusual cases.
