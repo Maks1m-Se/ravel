@@ -287,6 +287,11 @@ specification, not an implemented mode or a general defect-injection framework.
 
 ## Implementation ownership and unresolved numeric policy
 
+The unreviewed [clinical template preparation and numeric proposal](clinical-template-preparation.md)
+now supplies the requested decision sheet, interface mapping and machine-readable
+transcriptions of the accepted references. It adopts no numeric policy and
+implements no derivations. The review prerequisite below remains in force.
+
 Before clinical numeric implementation in **M1-01, Implement linked clinical CLI
 slice** ([existing task record](progress.json)), specify and review arithmetic
 representation and supported range/overflow handling, rounding (including when

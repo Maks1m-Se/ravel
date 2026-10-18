@@ -1,0 +1,159 @@
+{
+  "format": "ravel-dataset/1",
+  "seed": 17,
+  "tables": [
+    {
+      "id": "subjects",
+      "name": "Subjects (generic)",
+      "row_count": 1,
+      "primary_key": "subject_id",
+      "fields": [
+        {
+          "id": "subject_id",
+          "name": "subject_id",
+          "kind": "text_id",
+          "missing_probability": "0",
+          "prefix": "S",
+          "start": 1,
+          "width": 2
+        }
+      ]
+    },
+    {
+      "id": "exposures",
+      "name": "Exposures (generic)",
+      "row_count": 1,
+      "primary_key": "dose_id",
+      "fields": [
+        {
+          "id": "dose_id",
+          "name": "dose_id",
+          "kind": "text_id",
+          "missing_probability": "0",
+          "prefix": "D",
+          "start": 1,
+          "width": 2
+        },
+        {
+          "id": "subject_id",
+          "name": "subject_id",
+          "kind": "foreign_key",
+          "missing_probability": "0"
+        },
+        {
+          "id": "kind",
+          "name": "kind",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "actual-dose"
+        },
+        {
+          "id": "treatment",
+          "name": "treatment",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "TX-1"
+        },
+        {
+          "id": "timestamp",
+          "name": "timestamp",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "2026-01-01T10:00:00Z"
+        },
+        {
+          "id": "amount",
+          "name": "amount",
+          "kind": "integer",
+          "missing_probability": "0",
+          "minimum": 1,
+          "maximum": 1
+        },
+        {
+          "id": "unit",
+          "name": "unit",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "dx-unit"
+        }
+      ]
+    },
+    {
+      "id": "measurements",
+      "name": "Measurements (generic)",
+      "row_count": 1,
+      "primary_key": "measurement_id",
+      "fields": [
+        {
+          "id": "measurement_id",
+          "name": "measurement_id",
+          "kind": "text_id",
+          "missing_probability": "0",
+          "prefix": "M",
+          "start": 1,
+          "width": 2
+        },
+        {
+          "id": "subject_id",
+          "name": "subject_id",
+          "kind": "foreign_key",
+          "missing_probability": "0"
+        },
+        {
+          "id": "parameter",
+          "name": "parameter",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "BX-1"
+        },
+        {
+          "id": "timestamp",
+          "name": "timestamp",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "2026-01-01T09:00:00Z"
+        },
+        {
+          "id": "value",
+          "name": "value",
+          "kind": "integer",
+          "missing_probability": "0",
+          "minimum": 10,
+          "maximum": 10
+        },
+        {
+          "id": "unit",
+          "name": "unit",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "bx-unit"
+        },
+        {
+          "id": "baseline",
+          "name": "baseline",
+          "kind": "constant",
+          "missing_probability": "0",
+          "value": "ordinary literal text"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "subject_exposures",
+      "parent": "subjects",
+      "parent_key": "subject_id",
+      "child": "exposures",
+      "foreign_key": "subject_id",
+      "children_per_parent": 1
+    },
+    {
+      "id": "subject_measurements",
+      "parent": "subjects",
+      "parent_key": "subject_id",
+      "child": "measurements",
+      "foreign_key": "subject_id",
+      "children_per_parent": 1
+    }
+  ]
+}
