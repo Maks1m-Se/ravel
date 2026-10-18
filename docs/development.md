@@ -1706,3 +1706,42 @@ all ten published changed blobs match the tested repair snapshot. The PR stays
 draft and unmerged. Normal Berlin restrictions apply to later publication.
 The manual server on8100 is a separate immutable repair-E49 snapshot, excluding
 sample/polish changes. New behavior awaits joint review and E46 is unchanged.
+
+### Bounded extended rules (18 October2026)
+
+See [extended-rules.md](extended-rules.md) for the version3 contract and the hand
+references. All65 unit methods pass. The common source-attested Chrome matrix
+passes12 cases: rules/sample/extended, both themes and both laptop sizes. A
+focused Edge extended-rule case passes. Actual captures were inspected; zero
+browser page errors or external HTTP/WebSocket attempts. Recipe/CSV/CLI agree,
+and impossible final quotas preserve the previous applied state and result.
+
+The fixed statistics command was executed once with its predeclared fixture and
+five seeds; unchanged R5 thresholds all passed:
+
+```bash
+python scripts/check_rule_statistics.py --output outputs/rule-statistics.json
+```
+
+| Seed | Mean | Sample SD | Bernoulli0.30 proportion |
+| --- | ---: | ---: | ---: |
+| 17 | -0.00079190240 | 0.99879584231 | 0.30003 |
+| 42 | 0.00078475095 | 0.99954688816 | 0.30319 |
+| 101 | -0.00355832615 | 0.99828572696 | 0.30054 |
+| 2026 | -0.00310758395 | 1.00109307029 | 0.30074 |
+| 65537 | -0.00223665512 | 0.99897580584 | 0.30233 |
+
+These are100000 rows per seed. Gaussian-pair correlation is not implemented, so
+overall R5 remains open. No clinical numeric-policy or release acceptance is
+implied. Keep the source interpreter/environment pinned for reproducibility.
+After capture review, quota provenance was corrected to Edited, and source-ID
+validation was extended to zero-new runs. Three new failing regression assertions
+reproduced these defects before repair; all65 methods then pass. Four final
+sample plus four final extended Chrome cases and one final Edge extended case
+verify the fixed sources; unchanged rule checks and statistics are reused.
+The final sample checks include exact retention with zero new rows.
+Use `examples/extended-rules/three-days.recipe.json` to try leap day, Boolean,
+unique integer capacity and exact category counts in the shared UI/CLI. Add a
+normal field, reject SD0 and recover with SD1. In a sample, choose Exact category
+counts with final scope; originals exceeding a category quota must fail rather
+than being rewritten. New behavior remains subject to joint review.

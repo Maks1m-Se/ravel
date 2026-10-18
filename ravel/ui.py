@@ -17,7 +17,31 @@ app.add_static_files("/ravel-brand", ROOT / "brand/svg")
 app.add_static_file(url_path="/favicon.svg", local_file=ROOT / "brand/favicon/favicon.svg")
 app.add_static_file(url_path="/favicon.ico", local_file=ROOT / "brand/favicon/favicon.ico")
 RULES = dict(id="Sequential ID", constant="Constant text", sequence="Numeric sequence",
-             integer="Random integer", decimal="Random decimal", category="Category", text_id="Formatted ID")
+             integer="Random integer", decimal="Random decimal", category="Category", text_id="Formatted ID",
+             normal="Normal numeric", boolean="Boolean", date="Calendar date", date_sequence="Date sequence",
+             category_quota="Exact category counts")
+
+
+def rule_summary(field):
+    kind=field['kind']
+    if kind in {'integer','decimal','date'}:
+        summary=f'{field["minimum"]}–{field["maximum"]}'
+    elif kind in {'id','text_id'}:
+        summary=f'Start {field["start"]}'
+    elif kind in {'sequence','date_sequence'}:
+        summary=f'{field["start"]}, step {field["step"]}'
+    elif kind=='normal':
+        summary=f'Mean {field["mean"]} · SD {field["sd"]} · {field["places"]} decimals'
+    elif kind=='boolean':
+        summary=f'p(true) {field["probability"]}'
+    elif kind=='constant':
+        summary=field['value']
+    elif kind=='category_quota':
+        summary=', '.join(f'{v}: {c}' for v,c in zip(field['values'],field['counts']))
+        return summary+f' · missing: {field["missing_count"]} · {field["scope"]}'
+    else:
+        summary=', '.join(field['values'])
+    return summary+f' · p(missing) {field["missing_probability"]}'+(' · unique' if field.get('unique') else '')
 
 
 def help_note(title, text):
@@ -174,6 +198,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             key = exc.path.rsplit(".", 1)[-1]
             if key in {"values", "probabilities"}:
                 key = "categories"
+            elif key in {"counts", "unique"}:
+                key = "quotas" if key=="counts" else "maximum" if "maximum" in controls else "table_row_count"
             index = int(exc.path.split(".")[2])
             field = state.recipe["table"]["fields"][index]
             if field["id"] != state.selected:
@@ -509,12 +535,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         with ui.element("td"):
                             ui.label(RULES[field["kind"]])
                         with ui.element("td").classes("applied-settings"):
-                            kind = field["kind"]
-                            summary = (f'{field["minimum"]}–{field["maximum"]}' if kind in {"integer", "decimal"} else
-                                       f'Start {field["start"]}' if kind in {"id", "text_id"} else
-                                       f'{field["start"]}, step {field["step"]}' if kind == "sequence" else
-                                       field["value"] if kind == "constant" else ", ".join(field["values"]))
-                            ui.label(summary + f' · p(missing) {field["missing_probability"]}')
+                            ui.label(rule_summary(field))
 
     @ui.refreshable
     def preview():
@@ -553,15 +574,19 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             labels = dict(name="Column name", kind="Rule", start="Start", step="Step", minimum="Minimum",
                           maximum="Maximum", places="Decimal places", value="Constant value",
                           prefix="ID prefix", width="Minimum digits",
+                          mean="Mean", sd="Standard deviation", probability="True probability",
+                          quotas="Categories and exact counts", scope="Quota scope", missing_count="Exact missing count",
                           categories="Categories and probabilities", missing_probability="Missing probability")
             form = state.field_draft
-            order = ["name", "kind"] + [k for k in ["prefix", "width", "start", "step", "minimum", "maximum", "places", "value", "categories"] if k in form] + ["missing_probability"]
+            order = ["name", "kind"] + [k for k in ["prefix", "width", "start", "step", "minimum", "maximum", "mean", "sd", "places", "probability", "value", "categories", "quotas", "scope", "missing_count"] if k in form] + ["missing_probability"]
             for key in order:
                 with ui.element("div").classes("setting-row").props(f"data-setting={key}"):
                     if key == "kind":
                         control = ui.select(RULES, label=labels[key], value=form[key], on_change=change_kind).props("outlined dense options-dense")
-                    elif key == "categories":
+                    elif key in {"categories", "quotas"}:
                         control = ui.textarea(labels[key], value=form[key], on_change=lambda e, k=key: edit_field(k, e.value)).props("outlined rows=4")
+                    elif key=="scope":
+                        control = ui.select({'generated':'New generated rows','final':'Final output including originals'}, label=labels[key], value=form[key], on_change=lambda e: edit_field('scope',e.value)).props('outlined dense options-dense')
                     else:
                         control = ui.input(labels[key], value=form[key], on_change=lambda e, k=key: edit_field(k, e.value)).props("outlined dense")
                     controls[key] = control
@@ -569,6 +594,10 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     with ui.row().classes("setting-state"):
                         ui.label(assumption_origin(state.recipe, state.selected, key)).classes("setting-origin")
                         marks[key] = ui.label("Draft").classes("draft-mark")
+            if form['kind'] in {'integer','decimal','date','id','text_id'}:
+                with ui.element('div').classes('setting-row').props('data-setting=unique'):
+                    ui.checkbox('Require unique values',value=form.get('unique')=='True',on_change=lambda e: edit_field('unique',str(e.value)))
+                    marks['unique']=ui.label('Draft').classes('draft-mark')
         if state.selected in state.recipe.get("sample", {}).get("identifiers", []):
             ui.label("Identifier · excluded from fitting").classes("muted")
             if state.selected in state.recipe["sample"]["confirmed"]:
@@ -576,7 +605,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             else:
                 action("Confirm identifier rule", "verified", confirm_id, "Confirm the applied sequential identifier policy")
         with ui.row().classes("label-help"):
-            help_note("Rule", "Integer bounds include both endpoints. Decimals are uniformly sampled on the chosen decimal grid. Categories use CSV lines such as A,0.25 and B,0.75; probabilities sum to 1. Missing probability is per cell, not an exact quota; IDs cannot be missing. Numeric sequence uses integer start and step, including zero/negative steps.")
+            help_note("Rule", "Ranges include both endpoints. Category probabilities use A,0.25 and B,0.75; they sum to1. Exact counts use A,600 and B,400 plus an exact missing count; choose new rows or final output scope. Normal uses a positive SD and half-even output rounding; unsupported draws fail without clipping. Dates use ISO YYYY-MM-DD and whole-day steps. Unique finite ranges must have enough unused values and zero missing probability. IDs cannot be missing.")
             ui.label("Rule help").classes("muted rule-help-label")
         action("Apply changes", "check", apply, "Apply column, row count, seed and table name edits", True).classes("apply-button")
         discard_button = action("Discard edits", "undo", discard, "Restore the applied settings").classes("discard-button")
