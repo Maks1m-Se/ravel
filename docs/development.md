@@ -1627,3 +1627,29 @@ resolved that environment problem. Five literal-category edit/Apply/save-reload
 checks preserved CR, LF, CRLF, quotes, commas and Unicode. No product change was
 required. Hosted core CI remains pending execution, and this local check is not
 native installation evidence. M0/full M1 and release gates remain incomplete.
+
+### Recipe-size and focus repair (17 October 2026)
+
+E49 records the saved-size boundary repair: canonical UTF-8 recipes must fit
+within the same 1 MiB bound before Apply/load accepts them. A compact recipe
+that expands beyond that size now fails clearly while preserving current state.
+Two new regression methods reproduce direct/upload/save and atomic duplication
+failures; the suite now has 43 tests. The earlier E46 human acceptance remains
+attached to its recorded sources and does not silently accept later changes.
+
+Visual checking caught a screenshot race; capture now awaits actual Preview.
+Further final runs exposed premature keyboard navigation and an actual focus
+loss during rule refresh. Selector blur is awaited and the target control is
+not blurred before focus. The maintained browser checks explicitly await the
+documented post-action focus. The final 17 October run passes all four themes/
+laptop cases, with no page errors or external browser HTTP/WebSocket attempts.
+Actual Dark fields and Light generated captures were inspected. Earlier failed
+runs remain retained separately; no arbitrary delay or weakened assertion was
+used. Fichte CSS, layout JavaScript and headless generation are unchanged.
+
+Hosted push/PR core runs at `709966be3503ea5c39edc9f13a117feea4138c8c` each
+passed 41 tests, dashboard freshness and whitespace on Windows/Linux/macOS
+(E48). These precede E49; no hosted result is claimed for an unpushed repair.
+PR #10 remains draft and unmerged. The normal Berlin publication rule applies
+to the newly authorized sequential issue #11 queue; no new merge or binary
+publication is authorized. M0/full M1 and release gates remain incomplete.

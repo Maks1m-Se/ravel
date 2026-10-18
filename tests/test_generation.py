@@ -12,7 +12,7 @@ import tempfile
 import unittest
 
 from ravel.engine import csv_text, generate, preview_rows, run_metadata
-from ravel.recipe import ValidationError, dumps, duplicate_field, loads, new_field, new_recipe, validate
+from ravel.recipe import MAX_BYTES, ValidationError, dumps, duplicate_field, loads, new_field, new_recipe, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -184,6 +184,25 @@ class GenerationTests(unittest.TestCase):
         ]:
             with self.subTest(message=message), self.assertRaisesRegex(ValidationError, message):
                 loads(payload)
+
+    def test_saved_utf8_recipe_limit_applies_before_accepting_compact_input(self):
+        recipe = new_recipe()
+        recipe['table']['row_count'] = 1
+        recipe['table']['fields'] = [dict(id=f'field{i}', name=f'column{i}', kind='category',
+            missing_probability='0', values=[str(j).zfill(3) + 'x' * 197 for j in range(100)],
+            probabilities=['0.01'] * 100) for i in range(49)]
+        compact = json.dumps(recipe, ensure_ascii=False, separators=(',', ':')).encode()
+        canonical = (json.dumps(recipe, ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode()
+        self.assertLess(len(compact), MAX_BYTES)
+        self.assertGreater(len(canonical), MAX_BYTES)
+        for action in [lambda: validate(recipe), lambda: dumps(recipe), lambda: loads(compact)]:
+            with self.subTest(action=action), self.assertRaisesRegex(ValidationError, '1 MiB'):
+                action()
+        recipe['table']['fields'] = recipe['table']['fields'][:4]
+        recipe['table']['fields'][0]['values'] = [str(j).zfill(3) + '\u03bb' * 197 for j in range(100)]
+        saved = dumps(recipe)
+        self.assertLessEqual(len(saved.encode('utf-8')), MAX_BYTES)
+        self.assertEqual(loads(saved), recipe)
 
     def test_cli_matches_engine_and_records_recipe_environment(self):
         with tempfile.TemporaryDirectory() as directory:

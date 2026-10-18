@@ -470,3 +470,17 @@ The new core workflow uses the official
 [setup-python](https://github.com/actions/setup-python) v7 examples with read-only
 permissions. Hosted core results must be recorded separately from local Windows
 browser and native installation evidence. There is no packaging/release job.
+
+## Authorized sequential feature batch (17 October 2026)
+
+The maintainer authorizes [batch #11](https://github.com/Maks1m-Se/ravel/issues/11)
+in order: finish the saved #9/#10 repair, then sample workflow #12, workflow UX
+and repository verification skill #13, bounded rules/constraints #14, linked
+tables #15, clinical numeric/interface preparation #16 and private Windows
+preview preparation #17. Keep one active implementation stream on the repaired
+feature baseline; reuse existing source environment, fixtures and valid evidence.
+Routine implementation choices are delegated; joint acceptance and merges remain
+later work. The normal Berlin commit/push window applies to this queue.
+Unavailable clinical-policy review or clean-machine access must be recorded
+precisely without blocking independent authorized packages. No clinical numeric
+implementation before its policy review and no public binary publication.

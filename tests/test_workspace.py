@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 
 from ravel.engine import generate
-from ravel.recipe import ValidationError, loads
+from ravel.recipe import ValidationError, loads, new_recipe
 from ravel.workspace import Workspace
 
 
@@ -102,6 +102,24 @@ class WorkspaceTests(unittest.TestCase):
         self.assertIsNone(state.result)
         self.assertFalse(state.has_drafts)
         self.assertEqual(state.save_recipe(), saved)
+
+    def test_recipe_size_rejection_preserves_applied_table_and_current_result(self):
+        recipe = new_recipe()
+        recipe['table']['row_count'] = 1
+        recipe['table']['fields'] = [dict(id=f'field{i}', name=f'column{i}', kind='category',
+            missing_probability='0', values=[str(j).zfill(3) + 'x' * 197 for j in range(100)],
+            probabilities=['0.01'] * 100) for i in range(44)]
+        state = Workspace(recipe)
+        state.result = generate(recipe)
+        saved, selected, result = state.save_recipe(), state.selected, state.result
+        before = state.export_csv()
+        with self.assertRaisesRegex(ValidationError, '1 MiB'):
+            state.duplicate()
+        self.assertEqual(state.save_recipe(), saved)
+        self.assertEqual(state.selected, selected)
+        self.assertIs(state.result, result)
+        self.assertTrue(state.current)
+        self.assertEqual(state.export_csv(), before)
 
     def test_changes_during_generation_make_snapshot_result_stale(self):
         state = Workspace()

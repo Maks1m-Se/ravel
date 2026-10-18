@@ -77,6 +77,10 @@ def identity(value, path):
         fail(path, "Use a stable ID starting with a letter, then letters, digits, _ or - (up to 64).")
 
 
+def _canonical_json(recipe):
+    return json.dumps(recipe, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False) + "\n"
+
+
 def validate(recipe):
     if isinstance(recipe, dict) and recipe.get("format") == "ravel-workbook-experiment/1":
         fail("format", "Old workbook experiment JSON is not a generation recipe. Keep the original; recreate its rules explicitly in Ravel. No migration was performed.")
@@ -141,11 +145,13 @@ def validate(recipe):
             weights = [decimal(p, path + ".probabilities", 0, 1) for p in probabilities]
             if sum(Fraction(weight) for weight in weights) != 1:
                 fail(path + ".probabilities", "Category probabilities must sum exactly to 1.")
+    if len(_canonical_json(recipe).encode("utf-8")) > MAX_BYTES:
+        fail("recipe", "Recipe must fit within 1 MiB when saved; reduce columns, categories or text length.")
     return deepcopy(recipe)
 
 
 def dumps(recipe):
-    return json.dumps(validate(recipe), ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False) + "\n"
+    return _canonical_json(validate(recipe))
 
 
 def loads(payload):

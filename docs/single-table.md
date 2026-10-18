@@ -32,7 +32,10 @@ endpoints and decimal bounds are within ±1,000,000,000,000; IDs remain positive
 and within that limit. Names are unique, trimmed, nonempty, at most 40 characters;
 stable IDs match `[A-Za-z][A-Za-z0-9_-]{0,63}`. Text values are nonempty and at most
 200 characters; categories number at most 100. Seed is an integer 0–2^63−1.
-Upload limit is 1 MiB. These are explicit increment limits, not release benchmarks.
+Uploaded and canonically saved UTF-8 recipes must both fit within 1 MiB.
+Validation checks the saved representation before applying or loading rules,
+so a compact upload cannot expand into a saved recipe that cannot be reloaded.
+These are explicit increment limits, not release benchmarks.
 
 `missing_probability` is a decimal string between 0 and 1. Independent Bernoulli
 draws decide whether each cell is missing; counts are not exact quotas. ID fields

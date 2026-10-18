@@ -139,8 +139,8 @@ def table(theme: str = "dark", open_recipe: bool = False):
 
     async def focus_control(control):
         for selector in (choice, controls.get("kind")):
-            if selector is not None:
-                selector.run_method("blur")
+            if selector is not None and selector is not control:
+                await selector.run_method("blur")
         await client.run_javascript(f'''
             await Vue.nextTick();
             const root = getHtmlElement({json.dumps(control.html_id)});

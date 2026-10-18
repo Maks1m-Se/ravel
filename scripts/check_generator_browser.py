@@ -17,7 +17,7 @@ from playwright.sync_api import expect, sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ravel.engine import csv_text, generate, preview_rows  # noqa: E402
-from ravel.recipe import loads  # noqa: E402
+from ravel.recipe import MAX_BYTES, loads, new_recipe  # noqa: E402
 from scripts.check_workbook_browser import (  # noqa: E402
     activate, assert_branding, assert_error, assert_focus_style, check_help, contrast,
     keyboard_to, popup_ready, properties_width, set_theme, type_value,
@@ -45,6 +45,7 @@ def choose_rule(page, label):
     page.get_by_role('option', name=label, exact=True).click()
     expect(page.locator('.q-menu')).to_have_count(0)
     expect(page.get_by_label('Rule', exact=True)).to_have_value(label)
+    expect(page.get_by_label('Rule', exact=True)).to_be_focused()
 
 
 def apply(page):
@@ -191,12 +192,14 @@ def exercise(page, base, out, viewport, theme):
     type_value(page, 'Constant value', 'demo')
     apply(page)
     activate(page, 'Add column')
+    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
     choose_rule(page, 'Random decimal')
     type_value(page, 'Column name', 'measure')
     type_value(page, 'Minimum', '-1.20')
     type_value(page, 'Maximum', '2.30')
     apply(page)
     activate(page, 'Add column')
+    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
     choose_rule(page, 'Category')
     type_value(page, 'Column name', 'arm')
     type_value(page, 'Categories and probabilities', 'A,0.2\nB,0.3')
@@ -206,6 +209,7 @@ def exercise(page, base, out, viewport, theme):
     type_value(page, 'Missing probability', '0.1')
     apply(page)
     activate(page, 'Select column value')
+    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
     type_value(page, 'Column name', 'score')
     apply(page)
     activate(page, 'Duplicate column')
@@ -236,6 +240,9 @@ def exercise(page, base, out, viewport, theme):
     page.screenshot(path=out / f'{prefix}-fields.png')
     readings = contrast(page, '.properties input, .q-field__label, .setting-origin, .result-state, .action-toolbar button:not(:disabled)')
     activate(page, 'Preview')
+    expect(page.get_by_role('button', name='Preview', exact=True)).to_have_attribute('aria-pressed', 'true')
+    expect(page.locator('.preview-table')).to_be_visible()
+    expect(page.locator('.preview-table tbody tr')).to_have_count(100)
     page.screenshot(path=out / f'{prefix}-generated.png')
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
 
@@ -256,13 +263,23 @@ def exercise(page, base, out, viewport, theme):
     before = state_snapshot(page)
     old = out / f'{prefix}-old.json'
     old.write_text('{"format":"ravel-workbook-experiment/1"}')
-    reload_recipe(page, old)
-    expect(page.locator('.load-dialog [role=alert]')).to_contain_text('Old workbook experiment')
-    expect(page.locator('.load-dialog [role=alert]')).to_be_in_viewport(ratio=1)
-    activate(page, 'Cancel')
-    expect(page.locator('.load-dialog')).to_be_hidden()
-    after = state_snapshot(page)
-    assert after == before, {key: [before[key], after[key]] for key in before if before[key] != after[key]}
+    large = new_recipe()
+    large['table']['row_count'] = 1
+    large['table']['fields'] = [dict(id=f'field{i}', name=f'column{i}', kind='category',
+        missing_probability='0', values=[str(j).zfill(3) + 'x' * 197 for j in range(100)],
+        probabilities=['0.01'] * 100) for i in range(49)]
+    compact = json.dumps(large, separators=(',', ':')).encode('utf-8')
+    assert len(compact) < MAX_BYTES
+    large_path = out / f'{prefix}-too-large-when-saved.json'
+    large_path.write_bytes(compact)
+    for path, message in [(old, 'Old workbook experiment'), (large_path, '1 MiB when saved')]:
+        reload_recipe(page, path)
+        expect(page.locator('.load-dialog [role=alert]')).to_contain_text(message)
+        expect(page.locator('.load-dialog [role=alert]')).to_be_in_viewport(ratio=1)
+        activate(page, 'Cancel')
+        expect(page.locator('.load-dialog')).to_be_hidden()
+        after = state_snapshot(page)
+        assert after == before, {key: [before[key], after[key]] for key in before if before[key] != after[key]}
     reload_recipe(page, out / f'{prefix}-built.recipe.json')
     expect(page.locator('.status-line')).to_contain_text('Recipe loaded')
     expect(page.locator('.load-dialog')).to_be_hidden()
@@ -279,6 +296,7 @@ def exercise(page, base, out, viewport, theme):
     page.screenshot(path=out / f'{prefix}-reference.png')
     activate(page, 'Fields')
     activate(page, 'Select column id')
+    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
     expect(page.get_by_label('Start', exact=True)).to_have_value('1')
     type_value(page, 'Start', '10')
     apply(page)
@@ -286,6 +304,7 @@ def exercise(page, base, out, viewport, theme):
     assert preview_cells(page) == [['10','demo','10'], ['11','demo','12'], ['12','demo','14']]
     activate(page, 'Fields')
     activate(page, 'Select column value')
+    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
     type_value(page, 'Step', '-2')
     apply(page)
     generate_table(page)
