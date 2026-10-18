@@ -1,10 +1,10 @@
 # Development guide
 
-Runnable source now includes an explicit-rule single-table engine, CLI and
-NiceGUI table builder, alongside the tracking dashboard and historical workbook
-experiment. Sample profiling, linked/clinical generation and binary distribution
-remain outside this increment. The provisional source recipe is specified in
-[single-table.md](single-table.md); it is not the old experiment configuration.
+Runnable source includes explicit-rule and sample-assisted single-table
+generation through a shared engine, CLI and NiceGUI builder, alongside the
+tracking dashboard and historical workbook experiment. See
+[single-table.md](single-table.md) and [sample-assisted.md](sample-assisted.md).
+Linked/clinical generation and binary distribution remain subsequent packages.
 
 ## Single-table source development
 
@@ -66,7 +66,7 @@ only. Native chooser interaction remains a separate manual check.
 .\.venv-source\Scripts\python.exe scripts/build_dashboard.py --check
 git diff --check
 .\.venv-source\Scripts\python.exe -m pip install -r requirements-review.lock
-.\.venv-source\Scripts\python.exe scripts/check_generator_browser.py --output outputs/generator-browser-review
+.\.venv-source\Scripts\python.exe scripts/check_generator_browser.py --workflow all --output outputs/generator-browser-review
 ```
 
 Start the source server in another terminal before running the browser command.
@@ -110,8 +110,8 @@ current-app acceptance, and joint code review remains required. At 1366×657 and
 
 These steps review new user-facing behaviour; they do not accept clinical rules,
 NiceGUI adoption, native distribution or the full M1 milestone. Sample import/
-profiling follows next, then linked tables; both entry paths remain required
-before the first usable release. M0 packaging/platform work stays open.
+profiling is available in the local stacked package described below; linked
+tables follow. M0 packaging/platform work stays open.
 
 Actual captures from the source app (invented data):
 [Dark fields](images/m1-single-table-fields-dark.png),
@@ -1677,3 +1677,32 @@ Tests use Python3.14.8/NiceGUI3.18.0/Playwright1.58.0 and Chrome155.0.8059.82
 on this development host. No page errors or browser external HTTP/WebSocket
 attempts were observed. E50 records scope; E46 remains earlier human acceptance.
 No new hosted CI, native chooser, clean-machine or release claim is made.
+
+### Workflow polish and scoped verification skill (18 October 2026)
+
+The repository skill `.agents/skills/ravel-verify/SKILL.md` selects existing
+checks from the diff, including actual runtime/capture review. Its initializer
+and validation ran; the skill was invoked on this package. The full suite has
+55 passing methods. Eight Chrome and two Edge workflow cases pass on the common
+UI logic. Subsequent import-only CSS fixes pass four additional Chrome sample
+cases and one Edge sample smoke; unchanged rule checks are reused. Both themes,
+1366×657/1280×800, keyboard errors/recovery and Properties regressions are covered.
+The final dialog keeps source rows/counts and the identifier confirmation
+visible, with no sticky overlay. Secondary toolbar actions retain accessible
+names; Home and closing warn about unsaved edits/settings/output.
+
+A stale test server was discovered and excluded. Dedicated test-server identity
+now verifies running source hashes before checks; `--verify-source` enables that
+assertion when such a server is used. A new warning callback initially used a
+deleted refresh slot and interrupted rule focus; the captured page client fixes
+that error. Earlier failed runs remain separate. Python3.14.8, NiceGUI3.18.0,
+Playwright1.58.0, Chrome155.0.8059.82 and Edge155.0.4283.62 were used. Browser
+page errors/external HTTP/WebSocket attempts are zero; a Windows connection-reset
+callback on browser closure remains in the local server log. This is host UI
+testing, not native file handling, clean-machine or broad accessibility evidence.
+
+PR10 now contains the separate repair commit `d9bcec2a752c382b17e8e90d40a7986e8bb2639f`;
+all ten published changed blobs match the tested repair snapshot. The PR stays
+draft and unmerged. Normal Berlin restrictions apply to later publication.
+The manual server on8100 is a separate immutable repair-E49 snapshot, excluding
+sample/polish changes. New behavior awaits joint review and E46 is unchanged.
