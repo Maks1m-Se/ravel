@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ravel Verify"
+  short_description: "Run focused Ravel checks and inspect actual UI"
+  default_prompt: "Use $ravel-verify to verify this Ravel diff and report actual evidence."

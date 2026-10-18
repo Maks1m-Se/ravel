@@ -52,11 +52,13 @@ class Workspace:
         self.result = None
         self.replace(new_recipe() if recipe is None else recipe)
 
-    def replace(self, recipe):
+    def replace(self, recipe, saved=True):
         candidate = validate(recipe)
         self.recipe = candidate
         self.selected = candidate["table"]["fields"][-1]["id"]
         self.result = None
+        self.saved_recipe_json = dumps(candidate) if saved else None
+        self.exported_result = None
         self.discard()
 
     @property
@@ -81,6 +83,18 @@ class Workspace:
     @property
     def current(self):
         return self.result is not None and not self.has_drafts and self.result.recipe_json == dumps(self.recipe)
+
+    @property
+    def has_unsaved(self):
+        return self.has_drafts or dumps(self.recipe) != self.saved_recipe_json or (self.result is not None and self.result is not self.exported_result)
+
+    def mark_saved(self):
+        self.require_applied()
+        self.saved_recipe_json = dumps(self.recipe)
+
+    def mark_exported(self):
+        if self.current:
+            self.exported_result = self.result
 
     def require_applied(self):
         if self.has_drafts:

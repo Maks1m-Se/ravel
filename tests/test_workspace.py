@@ -9,6 +9,25 @@ from ravel.workspace import Workspace
 
 
 class WorkspaceTests(unittest.TestCase):
+    def test_unsaved_warning_tracks_recipe_drafts_output_and_successful_saves(self):
+        state = Workspace()
+        self.assertFalse(state.has_unsaved)
+        state.field_draft['maximum'] = '200'
+        self.assertTrue(state.has_unsaved)
+        state.discard()
+        self.assertFalse(state.has_unsaved)
+        state.result = generate(state.recipe)
+        self.assertTrue(state.has_unsaved)
+        state.mark_exported()
+        self.assertFalse(state.has_unsaved)
+        state.field_draft['maximum'] = '200'
+        state.apply()
+        self.assertTrue(state.has_unsaved)
+        state.mark_saved()
+        self.assertFalse(state.has_unsaved)
+        state.replace(state.recipe, saved=False)
+        self.assertTrue(state.has_unsaved)
+
     def test_invalid_apply_is_atomic_and_unapplied_edits_block_actions(self):
         state = Workspace()
         state.result = generate(state.recipe_for_run())
