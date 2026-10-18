@@ -1,0 +1,166 @@
+{
+  "format": "ravel-sample-assisted-reference/1",
+  "status": "Hand-worked expectations before sample implementation; not an executable recipe.",
+  "source_sha256": "968bc909f3fa6435e7290f8bffe3a3485591af662d792adb5c8970926130597f",
+  "source_headers": [
+    "sample_id",
+    "length_mm",
+    "material"
+  ],
+  "source_cells": [
+    [
+      "1",
+      "9.8",
+      "A"
+    ],
+    [
+      "2",
+      "10.0",
+      "A"
+    ],
+    [
+      "3",
+      "10.2",
+      "B"
+    ],
+    [
+      "4",
+      "",
+      "A"
+    ],
+    [
+      "5",
+      "10.8",
+      "B"
+    ],
+    [
+      "6",
+      "11.0",
+      "B"
+    ],
+    [
+      "7",
+      "11.2",
+      "A"
+    ],
+    [
+      "8",
+      "",
+      "B"
+    ],
+    [
+      "9",
+      "11.8",
+      "A"
+    ],
+    [
+      "10",
+      "12.2",
+      "A"
+    ]
+  ],
+  "profile": {
+    "sample_id": {
+      "role": "identifier; excluded from fitting",
+      "count": 10,
+      "missing": 0,
+      "unique": 10
+    },
+    "length_mm": {
+      "observed": 8,
+      "missing": 2,
+      "minimum": "9.8",
+      "maximum": "12.2",
+      "sum": "87.0",
+      "mean": "10.875",
+      "places": 1
+    },
+    "material": {
+      "counts": {
+        "A": 6,
+        "B": 4
+      },
+      "missing": 0
+    }
+  },
+  "editable_suggestions": {
+    "sample_id": {
+      "kind": "id",
+      "start": 11,
+      "requires_explicit_confirmation": true
+    },
+    "length_mm": {
+      "kind": "decimal",
+      "minimum": "9.8",
+      "maximum": "12.2",
+      "places": 1,
+      "missing_probability": "0.2"
+    },
+    "material": {
+      "kind": "category",
+      "values": [
+        "A",
+        "B"
+      ],
+      "probabilities": [
+        "0.6",
+        "0.4"
+      ],
+      "missing_probability": "0"
+    }
+  },
+  "modes": {
+    "generate_1000_new": {
+      "retained": 0,
+      "generated": 1000,
+      "output": 1000,
+      "generated_id_first": 11,
+      "generated_id_last": 1010
+    },
+    "extend_to_1000": {
+      "retained": 10,
+      "generated": 990,
+      "output": 1000,
+      "generated_id_first": 11,
+      "generated_id_last": 1000
+    },
+    "extend_to_10": {
+      "retained": 10,
+      "generated": 0,
+      "output": 10
+    },
+    "extend_to_9": {
+      "error": "Target total is smaller than the retained source count.",
+      "state_preserved": true
+    }
+  },
+  "deterministic_override": {
+    "seed": 17,
+    "id_start": 11,
+    "length_minimum": "12.2",
+    "length_maximum": "12.2",
+    "length_places": 1,
+    "length_missing_probability": "0",
+    "material_values": [
+      "C"
+    ],
+    "material_probabilities": [
+      "1"
+    ],
+    "material_missing_probability": "0",
+    "generated_rows": [
+      [
+        "11",
+        "12.2",
+        "C",
+        "generated"
+      ],
+      [
+        "12",
+        "12.2",
+        "C",
+        "generated"
+      ]
+    ]
+  }
+}

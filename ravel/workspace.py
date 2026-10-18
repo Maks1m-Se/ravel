@@ -32,7 +32,7 @@ def form_field(form, path):
         if key in {"values", "probabilities"}:
             continue
         value = form[key]
-        if key in {"start", "step", "places"} or kind == "integer":
+        if key in {"start", "step", "places", "width"} or kind == "integer":
             value = whole(value, path + "." + key)
         field[key] = value
     if kind == "category":
@@ -64,8 +64,11 @@ class Workspace:
         return next(f for f in self.recipe["table"]["fields"] if f["id"] == self.selected)
 
     def table_form(self):
-        return dict(name=self.recipe["table"]["name"], row_count=str(self.recipe["table"]["row_count"]),
+        form = dict(name=self.recipe["table"]["name"], row_count=str(self.recipe["table"]["row_count"]),
                     seed=str(self.recipe["seed"]))
+        if "sample" in self.recipe:
+            form["mode"] = self.recipe["sample"]["mode"]
+        return form
 
     def discard(self):
         self.field_draft = field_form(self.field)
@@ -90,6 +93,12 @@ class Workspace:
         candidate["table"]["row_count"] = whole(self.table_draft["row_count"], "table.row_count")
         index = next(i for i, f in enumerate(candidate["table"]["fields"]) if f["id"] == self.selected)
         candidate["table"]["fields"][index] = form_field(self.field_draft, f"table.fields.{index}")
+        if self.field_draft["kind"] == "text_id":
+            candidate["format"] = "ravel-single-table/2"
+        if "sample" in candidate:
+            candidate["sample"]["mode"] = self.table_draft["mode"]
+            if candidate["table"]["fields"][index] != self.field and self.selected in candidate["sample"]["confirmed"]:
+                candidate["sample"]["confirmed"].remove(self.selected)
         self.recipe = validate(candidate)
         self.discard()
 
@@ -128,9 +137,23 @@ class Workspace:
         self.require_applied()
         candidate = deepcopy(self.recipe)
         candidate["table"]["fields"] = [f for f in candidate["table"]["fields"] if f["id"] != self.selected]
+        if "sample" in candidate:
+            for key in ("identifiers", "confirmed"):
+                candidate["sample"][key] = [value for value in candidate["sample"][key] if value != self.selected]
         self.recipe = validate(candidate)
         self.selected = self.recipe["table"]["fields"][-1]["id"]
         self.discard()
+
+    def confirm_identifier(self):
+        self.require_applied()
+        if self.selected not in self.recipe.get("sample", {}).get("identifiers", []):
+            raise ValidationError("sample.identifiers", "Select a source identifier first.")
+        if self.field["kind"] not in {"id", "text_id"}:
+            raise ValidationError("sample.identifiers", "Choose and apply a sequential ID or formatted ID rule first.")
+        candidate = deepcopy(self.recipe)
+        if self.selected not in candidate["sample"]["confirmed"]:
+            candidate["sample"]["confirmed"].append(self.selected)
+        self.recipe = validate(candidate)
 
     def recipe_for_run(self):
         self.require_applied()
