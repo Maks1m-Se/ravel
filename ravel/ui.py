@@ -862,6 +862,6 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ui.timer(0, open_sample_dialog, once=True)
 
 
-def launch():
-    ui.run(host="127.0.0.1", port=8090, title="Ravel | Table builder", favicon=ROOT / "brand/favicon/favicon.ico",
+def launch(port=8090):
+    ui.run(host="127.0.0.1", port=port, title="Ravel | Workbench", favicon=ROOT / "brand/favicon/favicon.ico",
            dark=True, reload=False, show=False, prod_js=True, on_air=False)

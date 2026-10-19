@@ -4,19 +4,22 @@
   <img src="brand/lockup/ravel-lockup-light.svg" alt="Ravel" width="225" height="64">
 </picture>
 
-Ravel composes reproducible synthetic test data from explicit rules.
-**The current source preview generates one table.** Sample import/profiling and
-linked tables are planned next; this is not a supported application release.
+Ravel composes reproducible synthetic test data from explicit rules or an invented
+CSV sample. The current preview supports editable sample assumptions, new-row or
+retain-and-extend generation, and small linked datasets. It is available for
+review and is not a supported application release.
 
 **Compose the data you need.**
 
-![Ravel table builder with six configured columns and widened Properties in Dark](docs/images/m1-single-table-fields-dark.png)
+![Ravel linked workbench with an actual measurement preview in Dark](docs/images/linked-generated-dark.png)
 
 ## Build a table
 
 Add, duplicate, rename, configure and remove columns. Choose sequential IDs,
 constant text, numeric sequences, bounded random integers/decimals or categorical
-values with explicit probabilities. Set row count, seed and per-cell missingness,
+values with explicit probabilities. Additional rules include normal values,
+Booleans, dates/day sequences, finite-domain uniqueness and exact category quotas.
+Set row count, seed and per-cell missingness,
 then **Apply changes → Generate table**. Preview shows the first 100 actual rows;
 **Export CSV**, **Save recipe** and **Save run record** retain the data, exact rules,
 generating environment and checksums.
@@ -26,6 +29,20 @@ previous result **Out of date** and block CSV export until a current result is
 generated. Column removal asks for confirmation. Drafts and errors survive theme,
 view and layout changes. Drag the Properties divider or focus it and use arrows;
 **Reset layout** restores its default preference, including after window resizing.
+
+Choose **Start from sample** to import an invented UTF-8 CSV. Review/edit ranges,
+categories and missingness, and explicitly confirm identifier generation. Generate
+1,000 new rows, or extend ten originals to1,000 total with their exact cell text
+and order retained. `row_origin` distinguishes retained and generated rows; the
+saved recipe embeds the checked source for reproducible reload.
+
+Choose **Use template** for Devices / measurements: three devices, two child
+measurements per device. Select tables, review parent/key/count changes and
+generate one current dataset. **Export dataset ZIP** includes every table CSV,
+recipe, dictionary and validation/run information. CLI `--directory` stages the
+same files into a fresh destination. See the [sample](docs/sample-assisted.md),
+[extended-rule](docs/extended-rules.md) and [linked-table](docs/linked-tables.md)
+contracts and their hand-worked fixtures.
 
 The headless engine and CLI use the same versioned recipe, validation and CSV
 serializer as the UI. Stable field identities and separate random streams mean
@@ -67,9 +84,14 @@ existing files. Choose a fresh output filename for another run.
 The [single-table contract](docs/single-table.md) defines bounds, decimal scale,
 probability semantics, CSV and limits. The app explicitly rejects the old
 workbook experiment JSON; it never silently migrates or overwrites the original.
-Sample import, exact quotas, arbitrary distributions, dependencies, linked tables,
-clinical derivations and binary distribution are outside this increment. Both
-generic entry paths remain required for the first usable release.
+Arbitrary joins, joined-sample fitting and clinical derivations remain outside
+this generic increment. The [clinical preparation](docs/clinical-template-preparation.md)
+requires numeric-policy review before clinical implementation. A
+[private Windows preview build/checklist](docs/windows-preview.md) is available
+for development review; clean-machine, native/offline and artifact-specific
+redistribution checks remain open. M0/full M1 and release gates are incomplete.
+The [candidate verification record](docs/windows-preview-validation.md) identifies
+the exact private artifact, actual checks, review PRs and joint function test.
 
 See the [development guide](docs/development.md#single-table-source-development)
 for maintained checks and a short walkthrough. Historical

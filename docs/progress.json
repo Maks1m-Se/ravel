@@ -182,9 +182,12 @@
         "E40",
         "E41",
         "E42",
-        "E43"
+        "E43",
+        "E55"
       ],
-      "blockers": []
+      "blockers": [
+        "No authorized clean Windows guest or second computer without Python is available; native/offline/installation checklist remains unrun (E55)."
+      ]
     },
     {
       "id": "M0-07",
@@ -200,9 +203,12 @@
       ],
       "evidence_refs": [
         "E17",
-        "E30"
+        "E30",
+        "E55"
       ],
-      "blockers": []
+      "blockers": [
+        "Public redistribution needs artifact-specific transformed frontend/font/native/vendor/Microsoft-runtime correspondence and terms review (E55)."
+      ]
     },
     {
       "id": "M0-08",
@@ -265,7 +271,8 @@
         "E51",
         "E52",
         "E53",
-        "E54"
+        "E54",
+        "E55"
       ],
       "blockers": []
     },
@@ -292,7 +299,8 @@
         "E50",
         "E51",
         "E52",
-        "E53"
+        "E53",
+        "E55"
       ],
       "blockers": []
     },
@@ -430,8 +438,12 @@
         "R7",
         "R10"
       ],
-      "evidence_refs": [],
-      "blockers": []
+      "evidence_refs": [
+        "E55"
+      ],
+      "blockers": [
+        "No authorized clean Windows guest or second computer without Python is available; native/offline/installation checklist remains unrun (E55)."
+      ]
     },
     {
       "id": "M5-02",
@@ -446,7 +458,9 @@
         "R5",
         "R6"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E55"
+      ],
       "blockers": []
     },
     {
@@ -520,7 +534,9 @@
       "id": "R3",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E55"
+      ]
     },
     {
       "id": "R4",
@@ -544,7 +560,9 @@
       "id": "R7",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E55"
+      ]
     },
     {
       "id": "R8",
@@ -562,7 +580,9 @@
       "id": "R10",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E55"
+      ]
     }
   ],
   "evidence": [
@@ -835,10 +855,19 @@
       "id": "E54",
       "reference": "18 October2026 issue #16; docs/clinical-template-preparation.md; examples/clinical-review/; https://github.com/Maks1m-Se/ravel/issues/16",
       "scope": "Completed preparation only: explicit template/version selection, three-table subject/exposure/measurement mapping, clinical declarations and a small prepare/validate/derive/export boundary. Generic keys/counts remain separate from group membership, dose semantics and derivations; current fixed-count/one-parent limits and missing record-schedule adapter are explicit. No unavailable clinical option appears in the app. Proposed exact decimal input, six-place/range bounds, exact subtraction/overflow failure, output formatting/half-even boundary and exact primary/absolute-only secondary Python-R comparison are unreviewed decisions with hand arithmetic examples. Clinical numeric implementation remains blocked on maintainer review/adopted policy ID; no Python/R clinical comparison ran. Transcribed the accepted four independent cases (14records,4doses,10measurements,4groups,4changes) and diagnostic a/b/c/crossed-pair sheets without changing the accepted baseline specification. Required failure/source-ID sets remain separate from NOT_EVALUATED checks, with zero successful outputs on clinical failure. A runnable generic-only three-table recipe demonstrates clinical-looking names/literal baseline text without activation. Two new tests check nonactivation, atomic rejection of review sheets and their structural references; full78-test suite passes. The standalone review-sheet checker verifies counts/references, not clinical selection/arithmetic/validation. Dashboard freshness and whitespace pass. Runtime/UI unchanged from E53, so its final16Chrome+Edge evidence is reused. No clinical generator, clinical validation, standards conformity, milestone or release acceptance. DraftPR21 publishes generic linked implementation at6a50e5fa6c89683aade934260378434cd81b71d3. Frozen manual8101 serves linked-E53-323bae982692 at that commit, isolated from edits/browser automation; original repair8100 remains separate."
+    },
+    {
+      "id": "E55",
+      "reference": "18–19 October2026 issue #17 private Windows candidate; docs/windows-preview-validation.md; docs/windows-preview.md; https://github.com/Maks1m-Se/ravel/issues/17",
+      "scope": "Completed available development-host preparation on the latest saved generic/clinical-preparation baseline. Selected standard CPython3.14.8 GIL-enabled Windows x64 for the bounded private binary; two fresh offline venvs pass dependency checks and exact55-pin inventories, excluding pip/review tools. Tracked build/environment/source/notice/audit/comparison/actual-EXE/protection tooling produces current CLI/UI folder and ZIP with declared-input hashes, actual file manifest, supplied notices and corresponding-source material. Final primary/rebuild content ID source-b99a360a14c4eb8d, full declared-input fingerprint b99a360a14c4eb8d05b2943c8af078535efec5190e187a8005a91f985b4e7a57; primary ZIP SHA256 eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91. Actual build metadata records Gitbase709966be3503ea5c39edc9f13a117feea4138c8c plus dirty source state, not an invented future commit. Both frozen EXEs pass hand CSV, sample1000-new/extend/replay/originals/origins, extended rules, linked complete exports/no-overwrite and clinical-sheet rejection. Final primary packaged browser matrix passes16Chrome cases across four workflows/both themes/1366x657 and1280x800, plus one Edge linked case; zero page errors/external browser HTTP/WebSockets; actual final captures inspected. Normal console Ctrl+C exposed an unhandled KeyboardInterrupt; a failing regression preceded the UI-command repair. Both final candidates were rebuilt, and actual owned console shutdowns now exit0, close8102/8112 and record zero tracebacks. All82 unit methods, dashboard freshness and whitespace pass. Rebuild has equal declared inputs/exact environment/output paths/every stable file byte and all decoded base-library/corresponding-source ZIP members. Only executable/two ZIP-container bytes vary; no bit-identical claim. Artifact audit verifies55 exact Python sdists plus CPython source/SBOM,107 integrity-checked core npm entries,16 decoded font hashes and eight exact retained direct-copy coreJS matches. Unused11 lazy asset families and nonproductionVue/Quasar are omitted and actual narrowed UI tested. Short content-addressed notices retain original component paths/full hashes; environment RECORD wrappers and incidental notice-directory bytecode are excluded, with actual manifest authoritative. On19October13:36–13:37UTC the actual primary folder passes native Defender custom scan: exit0/no threats, zero candidate history detections and unchanged full manifest. Windows11Home26H2 x64 build26300.9711; Defender4.18.26090.9/engine1.1.26090.9/signatures1.461.102.0, antivirus/realtime enabled before/after. SAC was already Off; EXE unsigned; no settings/policy changes. Local execution succeeds, but real download-origin SmartScreen is untested. No clean Windows guest/second machine without Python is available; native picker/default-browser/key press, physically disconnected cold start and clean-machine installation remain unrun with an exact checklist. Transformed frontend provenance, font-variant correspondence, native/Rust vendor coverage and Microsoft runtime terms remain public-distribution blockers; candidate stays private. Read all15 hosted sample/UX/extended/linked/clinical jobs: Windows/macOS/Ubuntu each pass54/55/65/76/78 tests respectively plus dashboard/whitespace; these older jobs do not establish new82-test hosted/native evidence. PRs10/18/19/20/21/22 remain draft/unmerged; Windows changes stay saved/uncommitted on feature/staged-generator-batch pending the normal Berlin window and separate draft publication. Manual8101 remains immutable linked-E53-323bae982692 at6a50e5fa6c89683aade934260378434cd81b71d3, runtime fingerprint323bae982692f05f72e5fdbb72e0fd9653acabea6a782251eee0335cc3a9351a; hashes checked and unchanged server resumed19October, separate from automated ports/edits. Repair8100 also preserved/resumed. E42/PR8 and E46 human acceptance remain unchanged and version-specific. No clinical numeric implementation, final acceptance, milestone completion, merge or public binary release."
     }
   ],
-  "blockers": [],
-  "next_action": "Continue authorized #11 with #17: select/verify fresh Windows build environment, tracked repeatable private candidate tooling, actual artifact/notices inventory and development-host checks, then prepare the exact clean-Windows checklist. No separate clean Windows guest without Python is available; record that external prerequisite without claiming installation evidence. Required joint review: draft10/18/19/20/21 features and the #16 clinical numeric proposal/reference transcription before any clinical numeric implementation. Test frozen manual8101 (linked-E53-323bae982692, commit6a50e5fa6c89683aade934260378434cd81b71d3); preserve repair8100. Keep drafts unmerged, no public binaries/final acceptance; normal live Berlin publishing checks apply. M0/fullM1/release gates remain incomplete.",
+  "blockers": [
+    "Clinical arithmetic awaits review/adoption of the proposed numeric policy and independent reference transcription; no clinical numeric implementation or Python/R comparison yet (E54).",
+    "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
+    "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
+  ],
+  "next_action": "Available #11 implementation/preparation is ready for joint review: draft PR10 repair,18 sample,19 UX/skill,20 rules,21 linked and22 clinical proposal. Test immutable manual8101 at commit6a50e5fa6c89683aade934260378434cd81b71d3 (linked-E53-323bae982692); the exact private Windows candidate and checks are in docs/windows-preview-validation.md. Finish the saved Windows evidence snapshot and publish its separate stacked draft feature/windows-preview only after a live eligible Berlin clock; commits/push/PR writes remain pending during08:00–16:30. Review clinical numeric choices before clinical implementation; obtain an authorized clean Windows environment and resolve concrete redistribution findings before public binaries. Keep PRs draft/unmerged, E46 acceptance version-specific, M0/fullM1 and release gates incomplete. No new merges, public binary release or final acceptance.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M1-02",
