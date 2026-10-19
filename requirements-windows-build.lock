@@ -1,0 +1,10 @@
+# Windows x64 / standard CPython3.14.8 private preview build tools.
+# Install with requirements-ui.lock in a fresh environment without review tools.
+# This adopts the separately tested setuptools80.9.0 candidate for this preview.
+altgraph==0.17.5
+packaging==26.3
+pefile==2024.8.26
+pyinstaller==6.20.0
+pyinstaller-hooks-contrib==2026.8
+pywin32-ctypes==0.2.3
+setuptools==80.9.0

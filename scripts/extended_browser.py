@@ -15,7 +15,7 @@ from scripts.check_workbook_browser import activate,assert_error,keyboard_to,pop
 
 
 def exercise(page,base,out,viewport,theme):
-    from scripts.check_generator_browser import ROOT,apply,choose_rule,download,generate_table,preview_cells,reload_recipe
+    from scripts.check_generator_browser import ROOT,apply,choose_rule,cli_command,download,generate_table,preview_cells,reload_recipe
     prefix=f'{viewport["width"]}x{viewport["height"]}-{theme.lower()}-extended'
     if page.url.startswith(base) and page.evaluate('Boolean(window.ravelUnsaved)'):
         page.once('dialog',lambda dialog:dialog.accept())
@@ -115,7 +115,7 @@ def exercise(page,base,out,viewport,theme):
     assert payload==csv_text(generate(recipe)).encode()
     assert preview_cells(page)==preview_rows(generate(recipe))
     cli_path=out/f'{prefix}-cli.csv'
-    cli=subprocess.run([sys.executable,'-m','ravel','generate',str(recipe_path),'--csv',str(cli_path)],cwd=ROOT,capture_output=True,text=True)
+    cli=subprocess.run(cli_command('generate',str(recipe_path),'--csv',str(cli_path)),cwd=ROOT,capture_output=True,text=True)
     assert cli.returncode==0,cli.stderr
     assert cli_path.read_bytes()==payload
     page.screenshot(path=out/f'{prefix}-final-quota.png')

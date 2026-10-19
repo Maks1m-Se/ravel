@@ -1,0 +1,4 @@
+# Separate font-metadata review tools; never install these in the build venv.
+# Actual recorded parser versions, not a latest-version or runtime selection.
+fonttools==4.42.0
+Brotli==1.1.0
