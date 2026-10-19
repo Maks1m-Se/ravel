@@ -1831,3 +1831,13 @@ keypress/file picker/default browser, physically disconnected cold start,
 download-origin SmartScreen and a clean machine without Python remain untested.
 Do not target the immutable manual8100/8101 instances with automated checks.
 No public binary, clinical or milestone acceptance follows from these passes.
+
+The private-preview implementation is published for review in
+[draft PR23](https://github.com/Maks1m-Se/ravel/pull/23), commit
+`5b5dbc2fc1a8e06d410c13b216d072d7b2f6c85f`. Published source/lock/capture blobs
+match the tested snapshot after explicit LF normalization. The three hosted
+Windows/macOS/Ubuntu job logs in
+[run39312807595](https://github.com/Maks1m-Se/ravel/actions/runs/39312807595)
+each record82 successful unit tests plus dashboard freshness and whitespace.
+These are core checks, not native installation or packaged-browser jobs.
+The candidate stays private and all feature PRs stay draft/unmerged.

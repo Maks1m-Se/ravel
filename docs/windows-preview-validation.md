@@ -22,9 +22,12 @@ The content fingerprint covers the builder's declared inputs, including runtime,
 fixtures, locks, packaging scripts and bundled notice/instruction documents.
 It is distinct from the exact ZIP hash. Later evidence, screenshots, progress
 and dashboard updates are outside that build-input set. The candidate was not
-built from a subsequently created publication commit. Before publication, compare
-the checked snapshot and eventual Git blobs with the tested inputs, accounting
-explicitly for repository LF normalization.
+built from a subsequently created publication commit. The published implementation
+is `5b5dbc2fc1a8e06d410c13b216d072d7b2f6c85f`: the publisher compared every checked
+runtime/test/script blob with the tested snapshot using explicit LF normalization,
+then verified the remote ref. Ten GitHub blobs were separately read back and
+matched, including both runtime entrypoints, builder/support/launcher, both locks,
+this initial report and both unchanged screenshots.
 
 ## Actual checks
 
@@ -116,9 +119,9 @@ No binary, release, tag or public artifact upload is authorized by this record.
 ## Published review chain and hosted checks
 
 All listed PRs remain draft and unmerged. Each feature PR depends on the
-preceding branch; review them in this order. The Windows package remains saved
-locally on `feature/staged-generator-batch` until eligible publication as
-`feature/windows-preview`, based on the clinical-preparation branch.
+preceding branch; review them in this order. The Windows package is published on
+`feature/windows-preview`, based on the clinical-preparation branch. The original
+`feature/staged-generator-batch` working tree and its saved work remain preserved.
 
 | Review | Exact published commit | Hosted core evidence |
 | --- | --- | --- |
@@ -128,13 +131,16 @@ locally on `feature/staged-generator-batch` until eligible publication as
 | [#20 extended rules](https://github.com/Maks1m-Se/ravel/pull/20) | `d0aec989c5f756b8b7c6c3f021784d1625348cd8` | [65 tests per OS](https://github.com/Maks1m-Se/ravel/actions/runs/39138670144) |
 | [#21 linked tables](https://github.com/Maks1m-Se/ravel/pull/21) | `6a50e5fa6c89683aade934260378434cd81b71d3` | [76 tests per OS](https://github.com/Maks1m-Se/ravel/actions/runs/39139225278) |
 | [#22 clinical preparation](https://github.com/Maks1m-Se/ravel/pull/22) | `f96a1def5c7b0a7412c6cd7faeb98a7f8b88dca8` | [78 tests per OS](https://github.com/Maks1m-Se/ravel/actions/runs/39139720429) |
+| [#23 private Windows preparation](https://github.com/Maks1m-Se/ravel/pull/23) | `5b5dbc2fc1a8e06d410c13b216d072d7b2f6c85f` | [82 tests per OS](https://github.com/Maks1m-Se/ravel/actions/runs/39312807595) |
 
 All 15 sample-through-clinical hosted job logs were read: Windows, Ubuntu and
 macOS each passed the stated unit count, dashboard freshness and whitespace.
-Earlier repair job logs separately establish its 43-test result. Hosted Windows
-packaging, the new 82-test source package and native/clean-machine checks are not
-covered by those older runs. E46 human acceptance remains attributed only to its
-earlier exact tested sources; E42 and PR #8 history remain preserved.
+Earlier repair job logs separately establish its 43-test result. The new Windows
+preparation run was also read in full: Ubuntu job118266508679 (82 tests,2.175s),
+macOS job118266509211 (82,1.752s), Windows job118266509246 (82,3.460s), each with
+successful dashboard and whitespace steps. These are hosted core checks, with
+no packaging/native/clean-machine job. E46 human acceptance remains attributed
+only to its earlier exact tested sources; E42 and PR #8 history remain preserved.
 
 ## Joint function test
 
@@ -168,5 +174,6 @@ Review the clinical proposal separately before implementing clinical arithmetic.
 Raw final reports are retained under local `outputs/ravel-batch-2026-10-17`:
 `win-c-cli`, `win-d-cli`, `win-c-browser`, `win-d-lifecycle`,
 `windows-final-rebuild-comparison.json`, `windows-final-candidate-asset-audit.json`,
-`windows-final-protections.json` and `windows-ready`. Older unsuccessful evidence
+`windows-final-protections.json`, `windows-ready`, `windows-publication-ready`,
+`windows-published-readback.json` and the three new CI job logs. Older unsuccessful evidence
 is preserved alongside them.
