@@ -31,16 +31,44 @@ def exercise(page, base, out, viewport, theme):
     expect(dialog.locator('.source-count')).to_contain_text('10 rows')
     expect(dialog.locator('.sample-source tbody tr')).to_have_count(10)
     expect(dialog).to_contain_text('excluded from fitting')
+    page.screenshot(path=out / f'{prefix}-actions-before-focus.png')
+    for name in ['Use sample','Cancel import']:
+        button=page.get_by_role('button',name=name,exact=True)
+        expect(button).to_be_in_viewport(ratio=1)
+        assert button.evaluate('(e)=>{const r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}')
+    if theme=='Light' and viewport['width']==1366:
+        before_cancel=state_snapshot(page)
+        page.get_by_role('button',name='Cancel import',exact=True).click()
+        expect(dialog).not_to_be_visible()
+        assert state_snapshot(page)==before_cancel
+        activate(page,'Import CSV')
+        expect(dialog).to_be_visible()
+        dialog.locator('input[type=file]').set_input_files(ROOT / 'examples/sample-assisted/ten-rows.csv')
+        expect(dialog.locator('.source-count')).to_contain_text('10 rows')
     checkbox = page.get_by_role('checkbox', name='Use the displayed sequential identifier rules', exact=True)
     keyboard_to(page, checkbox)
     page.keyboard.press('Space')
     expect(checkbox).to_be_checked()
+    body=dialog.locator('.sample-body')
+    footer=dialog.locator('.sample-actions')
+    before_footer=footer.bounding_box()
+    if viewport['height']==657:
+        assert body.evaluate('(e)=>e.scrollHeight>e.clientHeight')
+    body.evaluate('(e)=>e.scrollTop=e.scrollHeight')
+    expect(dialog.locator('.sample-assumption').last).to_be_in_viewport(ratio=1)
+    assert footer.bounding_box()==before_footer
+    for name in ['Use sample','Cancel import']:
+        expect(page.get_by_role('button',name=name,exact=True)).to_be_in_viewport(ratio=1)
+    body.evaluate('(e)=>e.scrollTop=0')
     count_box = dialog.locator('.source-count').bounding_box()
     source_box = dialog.locator('.source-scroll').bounding_box()
     assert count_box['height'] >= 12 and count_box['y']+count_box['height'] <= source_box['y']
     assert checkbox.evaluate('(root) => {const r=root.getBoundingClientRect(); return root.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}')
     page.screenshot(path=out / f'{prefix}-import.png')
-    activate(page, 'Use sample')
+    if theme=='Dark':
+        page.get_by_role('button',name='Use sample',exact=True).click()
+    else:
+        activate(page, 'Use sample')
     expect(dialog).not_to_be_visible()
     expect(page.locator('.sample-summary')).to_contain_text('0 retained + 1,000 new = 1,000 output')
     generate_table(page)

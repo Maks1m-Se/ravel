@@ -1841,3 +1841,101 @@ Windows/macOS/Ubuntu job logs in
 each record82 successful unit tests plus dashboard freshness and whitespace.
 These are core checks, not native installation or packaged-browser jobs.
 The candidate stays private and all feature PRs stay draft/unmerged.
+
+### Pending Apply/Discard review (20 October 2026)
+
+The complete [issue13 follow-up](https://github.com/Maks1m-Se/ravel/issues/13)
+is a separate source correction from the previously published stack. The group
+beside Apply/Discard has persistent text plus Fichte tint/border only with drafts;
+Apply is disabled otherwise. Table-only settings participate, and exact revert
+clears obsolete errors. Apply clears drafts while older results stay stale until
+Generate. The Properties header/actions stay visible while fields scroll; focused
+fields do not sit behind an overlay. Session help describes current capabilities.
+
+`ravel-verify` selected the existing unit/dashboard/whitespace checks and real
+source-attested browser matrix, extended by `scripts/pending_browser.py`:
+
+```powershell
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow all --verify-source --output outputs/pending-review
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow pending --channel msedge --smoke --verify-source --output outputs/pending-edge-review
+```
+
+Common Chrome coverage passes20 cases (rules/sample/extended/linked/pending × both
+themes and both laptop sizes), at runtime8007d88b66eb7f265923a2070193eb1cfc3cde431a00f52b76b6a2efc5c9c336.
+Only the stale-result instruction then changed: after Apply it now says Generate
+to update. All other runtime bytes remain identical. Four additional final Chrome
+pending cases and one final Edge pending case verify this last change, including
+fully visible/unobscured keyboard access to the last checkbox. Browser versions:
+Chrome155.0.8059.85, Edge155.0.4283.62, Playwright1.58.0,
+Python3.14.8/NiceGUI3.18.0 on the existing Windows development host.
+Zero page errors/external HTTP/WebSockets. The tests assert focus, stable visible
+actions, transition-only polite announcements, validation/recovery, exact revert,
+view/theme/resize/narrow/restore, stale/current export and real Preview/CSV.
+Earlier missing-area, clipped-help and obsolete no-op-harness failures remain
+under local outputs/ravel-pending-2026-10-20, alongside the final raw records.
+
+Actual short-laptop captures (no generated UI mockups):
+
+| State | Light | Dark |
+| --- | --- | --- |
+| Unchanged, disabled Apply | [Capture](images/pending-actions-light-unchanged.png) | [Capture](images/pending-actions-dark-unchanged.png) |
+| Column draft, next actions | [Capture](images/pending-actions-light-column.png) | [Capture](images/pending-actions-dark-column.png) |
+| Applied, prior result stale | [Capture](images/pending-actions-light-applied-stale.png) | [Capture](images/pending-actions-dark-applied-stale.png) |
+
+Manual review: http://127.0.0.1:8103/, fixed `pending-E58-2c91456fb4d1`,
+runtime fingerprint `2c91456fb4d1f9341793badddbd2f93c06f68f98a15ec11b8bf3a48e02e8981d`. Original8101 remains fixed at
+`6a50e5fa6c89683aade934260378434cd81b71d3`. Automated tests use8096 only.
+Try a column change and Rows/Seed alone, exact revert, invalid Apply and recovery,
+Discard and Apply; then verify that only Generate restores a changed result's
+export. Theme/view/resize must retain pending edits. Human visual acceptance is
+pending and no broader accessibility/native/release acceptance is implied.
+
+The older Windows candidate is independently accessible at
+`C:\Git\ravel\outputs\private-review-b99a360a14c4eb8d\Ravel-source-b99a360a14c4eb8d-windows-x64-private.zip`.
+Full ZIP SHA256: `eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91`.
+All252 copied files are ignored by the existing /outputs/ rule; original ZIP,
+manifest, launch instructions, checksum record and raw evidence are preserved.
+Read REVIEW-IDENTITY.txt before testing. No new build was made, and this older
+package does not contain the pending-action repair. Keep independent native
+evidence tied to that artifact and distinct from source UI review. Claude's
+issue-reported Linux review is attributed separately, not counted as our run.
+
+### Short laptop action visibility follow-up (20 October 2026)
+
+The latest [issue13 evidence addendum](https://github.com/Maks1m-Se/ravel/issues/13)
+was checked against the running correction first. Apply/Discard was already fixed.
+The import action buttons still fell outside the initial visible review area;
+the before-focus regression reproduced that. Import now has a separate fixed
+confirmation/action footer while longer form/source/assumption content scrolls.
+Identifier confirmation and both actions stay visible without covering content.
+
+Four final sample and four final pending Chrome cases pass both themes/laptop
+sizes; a focused Edge sample case also passes. The new assertions verify full
+button visibility/hit testing before keyboard scrolling, fixed footer bounds as
+content scrolls, the last assumption, pointer Cancel preserving table state,
+pointer and keyboard confirmation and existing CSV/retention/recipe/error checks.
+All82 unit methods, regenerated dashboard freshness and whitespace pass. Earlier
+valid20-case coverage and failed attempts remain in local evidence. The800-pixel
+case may fit all content; only the short case requires scrolling, while both
+must retain visible actions. Final runtime: `b5d5bbf9e2e0ddf3cfb4520bbd4ef89652586c08bcebfcb5b1fdcf639f06940b`.
+
+| Corrected import at1366×657 | Capture |
+| --- | --- |
+| Light | [Actual capture](images/import-actions-light.png) |
+| Dark | [Actual capture](images/import-actions-dark.png) |
+
+Current combined manual review is http://127.0.0.1:8104/, fixed
+`actions-E59-b5d5bbf9e2e0`. Original8101 remains the linked6a50e5f snapshot;
+initial corrected8103 remains0aaec2. Neither snapshot is overwritten or used by
+browser automation. Latest pending captures/raw runs are under
+outputs/ravel-pending-2026-10-20/pending-import-final; import captures/results are
+under import-actions-final-2 and edge-import-final.
+
+The actual supplied Claude ZIP is preserved separately under local references,
+SHA256 `deb0e6c35eb366ac628a1e3dcf0bb28b0e4437f6de9ac88485ba4a889b51977e`. Its recorded11 runtime hashes match Git2c235bb;
+its Chromium141/Linux observations are attributed review evidence and its
+harnesses were not executed here. This is distinct from the current Windows
+Chrome155 source checks and the older private Windows b99 package. The latter
+remains at the separately documented ignored C:\Git\ravel\outputs handoff,
+unchanged, with no rebuild. Native/clean-machine/physical-offline/reputation and
+redistribution requirements remain open; human visual acceptance is pending.
