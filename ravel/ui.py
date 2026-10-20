@@ -504,18 +504,20 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
 
     with ui.dialog() as sample_dialog, ui.card().classes("sample-dialog"):
         ui.label("Start from sample").classes("section-title")
-        ui.label("Review suggestions before replacing this table and its unsaved edits. Original cells are retained exactly in Extend mode.").classes("help")
-        sample_delimiter = ui.select({',':'Comma', ';':'Semicolon', '\t':'Tab'}, value=',', label="CSV delimiter", on_change=delimiter_changed).props("outlined dense options-dense")
-        sample_error = ui.label("").props("role=alert").classes("error")
-        sample_uploader = ui.upload(label="Choose sample CSV", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
-            on_upload=sample_file, on_rejected=lambda: sample_error.set_text("Choose a UTF-8 CSV no larger than 1 MiB.")).props("accept=.csv,.tsv")
-        sample_review()
-        ui.label("Suggestions describe this sample. Review ranges and frequencies; generation treats columns independently.").classes("help")
-        confirm_ids = ui.checkbox("Use the displayed sequential identifier rules", value=False)
-        with ui.row():
-            use_sample = action("Use sample", "check", use_import, "Replace current table with the reviewed sample and assumptions", True)
-            use_sample.disable()
-            action("Cancel import", "close", sample_dialog.close, "Keep the current table and edits")
+        with ui.element('div').classes('sample-body'):
+            ui.label("Review suggestions before replacing this table and its unsaved edits. Original cells are retained exactly in Extend mode.").classes("help")
+            sample_delimiter = ui.select({',':'Comma', ';':'Semicolon', '\t':'Tab'}, value=',', label="CSV delimiter", on_change=delimiter_changed).props("outlined dense options-dense")
+            sample_error = ui.label("").props("role=alert").classes("error")
+            sample_uploader = ui.upload(label="Choose sample CSV", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
+                on_upload=sample_file, on_rejected=lambda: sample_error.set_text("Choose a UTF-8 CSV no larger than 1 MiB.")).props("accept=.csv,.tsv")
+            sample_review()
+            ui.label("Suggestions describe this sample. Review ranges and frequencies; generation treats columns independently.").classes("help")
+        with ui.element('div').classes('sample-actions').props('role=group aria-label="Import confirmation"'):
+            confirm_ids = ui.checkbox("Use the displayed sequential identifier rules", value=False)
+            with ui.row():
+                use_sample = action("Use sample", "check", use_import, "Replace current table with the reviewed sample and assumptions", True)
+                use_sample.disable()
+                action("Cancel import", "close", sample_dialog.close, "Keep the current table and edits")
 
     with ui.dialog() as load_dialog, ui.card().classes("load-dialog"):
         ui.label("Open recipe").classes("section-title")

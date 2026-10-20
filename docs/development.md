@@ -1899,3 +1899,43 @@ Read REVIEW-IDENTITY.txt before testing. No new build was made, and this older
 package does not contain the pending-action repair. Keep independent native
 evidence tied to that artifact and distinct from source UI review. Claude's
 issue-reported Linux review is attributed separately, not counted as our run.
+
+### Short laptop action visibility follow-up (20 October 2026)
+
+The latest [issue13 evidence addendum](https://github.com/Maks1m-Se/ravel/issues/13)
+was checked against the running correction first. Apply/Discard was already fixed.
+The import action buttons still fell outside the initial visible review area;
+the before-focus regression reproduced that. Import now has a separate fixed
+confirmation/action footer while longer form/source/assumption content scrolls.
+Identifier confirmation and both actions stay visible without covering content.
+
+Four final sample and four final pending Chrome cases pass both themes/laptop
+sizes; a focused Edge sample case also passes. The new assertions verify full
+button visibility/hit testing before keyboard scrolling, fixed footer bounds as
+content scrolls, the last assumption, pointer Cancel preserving table state,
+pointer and keyboard confirmation and existing CSV/retention/recipe/error checks.
+All82 unit methods, regenerated dashboard freshness and whitespace pass. Earlier
+valid20-case coverage and failed attempts remain in local evidence. The800-pixel
+case may fit all content; only the short case requires scrolling, while both
+must retain visible actions. Final runtime: `b5d5bbf9e2e0ddf3cfb4520bbd4ef89652586c08bcebfcb5b1fdcf639f06940b`.
+
+| Corrected import at1366×657 | Capture |
+| --- | --- |
+| Light | [Actual capture](images/import-actions-light.png) |
+| Dark | [Actual capture](images/import-actions-dark.png) |
+
+Current combined manual review is http://127.0.0.1:8104/, fixed
+`actions-E59-b5d5bbf9e2e0`. Original8101 remains the linked6a50e5f snapshot;
+initial corrected8103 remains0aaec2. Neither snapshot is overwritten or used by
+browser automation. Latest pending captures/raw runs are under
+outputs/ravel-pending-2026-10-20/pending-import-final; import captures/results are
+under import-actions-final-2 and edge-import-final.
+
+The actual supplied Claude ZIP is preserved separately under local references,
+SHA256 `deb0e6c35eb366ac628a1e3dcf0bb28b0e4437f6de9ac88485ba4a889b51977e`. Its recorded11 runtime hashes match Git2c235bb;
+its Chromium141/Linux observations are attributed review evidence and its
+harnesses were not executed here. This is distinct from the current Windows
+Chrome155 source checks and the older private Windows b99 package. The latter
+remains at the separately documented ignored C:\Git\ravel\outputs handoff,
+unchanged, with no rebuild. Native/clean-machine/physical-offline/reputation and
+redistribution requirements remain open; human visual acceptance is pending.

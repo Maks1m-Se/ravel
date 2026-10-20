@@ -168,3 +168,7 @@ and limitations are recorded in progress.json, not inferred from this reference.
 M0/full M1 and native/platform/clean-machine/license/distribution/release gates
 remain open; NiceGUI remains provisional. Work was AI-assisted; the invented
 fixtures do not establish clinical validation.
+
+The import review keeps identifier confirmation, Use sample and Cancel import
+fully visible in a separate footer. The longer form, source and assumptions
+scroll independently; Cancel preserves the current table and its drafts.
