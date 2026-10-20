@@ -135,22 +135,41 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     active_view = "Fields"
     busy = False
     pending_sample = None
+    last_pending = False
+    reported_error = False
 
     def report(message, error=False):
+        nonlocal reported_error
+        reported_error = error
         status.set_text(message)
         status.classes(add="error" if error else "", remove="" if error else "error")
 
     def update_state():
+        nonlocal last_pending
         if state.result is None:
             text = "No result yet"
         elif state.current:
             text = f"Current · {len(state.table_result.rows):,} rows"+ (f' · {len(state.recipe["tables"])} tables' if state.is_dataset else '')
         else:
-            text = "Out of date · Apply edits, then Generate"
+            text = "Out of date · Apply or discard edits first" if state.has_drafts else "Out of date · Generate to update"
         result_state.set_text("Generating…" if busy else text)
         result_state.classes(add="stale" if state.result and not state.current else "",
                              remove="" if state.result and not state.current else "stale")
         draft_summary.set_text("Unapplied edits" if state.has_drafts else "All changes applied")
+        pending = state.has_drafts
+        edit_actions.props(f'data-pending={str(pending).lower()}')
+        edit_actions.classes(add='has-pending' if pending else '', remove='' if pending else 'has-pending')
+        pending_note.set_text('Unapplied changes' if pending else 'All changes applied')
+        properties_name.set_text(state.field['name'])
+        apply_button.set_enabled(pending and not busy)
+        discard_button.set_enabled(pending and not busy)
+        if pending != last_pending:
+            if not pending:
+                clear_errors()
+                if reported_error:
+                    report('')
+            pending_announcement.set_text('Unapplied changes. Apply or discard your edits.' if pending else 'All changes applied. No unapplied changes.')
+            last_pending = pending
         export_button.set_enabled(state.current and state.table_result is not None and not busy)
         record_button.set_enabled(state.current and not busy)
         dataset_button.set_visibility(state.is_dataset)
@@ -159,8 +178,6 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             applied = field_form(state.field)
             for key, mark in marks.items():
                 mark.set_visibility(state.field_draft.get(key) != applied.get(key))
-        if discard_button is not None:
-            discard_button.set_enabled(state.has_drafts)
         if table_name_label is not None:
             table_name_label.set_text(state.table["name"])
         if sample_summary is not None:
@@ -252,6 +269,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         await focus_control(controls["kind"])
 
     async def apply():
+        if not state.has_drafts or busy:
+            return
         clear_errors()
         try:
             state.apply()
@@ -633,8 +652,9 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         record_button = action("Save run record", "description", save_record, "Save run record · recipe, environment and CSV checksum", compact=True)
         action("Reset layout", "restart_alt", None, "Reset layout · restore the 312 px Properties preference", compact=True).on(
             "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
-        help_note("Session", "State is local to this page. Save your recipe and CSV before closing. Run records include the generating environment and checksums. Exact quotas and relationships are not supported yet.")
+        help_note("Session", "State is local to this page. Apply or discard pending edits before generating or saving. Exact quotas and linked tables are available. Save your recipe and CSV or dataset ZIP before closing. Run records include the generating environment and checksums.")
     status = ui.label("Ready. Configure columns, Apply changes, then Generate.").classes("status-line").props("role=status aria-live=polite")
+    pending_announcement = ui.label('').classes('pending-announcement').props('role=status aria-live=polite aria-atomic=true')
 
     def switch_view(view):
         nonlocal active_view
@@ -722,14 +742,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
 
     @ui.refreshable
     def properties():
-        nonlocal discard_button
         controls.clear()
         marks.clear()
-        with ui.row().classes("pane-heading"):
-            with ui.row().classes("label-help"):
-                ui.label("Properties").classes("pane-title")
-                help_note("Properties", "Apply commits both column and table edits. Generate, Save and column actions require applied edits. A changed result is out of date until you generate again.")
-            ui.label(state.field["name"]).classes("section-title mono")
         with ui.element("div").classes("property-fields"):
             labels = dict(name="Column name", kind="Rule", start="Start", step="Step", minimum="Minimum",
                           maximum="Maximum", places="Decimal places", value="Constant value",
@@ -770,13 +784,11 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         with ui.row().classes("label-help"):
             help_note("Rule", "Ranges include both endpoints. Category probabilities use A,0.25 and B,0.75; they sum to1. Exact counts use A,600 and B,400 plus an exact missing count; choose new rows or final output scope. Normal uses a positive SD and half-even output rounding; unsupported draws fail without clipping. Dates use ISO YYYY-MM-DD and whole-day steps. Unique finite ranges must have enough unused values and zero missing probability. IDs cannot be missing.")
             ui.label("Rule help").classes("muted rule-help-label")
-        action("Apply changes", "check", apply, "Apply column, row count, seed and table name edits", True).classes("apply-button")
-        discard_button = action("Discard edits", "undo", discard, "Restore the applied settings").classes("discard-button")
-        update_state()
 
     @ui.refreshable
     def shell():
         nonlocal fields_region, preview_region, source_region, relationships_region, result_state, draft_summary, table_name_label, sample_summary
+        nonlocal edit_actions, pending_note, apply_button, discard_button, properties_name
         table_controls.clear()
         view_buttons.clear()
         with ui.element("main").classes("workbook-grid generator-grid"):
@@ -785,7 +797,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             with ui.element("section").classes("sheet"):
                 with ui.row().classes("sheet-heading"):
                     ui.label("Columns & data").classes("sheet-title")
-                    draft_summary = ui.label("").classes("draft-summary muted").props("role=status")
+                    draft_summary = ui.label("").classes("draft-summary muted")
                 with ui.row().classes("view-bar"):
                     for name in ["Fields", "Preview"] + (["Source"] if "sample" in state.recipe else []) + (['Relationships'] if state.is_dataset else []):
                         view_buttons[name] = ui.button(name, color=None, on_click=lambda v=name: switch_view(v)).props(
@@ -831,9 +843,19 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                                    ("lostpointercapture", "finish(e)"), ("keydown", "key(e)")):
                 divider.on(event, js_handler=f"e => window.ravelWorkspaceLayout.{handler}")
             with ui.element("aside").classes("properties").props('aria-label="Selected column settings"') as pane:
+                with ui.row().classes("pane-heading"):
+                    with ui.row().classes("label-help"):
+                        ui.label("Properties").classes("pane-title")
+                        help_note("Properties", "Apply commits both column and table edits. Generate, Save and column actions require applied edits. A changed result is out of date until you generate again.")
+                    properties_name = ui.label(state.field["name"]).classes("section-title mono")
                 hint = ui.label("Resize: drag the divider or Tab to it, then ← / →.").classes("layout-hint muted")
                 divider.props(f"aria-controls={pane.html_id} aria-describedby={hint.html_id}")
-                properties()
+                with ui.element('div').classes('property-body'):
+                    properties()
+                with ui.element('div').classes('edit-actions').props('role=group aria-label="Apply or discard changes" data-pending=false') as edit_actions:
+                    pending_note = ui.label('All changes applied').classes('pending-note')
+                    apply_button = action("Apply changes", "check", apply, "Apply column, row count, seed and table name edits", True).classes("apply-button")
+                    discard_button = action("Discard edits", "undo", discard, "Restore the applied settings").classes("discard-button")
             with ui.element("div").classes("output-panel"):
                 with ui.row().classes("output-controls"):
                     if "sample" in state.recipe:
@@ -854,7 +876,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ui.run_javascript("await Vue.nextTick(); window.ravelWorkspaceLayout.init();")
         update_state()
 
-    fields_region = preview_region = source_region = relationships_region = result_state = draft_summary = discard_button = table_name_label = sample_summary = None
+    fields_region = preview_region = source_region = relationships_region = result_state = draft_summary = table_name_label = sample_summary = None
+    edit_actions = pending_note = apply_button = discard_button = properties_name = None
     shell()
     if open_recipe:
         ui.timer(0, open_load, once=True)
