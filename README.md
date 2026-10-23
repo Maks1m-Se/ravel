@@ -98,6 +98,10 @@ for maintained checks and a short walkthrough. Historical
 [fixture experiment instructions](docs/development.md#workbook-experiment) and
 packaging evidence remain available, with their original scope.
 
+A password-protected [personal Render test](docs/personal-render.md) is prepared
+on a separate deployment branch, with a narrow-screen layout. Hosted verification
+and actual Pixel8 keyboard review remain separate from the desktop source checks.
+
 ## Documentation and contributing
 
 - [Product plan](docs/plan.md) and [recipe architecture](docs/specification.md)

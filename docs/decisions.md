@@ -543,3 +543,43 @@ artifact `source-b99a360a14c4eb8d`. The authorized #17 handoff copies that exact
 ZIP and existing evidence without building again; native tests of it cannot
 accept the later source correction. Preserve manual8101 at its original linked
 snapshot and use another fixed source instance for this UX review.
+
+## Edit recovery after review (21 October 2026)
+
+Keep the P1/P2 correction bounded to PR24's reviewed `db6571c` source. Stable
+editor identities identify a table/column/setting rather than a transient DOM
+ID. Successful Apply/Discard restores the last edited control only if the
+invoking action still owns focus and no later user interaction occurred. A
+removed setting falls back to the selected column name, then Rows. Failure
+continues to focus the invalid input. Use nearest scrolling only when needed.
+
+Keep field-error dependencies and status ownership in the UI adapter. Clear a
+historical error on an actual edit to a participating input; distinguish range
+ordering/constraint totals from scalar parsing errors. Do not validate on each
+keystroke or imply that removing an old message has applied a draft. The shared
+engine, recipe semantics and accepted Fichte/layout assets remain unchanged.
+Preserve fixed review snapshots and the older private Windows package; prepare
+the new source separately and keep human acceptance pending.
+
+## Personal Render test (23 October 2026)
+
+Use PR24 commit `db6571c1f69b60eef34cefcadf4c89f1e29ad042` with the saved
+E60 P1/P2 patch as the integrated source on `deploy/render-personal-weekend`.
+Preserve the original dirty recovery worktree and all immutable review servers.
+Deployment changes stay uncommitted during the Berlin restriction; their eventual
+commit must identify the exact tested source, rather than relabel the base commit.
+
+Use the existing Python3.14.8/NiceGUI lock and one Render Free Python process.
+`python -m ravel.web` binds `0.0.0.0:$PORT`, without reload. The local CLI remains
+loopback-only. A pure ASGI Basic-auth gate protects all application paths and
+WebSockets; only GET/HEAD `/healthz` exposes a constant health response. Reject
+cross-origin traffic before NiceGUI's permissive Socket.IO CORS handling.
+Credentials belong only in Render secrets. No account database, saved server-side
+data or persistence is added. Recipe/CSV byte downloads travel through the
+authenticated Socket.IO connection and become browser-local blobs.
+
+Narrow screens use the existing Fichte colors with stacked panes, separately
+scrolling tables and in-flow Apply/Discard. Avoid fixed overlays so focused
+fields and actions can be scrolled into the space above a mobile keyboard.
+Actual Android keyboard behavior and hosted proxy/TLS behavior require their
+own verification; desktop emulation cannot establish either.

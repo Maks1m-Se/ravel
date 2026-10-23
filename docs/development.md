@@ -1939,3 +1939,168 @@ Chrome155 source checks and the older private Windows b99 package. The latter
 remains at the separately documented ignored C:\Git\ravel\outputs handoff,
 unchanged, with no rebuild. Native/clean-machine/physical-offline/reputation and
 redistribution requirements remain open; human visual acceptance is pending.
+
+### Edit recovery review (21 October 2026)
+
+The bounded P1/P2 follow-up starts at reviewed PR24 commit
+`db6571c1f69b60eef34cefcadf4c89f1e29ad042` on `fix/pending-edit-actions`.
+Successful Apply/Discard returns to the last edited input by stable table/column/
+setting identity, including table-only Rows/Seed and refreshed Properties.
+Removed settings fall back to Column name, then Rows. A later user interaction
+cancels restoration; visible fields stay in place and clipped fields use nearest
+reveal. Failed Apply still focuses the invalid field.
+
+Historical field/ARIA/status errors clear only when an involved input changes.
+Either range endpoint invalidates an ordering error; an unrelated scalar error
+or independent status stays. Removing a message is not validation: drafts and
+export blocking persist, and Apply validates completely again. Quota parsing
+errors remain when Rows changes; a total mismatch clears when its missing count
+changes. Shared generation/recipe logic, fixtures, Fichte CSS/layout and the
+import footer are unchanged.
+
+Actual checks selected with `ravel-verify`:
+
+```powershell
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow recovery --verify-source --output outputs/recovery-review
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow pending --verify-source --output outputs/pending-regression
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow recovery --channel msedge --smoke --verify-source --output outputs/recovery-edge
+python -m unittest discover -s tests -v
+python scripts/build_dashboard.py --check
+git diff --check
+```
+
+Four recovery plus four pending Chrome cases pass Light/Dark at1366x657 and
+1280x800; one Edge recovery case passes. All82 units, dashboard and whitespace
+pass. Zero page errors/external browser HTTP/WebSockets. Post-action focus is
+asserted before any focus helper. A delayed-restore case verifies that a later
+real keyboard movement retains focus. Both sample and linked Apply replace the
+Properties input DOM identity while retaining logical focus. Existing E58/E59
+broader engine/import/CSV/recipe checks remain attributed to their source; they
+are reused for unchanged areas and not claimed as new executions.
+
+Runtime fingerprint: `72e1e6651e2977f16b5b20b57087ae4bd2e49ed53b35e229178ad0e99fa1a542`.
+Python3.14.8/NiceGUI3.18.0/Playwright1.58.0,
+Chrome155.0.8059.85, Edge155.0.4283.62 on the existing Windows host.
+Final raw records: local outputs/ravel-recovery-2026-10-21/recovery-ready,
+pending-complete and edge-ready; earlier failures remain alongside them.
+The inherited check_workbook_browser invalid-escape SyntaxWarning remains.
+
+| Actual1366×657 state | Light | Dark |
+| --- | --- | --- |
+| Focus after Discard/re-render | [Capture](images/edit-recovery-light-discard-focus.png) | [Capture](images/edit-recovery-dark-discard-focus.png) |
+| Edited range, not revalidated | [Capture](images/edit-recovery-light-edited-unvalidated.png) | [Capture](images/edit-recovery-dark-edited-unvalidated.png) |
+| Still invalid on next Apply | [Capture](images/edit-recovery-light-still-invalid.png) | [Capture](images/edit-recovery-dark-still-invalid.png) |
+| Table-only Seed focus | [Capture](images/edit-recovery-light-seed-focus.png) | [Capture](images/edit-recovery-dark-seed-focus.png) |
+
+Each capture waits for100 actual Preview rows. The pointer is outside help and
+finite UI animations finish for capture. No generated/edited UI images.
+
+Fixed review: http://127.0.0.1:8105/, `recovery-E60-72e1e6651e29`.
+This is `db6571c1f69b60eef34cefcadf4c89f1e29ad042` **plus saved uncommitted changes**;
+no new commit or CI result is claimed. Its immutable version manifest identifies
+the runtime hashes, source archive and saved patch. Commit/push and the PR24
+description update remain pending under the Berlin08:00–16:30 restriction.
+The older8101/8103/8104 snapshots were hash-verified and resumed unchanged;
+automated tests use8096 only. The private Windows ZIP remains unchanged at full
+SHA256 `eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91`;
+it contains none of these later source repairs. No rebuild, merge, public binary,
+native/clean-machine acceptance or milestone completion.
+
+For joint review, create a table and generate once. Change only Rows, Apply and
+check Rows retains focus; change only Seed, Discard and check Seed. Change a
+column value and repeat both actions. Set Minimum200/Maximum20 and Apply; then
+edit Maximum150: the old message/ARIA/status must clear while pending/export
+blocking remain. Apply must fail again and focus Minimum. Set Maximum250 and
+Apply to verify successful focus return. Editing unrelated Seed while the range
+error is shown must retain that error. Repeat in both themes at short laptop
+height. Human visual/function acceptance remains pending.
+
+### Personal Render preparation (23 October 2026)
+
+The [personal Render guide](personal-render.md) specifies the separate hosting
+entry, secrets, narrow layout, actual-device try-out and limitations. Current
+branch is `deploy/render-personal-weekend`, based on PR24
+`db6571c1f69b60eef34cefcadf4c89f1e29ad042` plus the saved E60 P1/P2 correction.
+The original recovery worktree was inspected before copying; its modified and
+untracked files were preserved, with copied input hashes recorded locally.
+No deployment commit, GitHub write, PR merge or hosted URL exists yet. The
+live Berlin09:53 clock was inside the08:00–16:30 restriction. Finish preparation
+locally and resume publication later without scheduling it.
+
+Actual configured interpreter on this host:
+`outputs/python314-trial-2026-10-11/runtime-env/Scripts/python.exe`, Python3.14.8
+and NiceGUI3.18.0. All48 installed runtime versions match `requirements-ui.lock`;
+`pip check` passes. Existing isolated review dependencies are made available
+to the same interpreter for browser checks:
+
+```powershell
+$runtimePython = '.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe'
+$env:PYTHONPATH = Join-Path (Get-Location) 'outputs\python314-trial-2026-10-11\review-env\Lib\site-packages'
+& $runtimePython scripts/check_personal_web.py --output outputs/render-personal/new-protected-run
+& $runtimePython scripts/check_personal_web.py --desktop --output outputs/render-personal/new-desktop-run
+& $runtimePython -m unittest discover -s tests -v
+& $runtimePython scripts/build_dashboard.py --check
+git diff --check
+Remove-Item Env:PYTHONPATH
+```
+
+Both browser modes own and stop their child server. Protected mode generates
+random invented test credentials in memory, independent of any eventual hosting
+password. Desktop mode adds a loopback-only source identity route in the test
+launcher; the actual hosted app has no identity/debug endpoint. Source hashes
+are checked before/after the browser cases. No frozen manual-review port is used.
+
+Runtime fingerprint:
+`b6577e98d61ce6169ccb937240c9612990f444e636214525d845b9484e2df61f`
+(SHA256 of sorted-key JSON mapping all13 runtime Python/CSS/JS file hashes).
+The final protected local run `outputs/render-personal/browser-5` passes both
+themes at412x915 portrait,915x412 landscape and412x420 reduced height:
+1,000 generated rows, pending change/Apply/Discard, stale/current CSV,
+recipe/CSV downloads, invented ten-row CSV import, separately horizontal
+definition scrolling, reachable Properties/actions and stable import footer.
+Two independent contexts retain distinct column names, row counts and results.
+Direct HTTP/polling/WebSocket checks reject strangers, wrong credentials and
+foreign Origins; valid authenticated WebSocket and upload work. NiceGUI CSV/
+recipe bytes become local blob downloads through the protected Socket.IO channel.
+Zero browser page errors; one Windows Proactor `ConnectionResetError` is logged
+after intentional socket rejection. It is retained, not counted as a clean log.
+Chrome155.0.8059.85, Playwright1.58.0; actual responsive captures were inspected.
+One source-attested Edge155.0.4283.62 recovery smoke case also passes.
+
+A final repeat at `outputs/render-personal/protected-final` passes the same
+protected cases and additionally captures the real upload request URL, then
+verifies that anonymous POST to that exact endpoint receives401. Runtime hashes
+are identical to browser-5. The [personal guide](personal-render.md) links two
+unaltered captures from this final repeat.
+
+All89 unit tests pass after dashboard regeneration, as do dashboard freshness and
+whitespace. The initial unit run had88 passes and one stale-dashboard failure
+after copying E60 tracking sources. Initial mobile harness failures were test
+assumptions about blob URLs, the ID/value column position, an asynchronous custom
+checkbox, and a selector counting Source rows together with Preview; corrected
+assertions preserve the intended contract and the failed evidence remains.
+
+The first full Chrome matrix completed13 cases before a sample-harness race
+following Discard. It started the next Rows edit before the server's discarded
+state arrived; the sample check now awaits the visible completion status and
+restored 1000 Rows. Failed `desktop-1` and the subsequent server-not-running attempt
+remain retained. The complete rerun at `outputs/render-personal/desktop-final`
+passes all 24 source-attested Chrome cases: rules, sample, extended, linked,
+pending and recovery in Light/Dark at 1366×657 and 1280×800. Zero page errors,
+external browser HTTP attempts or external WebSockets. Runtime hashes match the
+protected checks; actual desktop captures were also inspected. The owned test
+server stopped after completion and its log has no traceback.
+
+Render YAML parses as Free/manual with both credentials prompted as secrets.
+The48 unchanged pins resolve to Linux x86_64/Python3.14 wheels in a PyPI
+`pip install --dry-run --ignore-installed --only-binary=:all:` check, using
+manylinux2_28/2_17/2014, CPython and ABIcp314; report retained at
+`outputs/render-personal/linux-resolution.json`. No packages were installed by
+that check. The first attempt was blocked by sandbox networking; the approved
+read-only retry succeeded. This establishes wheel resolution, not Linux execution.
+Actual Linux installation, Render Blueprint validation/build, HTTPS proxy/TLS,
+cold start/resource limits and the actual Pixel8/Gboard interaction remain unrun.
+The Render plugin was found but is unconnected, and no enabled browser surface
+was available. The required account connection and hosted/device acceptance are
+in `progress.json`'s next action. No milestone/release gate or human acceptance
+is inferred from local desktop emulation.

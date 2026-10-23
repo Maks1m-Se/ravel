@@ -46,9 +46,11 @@
     {
       "id": "M5",
       "title": "Distribution",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria_ref": "docs/plan.md",
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E61"
+      ],
       "blockers": []
     },
     {
@@ -187,7 +189,8 @@
         "E56",
         "E57",
         "E58",
-        "E59"
+        "E59",
+        "E60"
       ],
       "blockers": [
         "No authorized clean Windows guest or second computer without Python is available; native/offline/installation checklist remains unrun (E55)."
@@ -281,7 +284,8 @@
         "E55",
         "E56",
         "E58",
-        "E59"
+        "E59",
+        "E60"
       ],
       "blockers": []
     },
@@ -312,7 +316,8 @@
         "E55",
         "E56",
         "E58",
-        "E59"
+        "E59",
+        "E60"
       ],
       "blockers": []
     },
@@ -419,7 +424,8 @@
       "evidence_refs": [
         "E51",
         "E58",
-        "E59"
+        "E59",
+        "E60"
       ],
       "blockers": []
     },
@@ -493,6 +499,26 @@
       ],
       "evidence_refs": [],
       "blockers": []
+    },
+    {
+      "id": "M5-04",
+      "milestone_id": "M5",
+      "title": "Prepare the personal Render weekend test",
+      "status": "in_progress",
+      "acceptance_criteria": [
+        "Use PR24 plus the checked E60 P1/P2 changes on a separate deployment branch with exact source identity; preserve local launch and desktop appearance.",
+        "Run one Render Free Python service on HTTPS with hosting-only credentials protecting pages, uploads, downloads and WebSockets.",
+        "Verify 1,000-row generation, pending Apply/Discard, recipe/CSV download, invented CSV import, independent sessions and portrait/landscape/keyboard reachability; distinguish local emulation from hosted Pixel evidence."
+      ],
+      "release_gate_ids": [],
+      "evidence_refs": [
+        "E61"
+      ],
+      "blockers": [
+        "Render plugin/account is not connected; service creation, hosting secrets, Linux build and HTTPS verification remain pending.",
+        "Commit/push is prohibited during Berlin08:00-16:30; leave the prepared branch uncommitted for a later resume.",
+        "Actual Pixel8/Gboard review is required; reduced-height desktop emulation is not Android keyboard evidence."
+      ]
     },
     {
       "id": "M6-01",
@@ -900,17 +926,28 @@
       "id": "E59",
       "reference": "20 October2026 issue13 Evidence received addendum; https://github.com/Maks1m-Se/ravel/pull/24; docs/development.md#short-laptop-action-visibility-follow-up-20-october-2026",
       "scope": "Read the latest action-visibility addendum without restarting the completed correction. Existing0aaec2a35155acfb6b50f5dff61931cf030598b7 already keeps Apply/Discard fully visible in the tested short viewport. The current import dialog still required scrolling to discover its buttons: a new before-focus assertion reproduced Use sample at viewport ratio0 before repair. Moved import identifier confirmation/Use sample/Cancel into a separate stable footer; only the explanatory form/source/assumptions region scrolls. Fichte styling and all import/count/identifier/atomic-state semantics remain unchanged. Four final source-attested Chrome sample cases pass Light/Dark1366x657/1280x800, including full button visibility and pointer hit testing before focus helpers, footer bounds stable while content scrolls, last assumption visibility, pointer Cancel with unchanged table, pointer/keyboard Use, invalid import/count recovery, exact source/new/retained CSV and recipe/run reload. Four final Chrome pending-action cases pass on the same source, plus a final Edge sample case. Fully visible checkbox/actions, column/table-only indication, exact revert/error recovery, Apply/Discard, stale export, keyboard focus and theme/view/resize/narrow/restore remain covered. At800 pixels the complete sample body can fit; an intermediate harness wrongly required scrolling there and was corrected to require it at657 while retaining full visibility/stable-footer assertions at both heights. Prior failures and valid earlier20-case coverage remain retained, not restarted or counted as new runs. Final runtime fingerprint b5d5bbf9e2e0ddf3cfb4520bbd4ef89652586c08bcebfcb5b1fdcf639f06940b; Chrome155.0.8059.85, Edge155.0.4283.62, Python3.14.8/NiceGUI3.18.0/Playwright1.58.0 on this Windows host. Zero page errors/external browser HTTP/WebSockets. Actual corrected short-height Light/Dark import and pending screenshots inspected. All82 units, dashboard freshness and whitespace pass locally. The actual supplied Claude review ZIP was located in Downloads, full SHA256 deb0e6c35eb366ac628a1e3dcf0bb28b0e4437f6de9ac88485ba4a889b51977e confirmed, and copied unchanged under separate ignored local references; original retained. Inspected result JSON and actual captures; all11 recorded runtime hashes match Git2c235bb34512c6d76ee4bc143cbf0ddba5e6970c. Its Chromium141.0.7390.37/Linux evidence remains attributed third-party review; no supplied harness was executed. This adds raw evidence now located after the earlier E58 attribution. First correction PR24 was published separately after live Berlin commit18:31:18/push18:31:20 and PR creation18:32:51 checks; all17 changed GitHub blobs read back and matched. Hosted run39458636245 at0aaec2 logs82 successful unit tests on macOS118751969929,Ubuntu118751970458,Windows118751970629, with dashboard/whitespace successful; these precede the import follow-up and are not native binary checks. Original8101 was found stopped and resumed from the unchanged linked-E53 snapshot/6a50e5fa6c89683aade934260378434cd81b71d3 after all source hashes matched. Initial corrected8103 remains immutable at0aaec2. Combined correction is prepared separately on manual8104, actions-E59-b5d5bbf9e2e0. E1–E58, original staged work, fixtures, accepted PR8/E42 and E46 version-specific human acceptance preserved. Existing private b99 Windows ZIP/handoff is unchanged and contains neither source repair; no rebuild, native acceptance, merge or public binary. Human visual acceptance and M0/fullM1/release gates remain open."
+    },
+    {
+      "id": "E60",
+      "reference": "21 October 2026 bounded Claude P1/P2 follow-up to draft PR24; docs/development.md#edit-recovery-review-21-october-2026; scripts/edit_recovery_browser.py",
+      "scope": "Started from clean fix/pending-edit-actions at reviewed db6571c1f69b60eef34cefcadf4c89f1e29ad042; no existing changes discarded. Successful Apply/Discard returns focus to the last actually edited table/column/setting identity, including Rows-only and Seed-only changes. Identity survives Properties refresh on Discard and sample/linked Apply; a removed rule setting falls back to selected Column name, then Rows. Focus restoration requires that the invoking action still owns focus and no subsequent user focus/keyboard/pointer/input intent occurred; it uses preventScroll and only nearest reveal of a clipped field. Failed Apply continues to focus the invalid field. Editing an error dependency removes its historical inline message, aria-invalid/describedby and only its associated error status; no validation or application is implied. Both range endpoints clear ordering errors, while Maximum does not clear a Minimum scalar parsing failure; unrelated Seed/Rows edits and independently reported status remain. Quota total dependencies are distinguished from unparseable counts; unique-capacity/missingness dependencies are classified separately. Drafts, pending announcement and stale/current export guards remain intact. Shared engine/recipe/workspace/fixtures, Fichte CSS/layout and import footer are unchanged. Final runtime fingerprint 72e1e6651e2977f16b5b20b57087ae4bd2e49ed53b35e229178ad0e99fa1a542. Four Chrome recovery cases plus four existing pending cases pass Light/Dark at1366x657 and1280x800; one Edge recovery case passes at1366x657 Light. Recovery assertions use unassisted post-action focus, separate pointer/keyboard actions, Rows/Seed alone, replacement DOM identities, disappearing-field fallback, stable scrolling, simulated delayed restore followed by real keyboard movement, range correction through either endpoint, repeated invalid Apply, ARIA/status clearing, independent scalar errors/status, Rows/Seed invalid correction, quota parse-versus-total dependencies, sample/linked refresh. Zero page errors or external browser HTTP/WebSocket attempts. All82 unit tests, dashboard freshness and whitespace pass on this runtime. Chrome155.0.8059.85, Edge155.0.4283.62, Python3.14.8, Playwright1.58.0, NiceGUI3.18.0 on the existing Windows development host. Actual short-laptop Light/Dark captures of Discard focus, edited/unvalidated range, repeated invalid Apply and Seed focus retained; Preview has100 actual rows before each capture. Intermediate failures retained: initial native-input selector missed the restored target; scroll assertions now compare at action activation and allow necessary reveal; hidden error slots and offscreen textarea persistence assertions use the correct contract. Pointer moved outside help and finite animations finished for captures; no image modification/mockups. Existing E58/E59 broad generator/import/CSV/recipe/engine/native evidence remains valid only at its attributed source/artifact; not recounted as new runs. Original8101/8103/8104 were stopped and resumed only after their unchanged runtime hashes matched; each returns HTTP200, with no automation on manual ports. New fixed source review prepared separately at8105, recovery-E60-72e1e6651e29, based on db6571c plus explicitly uncommitted P1/P2 changes. Live Berlin time was12:28 at start, within08:00–16:30 restriction; no commit/push/GitHub write, merge or public binary. PR24 publication pending until allowed. Older private Windows ZIP SHA256 eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91 rechecked unchanged; no rebuild. E1–E59, original staged work, fixtures, accepted PR8/E42 and E46 version-specific human acceptance preserved. New human acceptance, remote CI for this patch, clean-machine/native and M0/fullM1/release gates remain open."
+    },
+    {
+      "id": "E61",
+      "reference": "23 October 2026 personal Render preparation; docs/personal-render.md; docs/development.md#personal-render-preparation-23-october-2026",
+      "scope": "Personal deployment branch deploy/render-personal-weekend starts at PR24 db6571c1f69b60eef34cefcadf4c89f1e29ad042 and includes the saved uncommitted E60 P1/P2 patch copied without changing its original worktree. Initial recovery inputs are byte-hashed in outputs/render-personal/recovery-input-hashes.json. No deployment commit exists yet. Added Render Free/manual Python3.14.8 Blueprint using the unchanged requirements-ui.lock, separate 0.0.0.0/PORT production entry without reload, fail-closed Basic authentication across HTTP/upload/polling/WebSockets, foreign-Origin rejection and generic unauthenticated GET/HEAD health. Local CLI remains loopback-only. Narrow Fichte layout stacks panes and separately scrolls definitions/preview; Apply/Discard remain in flow. Final runtime fingerprint b6577e98d61ce6169ccb937240c9612990f444e636214525d845b9484e2df61f (SHA256 of sorted JSON runtime-file hashes). Protected local Chrome Light/Dark cases pass 1000 rows, pending Apply/Discard and stale export, CSV/recipe blob downloads through authenticated Socket.IO, invented CSV upload/import, viewport412x915/915x412/412x420, separate horizontal table scroll and reachable fields/actions. Two independent browser contexts retain separate table/row/result state. Actual HTTP and direct WebSocket checks reject anonymous/wrong credentials and foreign Origins; valid WebSocket opens. Zero browser page errors. Actual responsive captures inspected, including reduced-height import footer. Python3.14.8/NiceGUI3.18.0/Playwright1.58.0/Chrome155.0.8059.85. Local protected evidence at outputs/render-personal/browser-5; one Windows Proactor ConnectionResetError follows intentional socket rejection, without browser failure. Edge155.0.4283.62 recovery smoke passes. Initial full Chrome run completed13 source-attested cases before a sample-harness race after Discard; it awaited input value locally but not server completion. The harness now waits for the visible discarded status and restored Rows before editing; original failed run retained at desktop-1. First unit run had88 passes and one dashboard-staleness failure because the copied E60 source required regeneration; final checks are recorded in the development guide. Earlier failed mobile runs retained: incorrect test assumptions about blob URL/column position, asynchronous custom-checkbox click and overbroad source+preview selector corrected without changing runtime behavior. Saved Render YAML parses as free/manual with both secret prompts; no actual Render schema/build/deploy validation yet. Render plugin discovered but unconnected, no browser surface available. Actual Berlin09:53 check confirms restricted hours: no commit, push, GitHub write, deployment, merge or scheduled publication. No hosted HTTPS URL, Linux installation, Render proxy/TLS behavior or actual Pixel8/Gboard test is claimed. Existing immutable review instances/PR stack/private Windows package and clinical decisions are unchanged. Human acceptance and milestones/release gates remain open. Approved PyPI read-only dry-run successfully resolves all48 unchanged pins to Linux x86_64/Python3.14 wheels (manylinux2_28/2_17/2014, cp314); report linux-resolution.json. Initial sandbox network failure retained; no packages installed and no Linux execution claimed. Final protected-final repeat passes both themes and actual anonymous POST rejection at the captured live upload URL; same runtime hashes and zero browser errors/Windows reset diagnostics in that final server log. Two unaltered final responsive captures are linked from docs/personal-render.md. Final full Chrome rerun desktop-final passes all24 source-attested cases (six workflows x two themes x two laptop sizes), zero page errors/external HTTP/WebSockets and unchanged runtime hashes. Owned desktop server stopped cleanly with no traceback. Original16 E60 input hashes remain unchanged. Final89 units, dashboard freshness and whitespace pass; no human or hosted acceptance inferred."
     }
   ],
   "blockers": [
+    "Personal Render test: account connection and permitted commit/push are pending; no deployed HTTPS URL or hosted verification yet (E61).",
     "Clinical arithmetic awaits review/adoption of the proposed numeric policy and independent reference transcription; no clinical numeric implementation or Python/R comparison yet (E54).",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Joint review of draft PR24 and the combined pending/import action correction on immutable manual8104, actions-E59-b5d5bbf9e2e0. At1366x657 inspect unchanged/pending/applied states and import confirmation/Cancel while content scrolls, using keyboard and pointer. Verify exact revert, invalid Apply/recovery, Discard, stale/current exports and source retention. Original manual8101 remains linked6a50e5fa6c89683aade934260378434cd81b71d3; first correction8103 remains0aaec2a35155acfb6b50f5dff61931cf030598b7. Claude independent native review uses the separate older C:\\Git\\ravel\\outputs\\private-review-b99a360a14c4eb8d\\Ravel-source-b99a360a14c4eb8d-windows-x64-private.zip, SHA256 eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91. It does not contain the new UX repairs; retain independent raw evidence with exact artifact identity. Keep the PR stack draft/unmerged, normal Berlin publication rule, clinical policy/clean Windows/redistribution dependencies and incomplete M0/fullM1/release gates. No public binaries or final acceptance.",
-  "current_task_id": "M1-01",
+  "next_action": "Connect the Render plugin/account and authorize the Ravel repository. After16:30 Berlin, on a later resume with a fresh live clock check, commit/push the saved deploy/render-personal-weekend source, keeping PRs unmerged; deploy that exact commit with render.yaml on Free and enter RAVEL_AUTH_USERNAME/RAVEL_AUTH_PASSWORD only as hosting secrets. Record the actual HTTPS URL/commit, run the protected checker against it and perform the required Pixel8 portrait/landscape/Gboard try-out from docs/personal-render.md before acceptance. Current source is db6571c plus E60 and uncommitted deployment changes, runtime b6577e98d61c. Preserve the separate pending E60 human review and all manual8101/8103/8104/8105 snapshots/private Windows artifact; clinical policy, clean Windows, redistribution and all incomplete release gates remain pending.",
+  "current_task_id": "M5-04",
   "next_task_ids": [
-    "M1-02",
+    "M1-01",
     "M0-06"
   ]
 }

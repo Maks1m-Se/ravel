@@ -350,7 +350,7 @@ def main():
     parser.add_argument('--base-url', default='http://127.0.0.1:8090')
     parser.add_argument('--output', type=Path, default=ROOT / 'outputs/generator-browser')
     parser.add_argument('--channel', default='chrome')
-    parser.add_argument('--workflow', choices=['rules', 'sample', 'extended', 'linked', 'pending', 'all'], default='rules')
+    parser.add_argument('--workflow', choices=['rules', 'sample', 'extended', 'linked', 'pending', 'recovery', 'all'], default='rules')
     parser.add_argument('--smoke', action='store_true', help='One Light laptop case instead of the full theme/viewport matrix.')
     parser.add_argument('--verify-source', action='store_true', help='Require a dedicated test server identity matching the current runtime files.')
     args = parser.parse_args()
@@ -409,6 +409,9 @@ def main():
                         if args.workflow in {'pending','all'}:
                             from scripts.pending_browser import exercise as pending_exercise
                             results['cases'].append(pending_exercise(page, args.base_url, out, viewport, theme))
+                        if args.workflow in {'recovery','all'}:
+                            from scripts.edit_recovery_browser import exercise as recovery_exercise
+                            results['cases'].append(recovery_exercise(page, args.base_url, out, viewport, theme))
                     except Exception:
                         page.screenshot(path=out / 'failure.png')
                         raise

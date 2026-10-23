@@ -125,6 +125,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     client = ui.context.client
     choice = chrome(theme)
     ui.add_head_html("<script>" + (STATIC / "layout.js").read_text(encoding="utf-8") + "</script>")
+    ui.add_head_html("<script>" + (STATIC / "edit_focus.js").read_text(encoding="utf-8") + "</script>")
     ui.add_head_html('''<script>
         window.addEventListener('beforeunload', e => {
             if (window.ravelUnsaved) { e.preventDefault(); e.returnValue = ''; }
@@ -137,10 +138,14 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     pending_sample = None
     last_pending = False
     reported_error = False
+    reported_error_key = None
+    validation_errors = {}
+    last_edited = None
 
     def report(message, error=False):
-        nonlocal reported_error
+        nonlocal reported_error, reported_error_key
         reported_error = error
+        reported_error_key = None
         status.set_text(message)
         status.classes(add="error" if error else "", remove="" if error else "error")
 
@@ -210,6 +215,28 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     def clear_errors():
         for key, control in {**controls, **table_controls}.items():
             set_error(key, control)
+        validation_errors.clear()
+
+    def editor_identity(key, column=False, field_id=None):
+        return f'column:{state.table_id}:{field_id or state.selected}:{key}' if column else f'table:{state.table_id}:{key}'
+
+    def wire_editor(key, control, column=False):
+        control.props(f'data-editor={editor_identity(key, column)}')
+
+    def clear_edited_errors(identity):
+        for key, dependencies in list(validation_errors.items()):
+            if identity in dependencies:
+                control = {**controls, **table_controls}.get(key)
+                if control is not None:
+                    set_error(key, control)
+                del validation_errors[key]
+                if reported_error_key == key:
+                    report('')
+
+    async def restore_editor_focus(ticket):
+        await client.run_javascript('window.ravelEditFocus.restore(' + json.dumps(dict(
+            ticket=ticket, identity=last_edited,
+            fallbacks=[editor_identity('name', True), editor_identity('row_count')])) + ')')
 
     async def focus_control(control):
         for selector in (choice, controls.get("kind")):
@@ -224,6 +251,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ''')
 
     async def show_error(exc):
+        nonlocal reported_error_key
         if exc.path.startswith('tables.') and state.is_dataset:
             parts=exc.path.split('.')
             table=state.recipe['tables'][int(parts[1])]
@@ -233,6 +261,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                 return
             exc=ValidationError('table.'+'.'.join(parts[2:]),exc.message)
         report(exc.message, True)
+        field = None
         if exc.path == "seed":
             key = "seed"
         elif exc.path.startswith("table.fields."):
@@ -251,18 +280,49 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         control = {**controls, **table_controls}.get(key)
         if control is not None:
             set_error(key, control, exc.message)
+            if field is not None:
+                parameter = exc.path.rsplit('.', 1)[-1]
+                parameter = {'values':'categories', 'probabilities':'categories', 'counts':'quotas'}.get(parameter, parameter)
+                dependencies = {editor_identity(parameter, True, field['id']), editor_identity('kind', True, field['id'])}
+                if exc.message in {'Minimum must not exceed maximum.', 'Minimum date must not exceed maximum date.'}:
+                    dependencies.update(editor_identity(k, True, field['id']) for k in ['minimum', 'maximum'])
+                elif parameter == 'unique' and exc.message.startswith('Unique domain has '):
+                    dependencies.update(editor_identity(k, True, field['id']) for k in ['minimum', 'maximum', 'places'])
+                    dependencies.update([editor_identity('row_count'), editor_identity('mode')])
+                elif parameter == 'unique' and exc.message == 'Unique generation requires zero missing probability.':
+                    dependencies.add(editor_identity('missing_probability', True, field['id']))
+                elif parameter == 'quotas' and exc.message.startswith('Exact counts including missing must total '):
+                    dependencies.update(editor_identity(k, True, field['id']) for k in ['missing_count', 'scope'])
+                    dependencies.update([editor_identity('row_count'), editor_identity('mode')])
+            else:
+                dependencies = {editor_identity({'table_name':'name', 'table_row_count':'row_count', 'table_primary_key':'primary_key'}.get(key, key))}
+            validation_errors[key] = dependencies
+            reported_error_key = key
             await focus_control(control)
         update_state()
 
     def edit_field(key, value):
-        state.field_draft[key] = value if value is not None else ""
+        nonlocal last_edited
+        value = value if value is not None else ""
+        if state.field_draft.get(key) != value:
+            last_edited = editor_identity(key, True)
+            clear_edited_errors(last_edited)
+        state.field_draft[key] = value
         update_state()
 
     def edit_table(key, value):
-        state.table_draft[key] = value if value is not None else ""
+        nonlocal last_edited
+        value = value if value is not None else ""
+        if state.table_draft.get(key) != value:
+            last_edited = editor_identity(key)
+            clear_edited_errors(last_edited)
+        state.table_draft[key] = value
         update_state()
 
     async def change_kind(event):
+        nonlocal last_edited
+        last_edited = editor_identity('kind', True)
+        clear_edited_errors(last_edited)
         state.change_kind(event.value)
         await properties.refresh()
         update_state()
@@ -271,6 +331,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     async def apply():
         if not state.has_drafts or busy:
             return
+        ticket = await client.run_javascript(f'window.ravelEditFocus.capture({json.dumps(apply_button.html_id)})')
         clear_errors()
         try:
             state.apply()
@@ -285,8 +346,12 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             await properties.refresh()
         update_state()
         report("Changes applied. Generate to update the result.")
+        await restore_editor_focus(ticket)
 
     async def discard():
+        if not state.has_drafts or busy:
+            return
+        ticket = await client.run_javascript(f'window.ravelEditFocus.capture({json.dumps(discard_button.html_id)})')
         state.discard()
         for key, control in table_controls.items():
             control.set_value(state.table_draft[{'table_name':'name','table_row_count':'row_count','table_primary_key':'primary_key'}.get(key,key)])
@@ -294,6 +359,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         clear_errors()
         update_state()
         report("Unapplied edits discarded.")
+        await restore_editor_focus(ticket)
 
     async def column_action(operation, identity=None):
         try:
@@ -769,13 +835,15 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     else:
                         control = ui.input(labels[key], value=form[key], on_change=lambda e, k=key: edit_field(k, e.value)).props("outlined dense")
                     controls[key] = control
+                    wire_editor(key, control, True)
                     wire_error(key, control)
                     with ui.row().classes("setting-state"):
                         ui.label(assumption_origin(state.recipe, state.selected, key)).classes("setting-origin")
                         marks[key] = ui.label("Draft").classes("draft-mark")
             if form['kind'] in {'integer','decimal','date','id','text_id'}:
                 with ui.element('div').classes('setting-row').props('data-setting=unique'):
-                    ui.checkbox('Require unique values',value=form.get('unique')=='True',on_change=lambda e: edit_field('unique',str(e.value)))
+                    unique = ui.checkbox('Require unique values',value=form.get('unique')=='True',on_change=lambda e: edit_field('unique',str(e.value)))
+                    wire_editor('unique', unique, True)
                     marks['unique']=ui.label('Draft').classes('draft-mark')
         if state.selected in state.recipe.get("sample", {}).get("identifiers", []):
             ui.label("Identifier · excluded from fitting").classes("muted")
@@ -813,7 +881,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         action('Relationship','account_tree',open_relationship,'Review the selected table’s parent and explicit row counts')
                 result_state = ui.label("").classes("result-state").props("role=status aria-live=polite")
                 sample_summary = ui.label("").classes("sample-summary muted").props("role=status")
-                with ui.element("div").classes("fields-view") as fields_region:
+                with ui.element("div").classes("fields-view").props('tabindex=0 role=region aria-label="Column definitions; scroll horizontally if needed"') as fields_region:
                     definitions()
                 with ui.element("div").classes("preview-view") as preview_region:
                     preview()
@@ -863,14 +931,17 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     if "sample" in state.recipe:
                         mode = ui.select({'new':'Generate new rows', 'extend':'Extend to total'}, value=state.table_draft['mode'], label='Sample mode', on_change=lambda e: edit_table('mode', e.value)).props('outlined dense options-dense')
                         table_controls['mode'] = mode
+                        wire_editor('mode', mode)
                         wire_error('mode', mode)
                     for key, label, control_key in [("name", "Table name", "table_name"), ("row_count", "Rows", "table_row_count"), ("seed", "Seed", "seed")]:
                         control = ui.input(label, value=state.table_draft[key], on_change=lambda e, k=key: edit_table(k, e.value)).props("outlined dense")
                         table_controls[control_key] = control
+                        wire_editor(key, control)
                         wire_error(control_key, control)
                     if state.is_dataset:
                         key_control=ui.select({'':'No primary key',**{field['id']:field['name'] for field in state.table['fields'] if field['kind'] in {'id','text_id'} or field.get('unique') or (field['kind']=='constant' and state.table['row_count']==1)}},label='Primary key',value=state.table_draft['primary_key'],on_change=lambda e:edit_table('primary_key',e.value)).props('outlined dense options-dense')
                         table_controls['table_primary_key']=key_control
+                        wire_editor('primary_key', key_control)
                         wire_error('table_primary_key',key_control)
                     help_note("Generation", "Rows: 1–100,000; columns: 1–50; at most 2 million cells. Seed: 0–2^63−1. Apply both table and column edits before generating. The same recipe and pinned environment reproduce the same CSV.")
         ui.label("Session only · Save your recipe and CSV to keep them").classes("footer-note")
@@ -887,6 +958,6 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ui.timer(0, open_sample_dialog, once=True)
 
 
-def launch(port=8090):
-    ui.run(host="127.0.0.1", port=port, title="Ravel | Workbench", favicon=ROOT / "brand/favicon/favicon.ico",
+def launch(port=8090, host="127.0.0.1"):
+    ui.run(host=host, port=port, title="Ravel | Workbench", favicon=ROOT / "brand/favicon/favicon.ico",
            dark=True, reload=False, show=False, prod_js=True, on_air=False)

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ravel-personal-test
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: deploy/render-personal-weekend
+    autoDeployTrigger: "off"
+    buildCommand: python -m pip install -r requirements-ui.lock && python -m pip check
+    startCommand: python -m ravel.web
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.8
+      - key: RAVEL_AUTH_USERNAME
+        sync: false
+      - key: RAVEL_AUTH_PASSWORD
+        sync: false

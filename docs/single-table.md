@@ -89,6 +89,23 @@ the edits, pending treatment and specific error. Successful Apply clears the
 draft indication while a prior result remains out of date until regeneration.
 Recipe saving and output export remain separate from applying edits.
 
+After successful Apply or Discard, return focus to the last edited field,
+including Rows or Seed when those alone changed. Field identity uses table,
+column and setting keys, so refreshing Properties does not invalidate the
+destination. If that setting disappears when discarding a rule change, use the
+selected column's name, then Rows as a reachable fallback. Do not take focus
+back after the user has moved on. Keep visible fields in place and scroll only
+enough to reveal a clipped destination; failed Apply still focuses its error.
+
+Editing an input involved in a reported validation error clears that historical
+field message, its ARIA error state and its associated status. Either endpoint
+can invalidate a prior Minimum/Maximum ordering error. A scalar parsing failure
+belongs to its own input; unrelated edits and newer independent status errors
+remain. Cross-input quota-total and unique-capacity errors track the inputs
+used by those constraints. Clearing a historical error does not validate or
+apply a draft: Apply still performs complete validation, pending remains and
+exports stay blocked until the recipe/result is current.
+
 ## Reference established by hand
 
 Before writing the engine, the three-row reference was fixed as:
