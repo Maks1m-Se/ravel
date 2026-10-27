@@ -350,6 +350,7 @@ def main():
     parser.add_argument('--base-url', default='http://127.0.0.1:8090')
     parser.add_argument('--output', type=Path, default=ROOT / 'outputs/generator-browser')
     parser.add_argument('--channel', default='chrome')
+    parser.add_argument('--executable-path', help='Explicit installed review browser; record its actual version.')
     parser.add_argument('--workflow', choices=['rules', 'sample', 'extended', 'linked', 'pending', 'recovery', 'all'], default='rules')
     parser.add_argument('--smoke', action='store_true', help='One Light laptop case instead of the full theme/viewport matrix.')
     parser.add_argument('--verify-source', action='store_true', help='Require a dedicated test server identity matching the current runtime files.')
@@ -372,7 +373,7 @@ def main():
             assert running['source_sha256'] == results['local_runtime_sha256'], 'Running app differs from the local runtime files.'
             results['running_source'] = running
         with sync_playwright() as p:
-            browser = p.chromium.launch(channel=args.channel, headless=True)
+            browser = p.chromium.launch(**({'executable_path': args.executable_path} if args.executable_path else {'channel': args.channel}), headless=True)
             results['browser'] = browser.version
             for width, height in ([(1366,657)] if args.smoke else [(1366,657), (1280,800)]):
                 for theme in (['Light'] if args.smoke else ['Light','Dark']):

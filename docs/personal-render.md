@@ -1,4 +1,12 @@
-# Personal Render test
+# Personal Render test — historical preparation
+
+**Superseded by the [public demo](public-demo.md).** The protected source was
+published as `d58e977ab2cac654c5012918e35b26fc899ab0f4` and deployed on 23 October
+2026 at https://ravel-personal-test.onrender.com/. The maintainer subsequently
+authorized public access and vacation-period publication. The original local
+evidence and preparation text below describe their original date, not the current
+connection/deployment state. Current limits, access mode and review steps are in
+the public demo guide.
 
 This is a personal weekend test, with invented data and session-only state.
 It does not change the release's supported platforms or accept the pending PRs.
@@ -51,8 +59,7 @@ state. Requests with a foreign Origin are refused; WebSockets also require a
 same-host Origin. Use Render HTTPS; credentials rely on its TLS termination.
 Recipe/CSV bytes are sent to the page's Socket.IO client and downloaded as
 browser-local blobs. File-route downloads, if added later, pass through the same
-HTTP gate. Private page responses are marked `no-store`; public framework assets
-can retain NiceGUI's static cache settings.
+HTTP gate. Responses through this gate, including framework assets, are marked `no-store`.
 
 The password is a shared personal entry gate, not a multi-user authorization
 system. Each page creates its own Workspace; separate contexts must retain their

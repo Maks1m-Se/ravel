@@ -583,3 +583,25 @@ scrolling tables and in-flow Apply/Discard. Avoid fixed overlays so focused
 fields and actions can be scrolled into the space above a mobile keyboard.
 Actual Android keyboard behavior and hosted proxy/TLS behavior require their
 own verification; desktop emulation cannot establish either.
+
+
+## Public demo and compact controls (27 October 2026)
+
+The maintainer requested a public link for repository/website visitors and
+authorized publication during vacation. Reuse the existing Free Render service
+and deployment branch without merging the review stack. Public access requires
+an explicit RAVEL_PUBLIC_DEMO=1; personal mode remains fail-closed otherwise.
+Keep existing secrets for rollback, and preserve local engine limits. The shared
+demo admits 1,000 total rows/20,000 cells, two concurrent generations and 30 starts
+per minute per process, and bounds file uploads. Explain server processing and
+session-only state before importing; use invented data only. These workload
+limits do not provide account isolation or an abuse-resistance guarantee.
+
+Move Light/Dark, Reset layout and Session help into a labelled More options menu.
+Use compact help icons and three named icon actions for column add/duplicate/remove;
+keep removal confirmation. Correct the inherited double padding of dense labelled
+inputs instead of changing the palette or data-entry model. Preserve keyboard
+focus, pending/error behavior and actual generated/exported data. Larger touch
+targets apply to the column actions without increasing the desktop toolbar height.
+Actual visual and Pixel/Gboard acceptance remain separate from automated checks.
+No clinical, native Windows or binary-redistribution acceptance follows.

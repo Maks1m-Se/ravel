@@ -2104,3 +2104,48 @@ The Render plugin was found but is unconnected, and no enabled browser surface
 was available. The required account connection and hosted/device acceptance are
 in `progress.json`'s next action. No milestone/release gate or human acceptance
 is inferred from local desktop emulation.
+
+
+## Compact controls and public demo (27 October 2026)
+
+Source starts at `d58e977ab2cac654c5012918e35b26fc899ab0f4`; this is the
+maintainer-authorized public/compact follow-up, with no PR merges. Operation,
+limits, commands and required device/visual try-out: [public demo](public-demo.md).
+Runtime fingerprint (sorted JSON runtime SHA256 mapping):
+`882f5d312924417fc15f08fae86f0365be750ac831302443d26d01e19c9706e5`.
+
+Actual review environment: Linux, CPython3.12.14, NiceGUI3.18.0, Playwright1.58.0,
+Chromium153.0.8010.0. This is not a new Windows/Edge or Python3.14 native run.
+The unchanged UI/review pins installed and `pip check` passed. Browser download
+from Playwright returned an empty/corrupt archive; the review instead used an
+explicit locally extracted Chromium binary from @sparticuz/chromium153.0.0.
+That test-only package stays in ignored outputs and is not an application pin.
+The managed sandbox forbids interface enumeration needed by a local0.0.0.0
+NiceGUI startup, so owned local checks bind loopback; hosted binding is checked
+separately. Server and browser must run in the same execution network namespace.
+
+Final `outputs/compact-desktop-final/desktop/results.json`: all24 maintained
+cases pass (rules/sample/extended/linked/pending/recovery, two themes, two laptop
+sizes), with zero page errors/external HTTP/WebSockets. Final
+`outputs/public-compact-final/results.json`: four compact desktop/mobile cases
+pass, plus real anonymous HTTP/WebSocket, rejected foreign Origins/oversized
+upload, downloads/import, limit recovery and two-context isolation. Both retain
+runtime hashes. Six measured input controls have42px height,22px line height,
+14px top and6px bottom padding, and no bottom overflow. Actual unaltered captures
+were inspected and selected files copied to docs/images. Emulated reduced height
+is not an actual Android keyboard test.
+
+Earlier full desktop run `outputs/compact-desktop-all` stopped after16 passing
+cases at a pending-state assertion after an unexpected same-page navigation.
+The cause is unproven; the failed capture/results remain retained. The complete
+final run passes. Earlier targeted four pending cases and public cases also
+passed; they are not added to the final24 count. An intermediate coarse-pointer
+rule increased all icon toolbar controls and clipped the footer; scope was
+corrected to the three column controls before the final runs. The menu capture
+now waits for the real popup transition. No images were redrawn or retouched.
+
+New unit checks cover explicit public opt-in, anonymous/same-origin access,
+chunked body framing/limits, aggregate dataset bounds without mutation and
+capacity/rate recovery after errors. All94 unit tests, dashboard freshness and whitespace pass. Actual hosted
+deployment is recorded after execution. Human visual acceptance,
+actual Pixel8/Gboard, clinical policy and existing release gates remain open.

@@ -37,6 +37,10 @@ def type_value(page, label, value):
 
 
 def activate(page, name):
+    if name in {'Reset layout', 'Session help'} and page.get_by_role('button', name='More options', exact=True).count():
+        if not page.get_by_role('button', name=name, exact=True).is_visible():
+            activate(page, 'More options')
+            expect(page.locator('.workbench-options')).to_be_visible()
     keyboard_to(page, page.get_by_role('button', name=name, exact=True))
     page.keyboard.press('Enter')
 
@@ -119,6 +123,20 @@ def popup_ready(page, selector):
 
 
 def set_theme(page, theme):
+    more = page.get_by_role('button', name='More options', exact=True)
+    if more.count():
+        activate(page, 'More options')
+        expect(page.locator('.workbench-options')).to_be_visible()
+        target = page.get_by_role('radio', name=theme, exact=True)
+        keyboard_to(page, target)
+        page.keyboard.press('Space')
+        expect(page.locator('body')).to_have_class(re.compile('body--' + theme.lower()))
+        if page.locator('.workbench-options').is_visible():
+            page.keyboard.press('Escape')
+        expect(page.locator('.workbench-options')).not_to_be_visible()
+        expect(more).to_be_focused()
+        assert_branding(page, theme)
+        return
     target = page.get_by_label('Theme', exact=True)
     keyboard_to(page, target)
     page.keyboard.press('Enter')

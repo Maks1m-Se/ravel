@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 4 · 9 October 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 5 · 27 October 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -60,6 +60,18 @@ and reduced height, then require an actual Pixel 8 keyboard try-out. Preserve
 desktop layout, local loopback launch and existing PRs without merges. Preparation
 can be complete while hosted verification and maintainer acceptance remain open;
 the normal Berlin publication restriction still applies.
+
+**Public demo follow-up, 27 October 2026.** The maintainer authorized removing
+the personal login requirement for a shareable demonstration and authorized
+publication during vacation. Retain one Free service, the separate deployment
+branch and unmerged PRs. Public mode must be explicit, bound generation/upload
+work, explain shared-server processing and preserve the local application.
+Verify anonymous HTTPS, same-origin WebSockets, file workflows, separate sessions
+and limit recovery. Simplify theme/general controls into an options menu, use
+smaller help icons, correct input spacing and compact the three column actions
+without losing names, keyboard access or removal confirmation. Require actual
+visual/device review; this exception does not adopt accounts, persistent hosting
+or mobile/platform support as release commitments.
 
 **Community add-ons.** Preserve a small boundary between core generation and domain rules now. Keep the clinical module in the same repository and distribution initially. Avoid a plugin loader, registry, or public API stability promise before real extension needs are understood.
 

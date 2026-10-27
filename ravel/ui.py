@@ -1,6 +1,7 @@
 """NiceGUI adapter for the shared single-table engine."""
 
 import json
+from contextlib import nullcontext
 from decimal import Decimal
 from pathlib import Path
 
@@ -11,9 +12,12 @@ from .recipe import MAX_BYTES, ValidationError, loads
 from .sample import assumption_origin, context as sample_context, parse_csv, profile
 from .workspace import Workspace, field_form, whole
 from .dataset import template as devices_template
+from .web import DEMO_ROWS, DemoCapacity
 
 ROOT = Path(__file__).resolve().parents[1]
 STATIC = Path(__file__).with_name("static")
+PUBLIC_DEMO = False
+demo_capacity = DemoCapacity()
 app.add_static_files("/ravel-brand", ROOT / "brand/svg")
 app.add_static_file(url_path="/favicon.svg", local_file=ROOT / "brand/favicon/favicon.svg")
 app.add_static_file(url_path="/favicon.ico", local_file=ROOT / "brand/favicon/favicon.ico")
@@ -49,7 +53,7 @@ def rule_summary(field):
 
 def help_note(title, text):
     with ui.element("div").classes("context-help") as root:
-        button = ui.button("?", color=None).props(f'flat dense aria-label="{title} help" aria-expanded=false')
+        button = ui.button(icon="help_outline", color=None).props(f'flat dense aria-label="{title} help" aria-expanded=false')
         note = ui.label(text).classes("help-content").props("role=note")
         button.props(f"aria-describedby={note.html_id} aria-controls={note.html_id}")
         button.on("click", js_handler='''e => {
@@ -70,18 +74,22 @@ def action(label, icon, handler, tip, primary=False, compact=False):
         f'flat no-caps aria-label="{label}" title="{tip}"')
     if compact:
         button.classes("icon-action")
-        button.tooltip(tip)
+        button.tooltip(label + " · " + tip)
     if primary:
         button.classes("primary-action")
     return button
 
 
-def chrome(theme):
+def chrome(theme, *, workbench=False):
     theme = "light" if theme == "light" else "dark"
     ui.add_css((ROOT / "experiments/workbook/workbook.css").read_text(encoding="utf-8"))
     ui.add_css((STATIC / "generator.css").read_text(encoding="utf-8"))
     ui.add_head_html('<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">')
     dark = ui.dark_mode(theme != "light")
+    with ui.dialog() as session_dialog, ui.card().classes("session-dialog"):
+        ui.label("Session help").classes("section-title")
+        ui.label("State is local to this page. Apply or discard pending edits before generating or saving. Exact quotas and linked tables are available. Save your recipe and CSV or dataset ZIP before closing. Run records include the generating environment and checksums.").classes("help")
+        action("Close help", "close", session_dialog.close, "Return to the workbench")
     with ui.element("header").classes("toolbar"):
         mark = ui.element("img").classes("mark").props(
             f'src=/ravel-brand/ravel-mark-32-{theme}.svg width=32 height=32 alt="" aria-hidden=true')
@@ -91,9 +99,22 @@ def chrome(theme):
         def change_theme(event):
             dark.set_value(event.value == "Dark")
             mark.props(f"src=/ravel-brand/ravel-mark-32-{event.value.lower()}.svg")
+            options.close()
 
-        choice = ui.select(["Light", "Dark"], value=theme.title(), label="Theme", on_change=change_theme).props(
-            "outlined dense options-dense").classes("theme-select")
+        with action("More options", "more_horiz", None, "Theme, layout and session help", compact=True).classes("options-button").props("aria-haspopup=menu") as options_button:
+            with ui.menu().props('anchor="bottom right" self="top right"').classes("workbench-options") as options:
+                ui.label("Appearance").classes("options-label")
+                choice = ui.radio(["Light", "Dark"], value=theme.title(), on_change=change_theme).props(
+                    'inline dense aria-label="Theme"').classes("theme-choice")
+                ui.separator()
+                if workbench:
+                    action("Reset layout", "restart_alt", options.close, "Restore the default Properties width").on(
+                        "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
+                action("Session help", "info_outline", lambda: (options.close(), session_dialog.open()), "How to keep your work")
+        options.on_value_change(lambda e: options_button.props(f'aria-expanded={str(e.value).lower()}'))
+        options_button.props("aria-expanded=false")
+    if PUBLIC_DEMO:
+        ui.label("Public demo · Up to 1,000 rows per run · Invented data only").classes("demo-note")
     return choice
 
 
@@ -123,7 +144,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         return
     state = Workspace(devices_template() if template else None)
     client = ui.context.client
-    choice = chrome(theme)
+    choice = chrome(theme, workbench=True)
     ui.add_head_html("<script>" + (STATIC / "layout.js").read_text(encoding="utf-8") + "</script>")
     ui.add_head_html("<script>" + (STATIC / "edit_focus.js").read_text(encoding="utf-8") + "</script>")
     ui.add_head_html('''<script>
@@ -239,7 +260,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             fallbacks=[editor_identity('name', True), editor_identity('row_count')])) + ')')
 
     async def focus_control(control):
-        for selector in (choice, controls.get("kind")):
+        for selector in (controls.get("kind"),):
             if selector is not None and selector is not control:
                 await selector.run_method("blur")
         await client.run_javascript(f'''
@@ -408,7 +429,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         total=sum(table['row_count'] for table in snapshot['tables']) if 'tables' in snapshot else snapshot['table']['row_count']
         report(f'Generating {total:,} rows'+(' across all tables…' if 'tables' in snapshot else '…'))
         try:
-            state.result = await run.io_bound(generate, snapshot)
+            with demo_capacity.reserve(snapshot) if PUBLIC_DEMO else nullcontext():
+                state.result = await run.io_bound(generate, snapshot)
             await preview.refresh()
             switch_view("Preview")
             report(f"Generated {total:,} rows." if state.current else "Generation finished; edits made during the run need Apply and Generate.")
@@ -485,7 +507,10 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     async def sample_file(event):
         nonlocal pending_sample
         try:
-            pending_sample = profile(await event.file.read(), sample_delimiter.value)
+            payload = await event.file.read()
+            if PUBLIC_DEMO and len(parse_csv(payload, sample_delimiter.value)[2]) > DEMO_ROWS:
+                raise ValidationError('sample', 'Public demo: import at most 1,000 invented source rows.')
+            pending_sample = profile(payload, sample_delimiter.value)
         except (ValidationError, ValueError) as exc:
             pending_sample = None
             use_sample.disable()
@@ -572,6 +597,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ui.label("Start from sample").classes("section-title")
         with ui.element('div').classes('sample-body'):
             ui.label("Review suggestions before replacing this table and its unsaved edits. Original cells are retained exactly in Extend mode.").classes("help")
+            if PUBLIC_DEMO:
+                ui.label("Files are processed on this shared server. Use invented data only; at most 1,000 source rows and 1 MiB.").classes("help")
             sample_delimiter = ui.select({',':'Comma', ';':'Semicolon', '\t':'Tab'}, value=',', label="CSV delimiter", on_change=delimiter_changed).props("outlined dense options-dense")
             sample_error = ui.label("").props("role=alert").classes("error")
             sample_uploader = ui.upload(label="Choose sample CSV", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
@@ -588,6 +615,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     with ui.dialog() as load_dialog, ui.card().classes("load-dialog"):
         ui.label("Open recipe").classes("section-title")
         ui.label("Loading replaces this table, edits and previous result.").classes("help")
+        if PUBLIC_DEMO:
+            ui.label("Recipes and embedded samples are processed on this shared server. Use invented data only.").classes("help")
         load_error = ui.label("").props("role=alert").classes("error")
         uploader = ui.upload(label="Choose recipe JSON", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
                              on_upload=load_file,
@@ -718,9 +747,6 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         action("Open recipe", "folder_open", open_load, "Open recipe · replaces the current table", compact=True)
         action("Import CSV", "upload_file", open_sample_dialog, "Import CSV · review source and assumptions", compact=True)
         record_button = action("Save run record", "description", save_record, "Save run record · recipe, environment and CSV checksum", compact=True)
-        action("Reset layout", "restart_alt", None, "Reset layout · restore the 312 px Properties preference", compact=True).on(
-            "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
-        help_note("Session", "State is local to this page. Apply or discard pending edits before generating or saving. Exact quotas and linked tables are available. Save your recipe and CSV or dataset ZIP before closing. Run records include the generating environment and checksums.")
     status = ui.label("Ready. Configure columns, Apply changes, then Generate.").classes("status-line").props("role=status aria-live=polite")
     pending_announcement = ui.label('').classes('pending-announcement').props('role=status aria-live=polite aria-atomic=true')
 
@@ -874,9 +900,9 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                             "flat no-caps").classes("view-button")
                     help_note("Preview", "The first 100 rows of the actual generated table, formatted exactly as CSV. Previous data remains visible but export is blocked when edits make it out of date.")
                 with ui.row().classes("column-actions"):
-                    action("Add column", "add", lambda: column_action("add"), "Add a new random integer column")
-                    action("Duplicate column", "content_copy", lambda: column_action("duplicate"), "Copy settings with a new identity and random stream")
-                    action("Remove selected column", "delete_outline", confirm_remove, "Remove this column after confirmation")
+                    action("Add column", "add", lambda: column_action("add"), "Add a new random integer column", compact=True)
+                    action("Duplicate column", "content_copy", lambda: column_action("duplicate"), "Copy settings with a new identity and random stream", compact=True)
+                    action("Remove selected column", "delete_outline", confirm_remove, "Remove this column after confirmation", compact=True)
                     if state.is_dataset:
                         action('Relationship','account_tree',open_relationship,'Review the selected table’s parent and explicit row counts')
                 result_state = ui.label("").classes("result-state").props("role=status aria-live=polite")
@@ -943,7 +969,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         table_controls['table_primary_key']=key_control
                         wire_editor('primary_key', key_control)
                         wire_error('table_primary_key',key_control)
-                    help_note("Generation", "Rows: 1–100,000; columns: 1–50; at most 2 million cells. Seed: 0–2^63−1. Apply both table and column edits before generating. The same recipe and pinned environment reproduce the same CSV.")
+                    limits = "Public demo: at most 1,000 rows across all tables and 20,000 cells per run. Larger recipes can run locally. " if PUBLIC_DEMO else "Rows: 1–100,000; columns: 1–50; at most 2 million cells. "
+                    help_note("Generation", limits + "Seed: 0–2^63−1. Apply both table and column edits before generating. The same recipe and pinned environment reproduce the same CSV.")
         ui.label("Session only · Save your recipe and CSV to keep them").classes("footer-note")
         switch_view(active_view)
         ui.run_javascript("await Vue.nextTick(); window.ravelWorkspaceLayout.init();")
@@ -958,6 +985,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         ui.timer(0, open_sample_dialog, once=True)
 
 
-def launch(port=8090, host="127.0.0.1"):
+def launch(port=8090, host="127.0.0.1", *, public_demo=False):
+    global PUBLIC_DEMO
+    PUBLIC_DEMO = public_demo
     ui.run(host=host, port=port, title="Ravel | Workbench", favicon=ROOT / "brand/favicon/favicon.ico",
            dark=True, reload=False, show=False, prod_js=True, on_air=False)

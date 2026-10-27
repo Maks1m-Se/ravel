@@ -65,7 +65,7 @@ async def websocket_checks(base, authorization):
         assert greeting.startswith('0{') and 'sid' in json.loads(greeting[1:])
 
 
-def mobile_case(browser, base, credentials, out, theme, errors):
+def mobile_case(browser, base, credentials, out, theme, errors, *, public_demo=False):
     from playwright.sync_api import expect
     context = browser.new_context(viewport={'width': 412, 'height': 915}, is_mobile=True,
                                   has_touch=True, device_scale_factor=2.625,
@@ -151,7 +151,10 @@ def mobile_case(browser, base, credentials, out, theme, errors):
     with page.expect_request(lambda request: '/upload/' in request.url and request.method == 'POST') as upload:
         dialog.locator('input[type=file]').set_input_files(ROOT / 'examples/sample-assisted/ten-rows.csv')
     expect(dialog.locator('.source-count')).to_contain_text('10 rows')
-    assert response('', upload.value.url, method='POST')[0] == 401
+    if public_demo:
+        assert upload.value.response().ok
+    else:
+        assert response('', upload.value.url, method='POST')[0] == 401
     confirm = page.get_by_role('checkbox', name='Use the displayed sequential identifier rules', exact=True)
     confirm.click()
     expect(confirm).to_be_checked()
@@ -205,6 +208,7 @@ def main():
     parser.add_argument('--output', type=Path, default=ROOT / 'outputs/render-personal/browser')
     parser.add_argument('--desktop', action='store_true', help='Run the maintained full desktop matrix on an owned loopback server.')
     parser.add_argument('--desktop-workflow', default='all', help='Focused desktop diagnosis, otherwise all workflows.')
+    parser.add_argument('--executable-path', help='Explicit installed Chromium review binary.')
     parser.add_argument('--serve-desktop', type=int, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.serve_desktop:
@@ -249,7 +253,8 @@ def main():
         if args.desktop:
             subprocess.run([sys.executable, str(ROOT / 'scripts/check_generator_browser.py'),
                             '--base-url', base, '--workflow', args.desktop_workflow,
-                            '--verify-source', '--output', str(out / 'desktop')], cwd=ROOT, check=True)
+                            '--verify-source', '--output', str(out / 'desktop')]
+                           + (['--executable-path', args.executable_path] if args.executable_path else []), cwd=ROOT, check=True)
             record['result'] = 'passed'
             record['scope'] = 'owned local desktop server; see desktop/results.json'
             return
@@ -265,7 +270,7 @@ def main():
         record['http_websocket_access'] = 'passed'
         from playwright.sync_api import sync_playwright
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch(channel='chrome', headless=True)
+            browser = playwright.chromium.launch(**({'executable_path': args.executable_path} if args.executable_path else {'channel': 'chrome'}), headless=True)
             record['browser'] = browser.version
             for theme in ['Light', 'Dark']:
                 record['cases'].append(mobile_case(browser, base, credentials, out, theme, record['page_errors']))
