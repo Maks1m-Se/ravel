@@ -2149,3 +2149,44 @@ chunked body framing/limits, aggregate dataset bounds without mutation and
 capacity/rate recovery after errors. All94 unit tests, dashboard freshness and whitespace pass. Actual hosted
 deployment is recorded after execution. Human visual acceptance,
 actual Pixel8/Gboard, clinical policy and existing release gates remain open.
+
+
+### Public deployment verification and local Codex handoff
+
+Published implementation `ac176403633e49c605f7295690c613c6db25afa4` on
+`deploy/render-personal-weekend`, [draft PR25](https://github.com/Maks1m-Se/ravel/pull/25)
+against `fix/pending-edit-actions`. No PR merge. Render environment update
+RAVEL_PUBLIC_DEMO=1 triggered deploy `dep-dbg84v0m7kps73bmfg2g`, live at
+11:53 Berlin on27 October. Free/Frankfurt/manual deployment preserved; original
+authentication secrets retained for personal-mode rollback, never copied here.
+The public source tree was checked blob-for-blob against the local tree before
+publication. Runtime remains fingerprint882f5d312924417fc15f08fae86f0365be750ac831302443d26d01e19c9706e5.
+
+Hosted HTTP/WebSocket/upload-boundary checks passed without credentials.
+A separate cloud Chrome session completed theme-with-draft, Apply,1,000-row
+generation, CSV/recipe downloads and Discard30→20. Downloaded CSV independently
+checked: header id,value, IDs1–1000, all values0–20. CSV SHA256
+7db126417bc23dcd9256bea73f09949c153eeeb47f4fc866915f3c641d4575f5; recipe SHA256
+ba2807f6bcf6d17402865be19f923ba7b2ff679720a962bd6708f4a5b29d525b.
+Actual capture is docs/images/public-demo-live.jpg. A new public page successfully
+uploaded examples/sample-assisted/ten-rows.csv, displayed10 source rows/3 columns,
+9.8–12.2 with missing0.2, material A0.6/B0.4 and IDs from11. No hosted import
+confirmation/generation, paired-session isolation or actual-phone test is claimed.
+Those broader workflows passed locally as recorded above. The connected Chrome
+version was not exposed by its control interface.
+
+Standalone remote attempts remain in outputs/public-demo-hosted and
+outputs/public-demo-hosted-proxy: both passed transport checks, but Chromium
+failed navigation (first ERR_EMPTY_RESPONSE, then proxy certificate trust).
+No certificate validation was disabled and no application fix is claimed. The
+experimental proxy launcher is retained only in ignored outputs; maintained
+checker/source unchanged. Both initial GitHub runs40491859566 and40491959122
+passed; PR jobs122147827011/122147827129/122147827169 ran core unit tests, dashboard
+freshness and whitespace on Ubuntu/Windows/macOS. These are not native app tests.
+
+Local Codex continuation: fetch current refs, inspect all existing worktrees and
+uncommitted changes, then use the PR25 deployment source in an isolated worktree.
+Do not overwrite the older local recovery work, recreate the Render service or
+restart the obsolete personal-deployment prompt. The deployed implementation
+remainsac176403; subsequent evidence-only commits do not need another deploy.
+Follow progress.json for the required visual/device review and unchanged gates.

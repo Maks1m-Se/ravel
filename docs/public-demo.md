@@ -56,8 +56,30 @@ Actual local captures: [Light menu](images/compact-controls-light.png),
   separately. The Blueprint requests `/healthz` for future provisioned services.
 
 The previous protected deployment is `d58e977ab2cac654c5012918e35b26fc899ab0f4`,
-deploy `dep-dbdhvit9fdbs73b6rnv0`. Record the new deployment and hosted checks
-below after they actually complete. Do not infer hosted behavior from localhost.
+deploy `dep-dbdhvit9fdbs73b6rnv0`. The public deployment is
+`ac176403633e49c605f7295690c613c6db25afa4`, deploy
+`dep-dbg84v0m7kps73bmfg2g`, live since 27 October 2026, 11:53 Berlin.
+The environment update itself triggered that deployment; no duplicate trigger
+was sent. The service remains Free with automatic deployments disabled.
+
+Anonymous HTTPS pages/health and same-origin WebSocket opening passed; foreign
+Origins returned403 and oversized HTTP upload bodies413. The cloud-browser
+check opened the actual public site, changed Dark to Light while retaining a
+Maximum20 draft, applied it, generated1,000 rows and downloaded CSV/recipe.
+The CSV has1,000 sequential IDs and every value is within0–20; Discard restored
+20 after editing30 and re-enabled the current export. A fresh public session
+uploaded the invented ten-row CSV and displayed the correct three-column profile
+and identifier rule from11. That hosted sample test stopped at the review
+dialog; full sample generation/isolation/mobile coverage is local evidence.
+[Actual live capture](images/public-demo-live.jpg).
+
+Both initial GitHub workflows passed. The [PR workflow](https://github.com/Maks1m-Se/ravel/actions/runs/40491959122)
+ran unit/dashboard/whitespace checks successfully on Windows, macOS and Ubuntu.
+The standalone hosted browser harness could not complete in this execution
+environment: direct Chromium gave ERR_EMPTY_RESPONSE; using the configured
+proxy gave ERR_CERT_AUTHORITY_INVALID. HTTPS verification was not disabled.
+The separate cloud-browser checks above succeeded. Actual Pixel/Gboard and
+visual acceptance remain pending.
 
 ## Verification and required try-out
 

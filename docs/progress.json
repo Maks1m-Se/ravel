@@ -459,10 +459,11 @@
         "R9"
       ],
       "evidence_refs": [
-        "E63"
+        "E63",
+        "E64"
       ],
       "blockers": [
-        "Maintainer visual and actual phone review pending."
+        "Maintainer visual and actual Pixel8/Gboard review pending; local emulation does not substitute for device acceptance."
       ]
     },
     {
@@ -533,11 +534,11 @@
       "evidence_refs": [
         "E61",
         "E62",
-        "E63"
+        "E63",
+        "E64"
       ],
       "blockers": [
-        "New public deployment and hosted checks pending.",
-        "Actual Pixel8/Gboard and visual acceptance remain required."
+        "Maintainer visual and actual Pixel8/Gboard review pending; local emulation does not substitute for device acceptance."
       ]
     },
     {
@@ -966,18 +967,23 @@
       "id": "E63",
       "reference": "27 October 2026 compact controls/public demo; docs/public-demo.md; docs/development.md#compact-controls-and-public-demo-27-october-2026",
       "scope": "Based on d58e977, implemented More options with Light/Dark, Reset layout and Session help, smaller focusable help icons, corrected dense-input padding, and named icon-only Add/Duplicate/Remove with confirmation. Explicit public mode keeps default personal access fail-closed, bounds total rows/cells, upload bodies, source rows, active generation and starts per minute; foreign Origins remain rejected. Local CLI/core rules unchanged. Runtime fingerprint 882f5d312924417fc15f08fae86f0365be750ac831302443d26d01e19c9706e5. Linux CPython3.12.14/NiceGUI3.18.0/Playwright1.58.0/Chromium153.0.8010.0: final maintained desktop matrix passes all24 cases, zero page errors/external HTTP/WebSockets; final public checker passes four desktop/mobile cases plus HTTP/WebSocket/upload limits and independent contexts. Actual Light/Dark/input/menu/mobile import captures inspected; six labelled input controls have42px height,22px line,14px top/6px bottom padding and no overflow. Earlier full matrix failed after16 cases on a pending-state assertion with unexpected navigation; cause was not established, evidence retained. A final full run passes. Smaller pointer-specific sizing corrected an intermediate toolbar clipping issue. All94 unit tests, dashboard freshness and whitespace pass. Hosted new-source verification and human visual/Pixel8/Gboard acceptance remain pending; no native/clinical/release claim."
+    },
+    {
+      "id": "E64",
+      "reference": "27 October2026 public deployment; https://github.com/Maks1m-Se/ravel/pull/25; docs/public-demo.md; docs/development.md#public-deployment-verification-and-local-codex-handoff",
+      "scope": "Published ac176403633e49c605f7295690c613c6db25afa4 after local/GitHub blob-tree equality. Render RAVEL_PUBLIC_DEMO=1 update triggered dep-dbg84v0m7kps73bmfg2g, live11:53 Berlin; existing Free Frankfurt service/manual deploy policy/secrets preserved. Anonymous HTTPS health/pages and same-origin WebSockets pass; foreign-Origin403 and oversized-upload413 pass. Separate cloud Chrome UI completed theme with pending Maximum20, Apply,1000-row generation, CSV/recipe downloads and Discard30-to20. Actual CSV independently checked for1000 sequential IDs and values0–20; hashes/live capture recorded in development guide. Fresh hosted session imported the invented ten-row CSV and displayed correct profile and sequential IDs from11; it was not confirmed/generated in that hosted sample check. Full mobile/isolation/sample workflows remain attributed local evidence E63. Standalone hosted browser harness transport passed but navigation failed with ERR_EMPTY_RESPONSE and then proxy ERR_CERT_AUTHORITY_INVALID; preserved attempts, no disabled TLS verification. Both initial GitHub workflows40491859566/40491959122 passed; all three OS jobs successful for units/dashboard/whitespace. No new Windows binary, native/clinical review or PR merge. Public access is operational; actual Pixel/Gboard and maintainer visual acceptance remain open."
     }
   ],
   "blockers": [
-    "Public Render demo: deploy the verified source and check anonymous HTTPS; actual Pixel/Gboard and visual acceptance remain pending (E63).",
+    "Public demo is deployed and its hosted core workflow checked (E64); actual Pixel/Gboard and visual acceptance remain pending.",
     "Clinical arithmetic awaits review/adoption of the proposed numeric policy and independent reference transcription; no clinical numeric implementation or Python/R comparison yet (E54).",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Publish the verified public-demo source on deploy/render-personal-weekend under the maintainer’s explicit vacation exception, keep the PR stack unmerged, enable RAVEL_PUBLIC_DEMO=1 on the existing Free service and verify the actual HTTPS deployment. Then perform the short visual/phone try-out in docs/public-demo.md, including More options, input spacing, icon names, pending Apply/Discard, downloads and keyboard-open import. Record acceptance separately; preserve all prior Windows/clinical evidence and incomplete release gates.",
-  "current_task_id": "M5-04",
+  "next_action": "Local Codex: fetch and inspect existing worktrees without overwriting saved work, then continue from draft PR25/deploy/render-personal-weekend in an isolated worktree; the Free public service already runs implementation ac176403, so do not recreate it or resume the obsolete deployment prompt. Use docs/public-demo.md for the short visual/phone try-out (options menu, input spacing, named icons, pending Apply/Discard, downloads and keyboard-open import); record maintainer acceptance separately. Technical implementation/tests/publication belong to Codex, planning/review to ChatGPT, subjective UX acceptance to the maintainer. Preserve unmerged PRs and all native/clinical/release gates.",
+  "current_task_id": "M4-03",
   "next_task_ids": [
-    "M4-03",
+    "M5-04",
     "M1-01"
   ]
 }
