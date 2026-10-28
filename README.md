@@ -11,6 +11,10 @@ review and is not a supported application release.
 
 **Compose the data you need.**
 
+**[Try the public web demo](https://ravel-personal-test.onrender.com/)** — no login,
+up to 1,000 rows per run. Use invented data only and download your work before
+closing. The Free service may need a minute to wake. [Details and limits](docs/public-demo.md).
+
 ![Ravel linked workbench with an actual measurement preview in Dark](docs/images/linked-generated-dark.png)
 
 ## Build a table
@@ -28,7 +32,8 @@ Unapplied or invalid edits cannot be silently ignored. Changed settings mark the
 previous result **Out of date** and block CSV export until a current result is
 generated. Column removal asks for confirmation. Drafts and errors survive theme,
 view and layout changes. Drag the Properties divider or focus it and use arrows;
-**Reset layout** restores its default preference, including after window resizing.
+**More options (…) → Reset layout** restores its default preference, including
+after window resizing. The same menu contains Light/Dark and Session help.
 
 Choose **Start from sample** to import an invented UTF-8 CSV. Review/edit ranges,
 categories and missingness, and explicitly confirm identifier generation. Generate
@@ -97,6 +102,11 @@ See the [development guide](docs/development.md#single-table-source-development)
 for maintained checks and a short walkthrough. Historical
 [fixture experiment instructions](docs/development.md#workbook-experiment) and
 packaging evidence remain available, with their original scope.
+
+The [public Render demo](docs/public-demo.md) uses the separate deployment branch
+and a narrow-screen layout. Actual Pixel8 keyboard review remains separate from
+automated mobile emulation. The original [personal test record](docs/personal-render.md)
+is retained as history.
 
 ## Documentation and contributing
 
