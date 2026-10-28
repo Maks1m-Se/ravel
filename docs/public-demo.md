@@ -55,14 +55,20 @@ Actual local captures: [Light menu](images/compact-controls-light.png),
 - The existing service uses Render's TCP health check; `/healthz` is verified
   separately. The Blueprint requests `/healthz` for future provisioned services.
 
+The current live implementation is
+[`79e44cb405033aa16e8459c59903c3120643656d`](https://github.com/Maks1m-Se/ravel/commit/79e44cb405033aa16e8459c59903c3120643656d),
+deploy `dep-dbh0u26i0phs73aeeh90`, live since 28 October 2026, 16:05:50 Berlin.
+It contains both source/provenance limit repairs and passed the five-case HTTPS
+checker. Later documentation-only commits do not require another deployment.
+
 The previous protected deployment is `d58e977ab2cac654c5012918e35b26fc899ab0f4`,
-deploy `dep-dbdhvit9fdbs73b6rnv0`. The public deployment is
+deploy `dep-dbdhvit9fdbs73b6rnv0`. The first public deployment was
 `ac176403633e49c605f7295690c613c6db25afa4`, deploy
 `dep-dbg84v0m7kps73bmfg2g`, live since 27 October 2026, 11:53 Berlin.
 The environment update itself triggered that deployment; no duplicate trigger
 was sent. The service remains Free with automatic deployments disabled.
 
-Anonymous HTTPS pages/health and same-origin WebSocket opening passed; foreign
+The initial 27 October HTTPS pages/health and same-origin WebSocket opening passed; foreign
 Origins returned403 and oversized HTTP upload bodies413. The cloud-browser
 check opened the actual public site, changed Dark to Light while retaining a
 Maximum20 draft, applied it, generated1,000 rows and downloaded CSV/recipe.
@@ -75,7 +81,7 @@ dialog; full sample generation/isolation/mobile coverage is local evidence.
 
 Both initial GitHub workflows passed. The [PR workflow](https://github.com/Maks1m-Se/ravel/actions/runs/40491959122)
 ran unit/dashboard/whitespace checks successfully on Windows, macOS and Ubuntu.
-The standalone hosted browser harness could not complete in this execution
+The initial standalone hosted browser harness could not complete in its execution
 environment: direct Chromium gave ERR_EMPTY_RESPONSE; using the configured
 proxy gave ERR_CERT_AUTHORITY_INVALID. HTTPS verification was not disabled.
 The separate cloud-browser checks above succeeded. Actual Pixel/Gboard and
@@ -102,8 +108,7 @@ The core engine and local CLI retain their original limits. New regression tests
 failed on both defects before the repair. The final local public browser run
 passes five cases, including both themes, mobile emulation, downloads, import,
 session isolation and the two limit boundaries with recovery to 19,950 cells.
-These fixes are **not deployed**; the live demo still serves the implementation
-identified above. Publication remains a separate next action in progress.json.
+Both fixes are now deployed in `79e44cb`, as identified above and verified below.
 All 96 unit tests, regenerated dashboard freshness and whitespace checks pass.
 
 The existing HTTPS service passed the full original public checker on
@@ -125,9 +130,40 @@ all 24 cases pass, with no page errors or external HTTP/WebSocket attempts.
 The repeated public checker passes all five cases and all 96 units pass
 again. Both local servers stopped; `pip check`, dashboard and whitespace
 checks pass. The public server log retains two Windows Proactor connection-
-reset diagnostics despite passing browser checks. Commit/push and the
-existing-service update await the current publication/time and workspace
-confirmations recorded in progress.json; no update was scheduled.
+reset diagnostics despite passing browser checks. Subsequent publication used
+the maintainer's explicit current-day exception and confirmed workspace, as
+recorded below; no publication was scheduled.
+
+## Published repair verification (28 October 2026)
+
+The maintainer explicitly confirmed publication before 16:30 Berlin on this day
+and workspace `tea-ctkuvolds78s73c2u1j0`. Live clock checks immediately before
+the implementation commit and push were 16:03:53 and 16:04:07 Berlin.
+All 13 committed runtime files matched the tested files after LF normalization.
+The existing Free/Frankfurt service, one instance, manual deployment policy and
+secrets were preserved. A single manual trigger deployed `79e44cb`; Render
+returned `live` at 15:05:50 UTC / 16:05:50 Berlin. No PR merge or new service.
+
+Actual `outputs/pr25-review/hosted-79e44cb/results.json` records five passed
+HTTPS cases with Chrome156.0.8078.73, zero page errors and independent contexts.
+Anonymous HTTP/health, same-origin WebSocket, rejected foreign Origins and
+oversized requests, both themes, portrait/landscape/reduced-height workflows,
+Apply/Discard, generation, recipe/CSV download and full invented CSV import pass.
+The actual deployed guards accept exactly 20,000 output cells, reject 21,000,
+recover at 19,950, and reject a saved recipe with 1,001 source rows while
+preserving the prior workbook and drafts. No TLS verification was disabled.
+Actual hosted captures: [pending edit](images/public-demo-repair-live.png),
+[reduced-height import](images/public-demo-repair-mobile.png).
+
+An independent read of downloaded files verifies IDs1–1000 and values0–20;
+sample IDs11–1010, ranges/categories and `generated` origins; 1,000 rows ×20
+columns and 950 rows ×21 columns at the cell boundaries. File hashes are in
+`independent-artifact-verification.json` beside the raw browser report.
+Render returned no error-level logs for the post-trigger verification interval.
+The new [PR CI run](https://github.com/Maks1m-Se/ravel/actions/runs/40712206277)
+passes 96 tests plus dashboard/whitespace on Ubuntu and Windows; macOS was still
+queued at readback and is not claimed passed. Actual Pixel/Gboard and subjective
+maintainer acceptance remain open.
 
 ## Verification and required try-out
 

@@ -2214,8 +2214,9 @@ Raw evidence outside the review worktree:
 failures) and `public-local-baseline` (unreproduced menu-focus assertion failure).
 An input inventory preserves hashes of 17 dirty/untracked recovery files and
 76 staged-worktree files; none was edited by this review. The main checkout
-remains on its original commit. The isolated repair is saved uncommitted and
-not deployed. No PR merge, binary rebuild or visual/clinical acceptance.
+remains on its original commit. The isolated repair was initially saved
+uncommitted; its subsequent deployment is recorded below. No PR merge, binary
+rebuild or visual/clinical acceptance.
 Final 96 unit tests pass (`outputs/pr25-review/final-units.log`); dashboard
 freshness and `git diff --check` pass. The original dirty-file inventory was
 verified unchanged on 28 October. Actual final menu/import captures were inspected.
@@ -2237,3 +2238,30 @@ staged worktree inventories remain unchanged. Actual HTTPS evidence
 from27October is preserved separately, not recounted as a new run.
 No publication or existing-service update occurs until the pending
 time/workspace requirements are resolved; nothing is scheduled.
+
+
+### Verified repair publication (28 October 2026)
+
+The explicitly authorized publication committed the checked repair as
+`79e44cb405033aa16e8459c59903c3120643656d` and fast-forward pushed PR25.
+Live Berlin checks immediately before commit/push:16:03:53/16:04:07.
+All13 runtime Git blobs matched tested bytes after LF normalization.
+A single manual deployment to the existing Free Frankfurt service became
+live at16:05:50 Berlin: `dep-dbh0u26i0phs73aeeh90`, exact commit79e44cb.
+No environment, secret, plan, instance count or automatic-deploy change.
+
+The final actual HTTPS checker (`outputs/pr25-review/hosted-79e44cb`)
+passes all five cases, both desktop/mobile themes, source/cell limit
+rejection and recovery, full invented import, CSV/recipe downloads and
+independent contexts. Chrome156.0.8078.73; zero page errors, TLS enabled.
+Independent raw-artifact inspection verifies hand-established row IDs,
+ranges/categories/origins and20000/19950 output cells; reports/checksums
+are retained beside results.json. Actual hosted pending/import captures
+were inspected and copied unchanged to docs/images/public-demo-repair-*.png.
+Render error-level log query15:04:40–15:09:33UTC returns no entries.
+
+PR CI40712206277 Ubuntu/Windows jobs pass unit/dashboard/whitespace;
+both full logs explicitly record96 tests and OK. macOS remains queued
+at readback, with no claimed result. Local E66 evidence is preserved.
+A documentation-only follow-up does not require a deploy. PRs remain
+unmerged; no new service, binary build or subjective/device acceptance.
