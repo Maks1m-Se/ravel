@@ -161,8 +161,9 @@ columns and 950 rows ×21 columns at the cell boundaries. File hashes are in
 `independent-artifact-verification.json` beside the raw browser report.
 Render returned no error-level logs for the post-trigger verification interval.
 The new [PR CI run](https://github.com/Maks1m-Se/ravel/actions/runs/40712206277)
-passes 96 tests plus dashboard/whitespace on Ubuntu and Windows; macOS was still
-queued at readback and is not claimed passed. Actual Pixel/Gboard and subjective
+passes 96 tests plus dashboard/whitespace on Ubuntu, Windows and macOS. The
+macOS job completed successfully after its initial queued readback; all three
+full job logs confirm 96 tests and OK. Actual Pixel/Gboard and subjective
 maintainer acceptance remain open.
 
 ## Verification and required try-out

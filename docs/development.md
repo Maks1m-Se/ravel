@@ -2260,8 +2260,8 @@ are retained beside results.json. Actual hosted pending/import captures
 were inspected and copied unchanged to docs/images/public-demo-repair-*.png.
 Render error-level log query15:04:40–15:09:33UTC returns no entries.
 
-PR CI40712206277 Ubuntu/Windows jobs pass unit/dashboard/whitespace;
-both full logs explicitly record96 tests and OK. macOS remains queued
-at readback, with no claimed result. Local E66 evidence is preserved.
+PR CI40712206277 Ubuntu/Windows/macOS jobs pass unit/dashboard/whitespace;
+all three full logs explicitly record96 tests and OK. The macOS job completed
+after its initial queued readback. Local E66 evidence is preserved.
 A documentation-only follow-up does not require a deploy. PRs remain
 unmerged; no new service, binary build or subjective/device acceptance.
