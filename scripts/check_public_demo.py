@@ -19,6 +19,8 @@ sys.path.insert(0, str(ROOT))
 from scripts.check_personal_web import free_port, isolation, mobile_case, response, runtime_hashes
 from scripts.check_workbook_browser import activate, popup_ready, set_theme
 from ravel.web import MAX_REQUEST_BYTES
+from ravel.recipe import dumps
+from ravel.sample import profile
 from playwright.sync_api import expect, sync_playwright
 
 
@@ -97,6 +99,66 @@ def compact_case(browser, base, out, theme, errors):
             'checks': 'icon names/tooltips; smaller help; input clearance; keyboard menu/focus; theme preserves draft; duplicate/remove confirmation; demo limit/recovery'}
 
 
+def source_limit_case(browser, base, out, errors):
+    context = browser.new_context(viewport={'width': 1366, 'height': 657}, accept_downloads=True)
+    page = context.new_page()
+    page.on('pageerror', lambda error: errors.append(str(error)))
+    try:
+        page.goto(base + '/table?theme=light')
+        page.get_by_role('button', name='Generate table', exact=True).click()
+        expect(page.locator('.result-state')).to_contain_text('Current', timeout=30000)
+        page.get_by_label('Maximum', exact=True).fill('20')
+        expect(page.locator('.edit-actions')).to_have_attribute('data-pending', 'true')
+
+        def load_recipe(recipe, filename):
+            path = out / filename
+            path.write_text(dumps(recipe), encoding='utf-8')
+            page.get_by_role('button', name='Open recipe', exact=True).click()
+            page.locator('.load-dialog input[type=file]').set_input_files(path)
+
+        oversized = profile(('value\n' + '1\n' * 1001).encode(), count=1)
+        load_recipe(oversized, '1001-source-rows.recipe.json')
+        expect(page.locator('.load-dialog [role=alert]')).to_contain_text('1,000 invented source rows')
+        expect(page.locator('.load-dialog [role=alert]')).to_contain_text('Current table preserved')
+        page.get_by_role('button', name='Cancel', exact=True).click()
+        expect(page.get_by_label('Maximum', exact=True)).to_have_value('20')
+        expect(page.locator('.edit-actions')).to_have_attribute('data-pending', 'true')
+        page.get_by_role('button', name='Discard edits', exact=True).click()
+        expect(page.get_by_label('Maximum', exact=True)).to_have_value('100')
+        expect(page.get_by_role('button', name='Export CSV', exact=True)).to_be_enabled()
+
+        for columns, allowed in [(19, True), (20, False)]:
+            source = (','.join(f'value{i}' for i in range(columns)) + '\n'
+                      + ','.join(['1'] * columns) + '\n').encode()
+            load_recipe(profile(source, count=1000), f'{columns}-source-columns.recipe.json')
+            expect(page.locator('.load-dialog')).not_to_be_visible()
+            page.get_by_role('button', name='Generate table', exact=True).click()
+            if allowed:
+                expect(page.locator('.result-state')).to_contain_text('Current', timeout=30000)
+            else:
+                expect(page.locator('.status-line')).to_contain_text('20,000 cells')
+                expect(page.get_by_role('button', name='Export CSV', exact=True)).to_be_disabled()
+                page.get_by_label('Rows', exact=True).fill('950')
+                page.get_by_role('button', name='Apply changes', exact=True).click()
+                expect(page.locator('.edit-actions')).to_have_attribute('data-pending', 'false')
+                page.get_by_role('button', name='Generate table', exact=True).click()
+                expect(page.locator('.result-state')).to_contain_text('Current', timeout=30000)
+            with page.expect_download() as pending:
+                page.get_by_role('button', name='Export CSV', exact=True).click()
+            path = out / f'{columns}-columns.csv'
+            pending.value.save_as(path)
+            import csv
+            from io import StringIO
+            rows = list(csv.reader(StringIO(path.read_text(encoding='utf-8'))))
+            assert rows[0] == [f'value{i}' for i in range(columns)] + ['row_origin']
+            assert len(rows) == (1001 if allowed else 951)
+            assert all(row == ['1'] * columns + ['generated'] for row in rows[1:])
+        page.screenshot(path=out / 'public-limit-recovery.png')
+    finally:
+        context.close()
+    return {'result': 'passed', 'checks': 'embedded-source rejection preserves draft/current output; row_origin included in cell bound; exact 20000-cell boundary; limit recovery to 19950 cells'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-url', help='Public HTTPS demo; omit to own a loopback server.')
@@ -153,6 +215,7 @@ def main():
                 print('PASS public demo + compact controls ' + theme, flush=True)
             isolation(browser, base, None)
             record['separate_sessions'] = 'passed'
+            record['cases'].append(source_limit_case(browser, base, out, record['page_errors']))
             browser.close()
         assert not record['page_errors'], record['page_errors']
         assert runtime_hashes() == record['runtime_sha256'], 'Runtime changed during review.'

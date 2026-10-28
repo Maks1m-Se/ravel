@@ -2190,3 +2190,50 @@ Do not overwrite the older local recovery work, recreate the Render service or
 restart the obsolete personal-deployment prompt. The deployed implementation
 remainsac176403; subsequent evidence-only commits do not need another deploy.
 Follow progress.json for the required visual/device review and unchanged gates.
+
+### Isolated PR25 technical review (27–28 October 2026)
+
+The [public-demo review](public-demo.md#pr25-technical-review-2728-october-2026)
+records two confirmed hosting-limit repairs, tested from PR25 head `fb800744`.
+New units reproduce both failures on the original code: the provenance column
+was omitted from cell arithmetic, and embedded recipe samples bypassed the
+CSV source-row limit. Guards stay in the hosting/UI adapters; generic engine,
+clinical rules and local CLI are unchanged. Invalid recipe load is atomic.
+
+Existing E63 desktop evidence is reused for unchanged styling. Windows source
+Python3.14.8/NiceGUI3.18.0 and Chrome156.0.8078.48 now pass the full hosted
+checker, including the previously uncompleted sample generation, independent
+contexts and mobile emulation. TLS validation remained enabled. Final local
+checker passes both compact/mobile themes plus one new boundary/recovery case;
+zero page errors. Runtime fingerprint:
+`a5b75e9951f4ab5cdf2a11e0c56402a2637ca03835273d93f4799179c8eace19`.
+
+Raw evidence outside the review worktree:
+`C:\Git\ravel\outputs\pr25-review\hosted-baseline` (four hosted cases),
+`public-fixed-1` (five local cases), `limits-before-fix.log` (two expected
+failures) and `public-local-baseline` (unreproduced menu-focus assertion failure).
+An input inventory preserves hashes of 17 dirty/untracked recovery files and
+76 staged-worktree files; none was edited by this review. The main checkout
+remains on its original commit. The isolated repair is saved uncommitted and
+not deployed. No PR merge, binary rebuild or visual/clinical acceptance.
+Final 96 unit tests pass (`outputs/pr25-review/final-units.log`); dashboard
+freshness and `git diff --check` pass. The original dirty-file inventory was
+verified unchanged on 28 October. Actual final menu/import captures were inspected.
+
+
+### Full repeat verification (28 October 2026)
+
+The maintainer requested a complete recheck. `recheck-desktop/desktop/
+results.json` records all 24 passed cases; `recheck-public/results.json`
+records five passed cases and separate sessions; `recheck-units.log`
+records 96 passed unit tests. These are new executions on Windows/
+Python3.14.8/NiceGUI3.18.0/Chrome156.0.8078.48, with unchanged E65
+runtime hashes. Both owned local servers stopped. Desktop browser
+external HTTP/WebSockets and all browser page errors remain zero.
+The public server log retains two Proactor ConnectionResetError
+diagnostics; no clean-log or diagnostic repair claim. `pip check`,
+dashboard freshness and whitespace checks pass. Original recovery/
+staged worktree inventories remain unchanged. Actual HTTPS evidence
+from27October is preserved separately, not recounted as a new run.
+No publication or existing-service update occurs until the pending
+time/workspace requirements are resolved; nothing is scheduled.

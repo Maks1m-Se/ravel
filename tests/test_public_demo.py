@@ -4,7 +4,8 @@ from copy import deepcopy
 import unittest
 
 from ravel.dataset import template
-from ravel.recipe import ValidationError, new_recipe, validate
+from ravel.recipe import ValidationError, dumps, loads, new_recipe, validate
+from ravel.sample import profile
 from ravel.web import DemoCapacity, MAX_REQUEST_BYTES, PersonalAccess, check_demo_recipe, settings
 
 
@@ -105,6 +106,30 @@ class PublicDemoTests(unittest.IsolatedAsyncioTestCase):
         clock[0] += 60
         with capacity.reserve(recipe):
             self.assertEqual(capacity.active, 1)
+
+    def test_sample_provenance_column_counts_toward_demo_cell_limit(self):
+        for columns in [19, 20]:
+            source = (','.join(f'value{i}' for i in range(columns)) + '\n'
+                      + ','.join(['1'] * columns) + '\n').encode()
+            recipe = profile(source, count=1000)
+            before = deepcopy(recipe)
+            if columns == 19:  # 19 values plus row_origin = 20,000 output cells.
+                check_demo_recipe(recipe)
+            else:  # 20 values plus row_origin = 21,000 output cells.
+                with self.assertRaisesRegex(ValidationError, '20,000 cells'):
+                    check_demo_recipe(recipe)
+            self.assertEqual(recipe, before)
+
+    def test_embedded_source_obeys_same_public_row_limit_as_csv_upload(self):
+        for source_rows in [1000, 1001]:
+            recipe = loads(dumps(profile(('value\n' + '1\n' * source_rows).encode(), count=1)))
+            before = deepcopy(recipe)
+            if source_rows == 1000:
+                check_demo_recipe(recipe)
+            else:
+                with self.assertRaisesRegex(ValidationError, '1,000.*source rows'):
+                    check_demo_recipe(recipe)
+            self.assertEqual(recipe, before)
 
 
 if __name__ == '__main__':

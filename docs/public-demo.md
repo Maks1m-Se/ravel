@@ -81,6 +81,54 @@ proxy gave ERR_CERT_AUTHORITY_INVALID. HTTPS verification was not disabled.
 The separate cloud-browser checks above succeeded. Actual Pixel/Gboard and
 visual acceptance remain pending.
 
+## PR25 technical review (27–28 October 2026)
+
+Review baseline: PR25 head `fb800744c7a5e201d4b89d49613d468be5745d66`.
+Isolated branch `review/pr25-technical-2026-10-27` lives at
+`C:\Git\ravel\outputs\pr25-review\worktree`. The main checkout and the saved
+recovery/staged worktrees are preserved. No new Render service, configuration
+change or deployment was made for this review.
+
+Two confirmed hosting-limit defects are corrected locally:
+
+- Sample generation now counts the added `row_origin` column toward the
+  20,000-cell limit. Nineteen source columns at 1,000 rows produce exactly
+  20,000 cells; twenty would produce 21,000 and must be refused.
+- A recipe with an embedded sample now obeys the same 1,000-source-row bound
+  as CSV import. An oversized embedded source is refused before replacing the
+  current workbook, preserving its result and pending edits.
+
+The core engine and local CLI retain their original limits. New regression tests
+failed on both defects before the repair. The final local public browser run
+passes five cases, including both themes, mobile emulation, downloads, import,
+session isolation and the two limit boundaries with recovery to 19,950 cells.
+These fixes are **not deployed**; the live demo still serves the implementation
+identified above. Publication remains a separate next action in progress.json.
+All 96 unit tests, regenerated dashboard freshness and whitespace checks pass.
+
+The existing HTTPS service passed the full original public checker on
+27 October with Chrome156.0.8078.48, Python3.14.8 and NiceGUI3.18.0 on Windows:
+anonymous HTTP, same-origin WebSockets, foreign-Origin/oversized-body rejection,
+both compact desktop/mobile workflows, 1,000-row CSV and recipe downloads,
+complete invented-sample import/generation and two independent contexts.
+There were zero page errors. This fills the earlier hosted sample/isolation/
+mobile-emulation gaps; an actual Pixel/Gboard test remains unrun.
+
+An initial local run failed the menu trigger's post-theme focus assertion.
+It was not reproduced by the final complete local run; no focus correction is
+claimed. The earlier 24-case layout matrix remains E63 evidence and was reused
+for unchanged layout. Raw results, failed runs and original-file hashes are
+retained under `C:\Git\ravel\outputs\pr25-review`.
+
+On 28 October the full desktop matrix was repeated on the repaired source:
+all 24 cases pass, with no page errors or external HTTP/WebSocket attempts.
+The repeated public checker passes all five cases and all 96 units pass
+again. Both local servers stopped; `pip check`, dashboard and whitespace
+checks pass. The public server log retains two Windows Proactor connection-
+reset diagnostics despite passing browser checks. Commit/push and the
+existing-service update await the current publication/time and workspace
+confirmations recorded in progress.json; no update was scheduled.
+
 ## Verification and required try-out
 
 With the source/review dependencies from `development.md`:

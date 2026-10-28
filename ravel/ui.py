@@ -12,7 +12,7 @@ from .recipe import MAX_BYTES, ValidationError, loads
 from .sample import assumption_origin, context as sample_context, parse_csv, profile
 from .workspace import Workspace, field_form, whole
 from .dataset import template as devices_template
-from .web import DEMO_ROWS, DemoCapacity
+from .web import DEMO_ROWS, DemoCapacity, check_demo_source
 
 ROOT = Path(__file__).resolve().parents[1]
 STATIC = Path(__file__).with_name("static")
@@ -487,6 +487,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         try:
             payload = await event.file.read()
             candidate = loads(payload)
+            if PUBLIC_DEMO:
+                check_demo_source(candidate)
         except (ValidationError, ValueError) as exc:
             load_error.set_text(str(exc) + " Current table preserved.")
             uploader.reset()

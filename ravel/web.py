@@ -10,18 +10,28 @@ from contextlib import contextmanager
 from urllib.parse import urlsplit
 
 from .recipe import MAX_BYTES, ValidationError
+from .sample import parse_csv
 
 DEMO_ROWS = 1_000
 DEMO_CELLS = 20_000
 MAX_REQUEST_BYTES = MAX_BYTES + 65_536  # one recipe/CSV plus multipart framing
 
 
+def check_demo_source(recipe):
+    """Apply the CSV source bound equally to uploaded CSVs and saved recipes."""
+    sample = recipe.get('sample')
+    if sample and len(parse_csv(sample['csv_utf8'], sample['delimiter'])[2]) > DEMO_ROWS:
+        raise ValidationError('sample', 'Public demo: import at most 1,000 invented source rows.')
+
+
 def check_demo_recipe(recipe):
     """Apply hosting limits to an already validated recipe, never alter its rules."""
+    check_demo_source(recipe)
     tables = recipe.get('tables', [recipe.get('table')])
     if sum(table['row_count'] for table in tables) > DEMO_ROWS:
         raise ValidationError('demo', 'Public demo: use at most 1,000 rows across all tables. Save your recipe to run larger jobs locally.')
-    if sum(table['row_count'] * len(table['fields']) for table in tables) > DEMO_CELLS:
+    provenance_columns = 1 if 'sample' in recipe else 0
+    if sum(table['row_count'] * (len(table['fields']) + provenance_columns) for table in tables) > DEMO_CELLS:
         raise ValidationError('demo', 'Public demo: use at most 20,000 cells per run. Reduce rows or columns, or run the recipe locally.')
 
 
