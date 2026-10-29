@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "planning_revision": 5,
+  "planning_revision": 6,
   "plan_ref": "docs/plan.md",
   "milestones": [
     {
@@ -285,7 +285,8 @@
         "E56",
         "E58",
         "E59",
-        "E60"
+        "E60",
+        "E68"
       ],
       "blockers": []
     },
@@ -317,7 +318,8 @@
         "E56",
         "E58",
         "E59",
-        "E60"
+        "E60",
+        "E68"
       ],
       "blockers": []
     },
@@ -453,7 +455,7 @@
       "status": "in_progress",
       "acceptance_criteria": [
         "Theme/general functions share a keyboard-accessible options menu; smaller help/icons and corrected input spacing retain names, draft/error state, removal confirmation and reachable mobile actions.",
-        "Actual Light/Dark desktop/mobile captures and maintainer try-out support visual acceptance."
+        "Actual Light/Dark desktop captures and a separate maintainer desktop try-out support visual acceptance. Actual Pixel8/Gboard testing is deferred: not performed, not passed; automated mobile emulation is scoped separately."
       ],
       "release_gate_ids": [
         "R9"
@@ -463,10 +465,11 @@
         "E64",
         "E65",
         "E66",
-        "E67"
+        "E67",
+        "E68"
       ],
       "blockers": [
-        "Maintainer visual and actual Pixel8/Gboard review pending; local emulation does not substitute for device acceptance."
+        "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
       ]
     },
     {
@@ -541,10 +544,11 @@
         "E64",
         "E65",
         "E66",
-        "E67"
+        "E67",
+        "E68"
       ],
       "blockers": [
-        "Maintainer visual and actual Pixel8/Gboard review pending; local emulation does not substitute for device acceptance."
+        "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
       ]
     },
     {
@@ -993,15 +997,20 @@
       "id": "E67",
       "reference": "28 October 2026 verified guard-repair publication; docs/public-demo.md#published-repair-verification-28-october-2026; https://github.com/Maks1m-Se/ravel/actions/runs/40712206277",
       "scope": "Maintainer explicitly confirmed the28October pre16:30 publication exception and My Workspace tea-ctkuvolds78s73c2u1j0. Committed79e44cb405033aa16e8459c59903c3120643656d after live Berlin16:03:53 check; fast-forward pushed existing PR25 branch after16:04:07 check. All13 committed runtime Git blobs equal tested sources after explicit LF normalization; remote ref and PR head read back matching. Existing srv-dbdhvi59fdbs73b6rm40 remains Free/Frankfurt, one instance, auto-deploy off, unchanged repo/build/start/TCP-health settings; no env/secret/plan changes. One manual trigger created dep-dbh0u26i0phs73aeeh90 with exactly79e44cb; Render returned live2026-10-28T15:05:50.807401Z,16:05:50 Berlin. Full actual HTTPS checker passes five cases through2026-10-28T15:07:35.294985Z using Chrome156.0.8078.73: anonymous HTTP/health, valid same-origin and rejected foreign WebSockets/HTTP, oversized413, both compact/mobile themes, portrait/landscape/reduced height, pending Apply/Discard,1000-row CSV/recipe downloads, full invented CSV import/generation and separate browser contexts. New deployed regressions reject1001 embedded source rows while preserving drafts/result, count row_origin within output cells, accept20000 cells, reject21000 and recover to19950; zero browser page errors and TLS validation enabled. Independent artifact read verifies IDs1-1000/value0-20, imported IDs11-1010/length9.8-12.2 or missing/materialA-B/generated origins, exact1000x20 and950x21 cells. Actual CSV SHA2567db126417bc23dcd9256bea73f09949c153eeeb47f4fc866915f3c641d4575f5. Raw browser/artifact reports and hashes at C:/Git/ravel/outputs/pr25-review/hosted-79e44cb; two unaltered hosted captures inspected and linked from docs/public-demo.md. Render error-level query15:04:40-15:09:33UTC returned zero entries, not a broader all-severity/log guarantee. PR workflow40712206277 Ubuntu122900182929 and Windows122900183078 succeed on unit/dashboard/whitespace steps; full logs explicitly record96 tests/OK. macOS122900182476 remains queued at readback, not counted passed. E66 local96 units/24 desktop/five public cases preserved with their exact source; original recovery17/staged76 file inventories remain unchanged. No new service, PR merge, Windows rebuild or human/clinical/release acceptance. Further documentation-only publication does not require another runtime deploy. Actual Pixel/Gboard and subjective visual acceptance remain open. Final readback: macOS122900182476 also completes successfully; its full log confirms96 tests/OK and successful dashboard/whitespace steps. All three implementation CI jobs now pass; the earlier queued statement is historical."
+    },
+    {
+      "id": "E68",
+      "reference": "29 October 2026 isolated main-integration preparation; docs/integration-main.md; outputs/integration-2026-10-29 (ignored raw evidence)",
+      "scope": "Read all nine open draft PR metadata/review timelines/threads and linked issue discussions. No review comments or threads; confirmed linear ancestry from main d7d42f8 through PR10/18/19/20/21/22/23/24/25 to 7c6042e532aef523cbd5f32700184e80649ee142. Sequential local fast-forwards in isolated integration/main-2026-10-29 need no conflict repair. Only documentation/progress/dashboard change afterward; checked runtime fingerprint a5b75e9951f4ab5cdf2a11e0c56402a2637ca03835273d93f4799179c8eace19 equals E67/live79e44cb. New Windows/Python3.14.8/NiceGUI3.18.0/Playwright1.58.0/Chrome156.0.8078.73 runs pass96 units,24 full desktop cases and five public cases. Zero page errors and desktop external HTTP/WebSockets. Independent no-local clone at7c6042e with a newly created venv installs all52 exact UI/review pins, passes pip check,96 units/dashboard/clinical structural references, hand CLI reference/no-overwrite and1000-row sample; four extra recovery browser cases and two protected-hosting cases pass from that clone. Protected HTTP/upload/WebSocket access and two contexts are verified using invented ephemeral credentials only. Five fixed-seed n100000 normal/Bernoulli statistical cases pass unchanged thresholds; overallR5 remains incomplete. Two fresh-CLI harness attempts used a wrong expected exit status and colliding output-sidecar name; corrected invocations pass and failed artifacts remain. Actual Light/Dark desktop captures at both laptop sizes inspected; two copied unaltered to docs/images/integration-desktop-*.png. README/current source instructions/demo link updated. Render readback confirms existing Free/manual service and live79e44cb; HTTPS health returns200/ok with TLS validation. Original worktree HEAD/status/file inventories unchanged, including17 recovery and76 staged files. Actual Pixel8/Gboard explicitly deferred by maintainer, not performed/not passed and not a source-integration prerequisite. Desktop maintainer acceptance and actual merge authorization remain separate. No PR merge/readiness/retarget, service/deploy/secret change, binary rebuild, clinical policy adoption or release-gate acceptance."
     }
   ],
   "blockers": [
-    "Public guard repair79e44cb is deployed, all five HTTPS cases and Ubuntu/Windows/macOS CI pass (E67). Actual Pixel/Gboard and subjective visual acceptance remain pending.",
+    "Integrated generic source awaits maintainer desktop acceptance and explicit merge approval; no confirmed unresolved technical integration defect. Actual Pixel8/Gboard is deferred, not performed/not passed, and does not block this source integration (E68).",
     "Clinical arithmetic awaits review/adoption of the proposed numeric policy and independent reference transcription; no clinical numeric implementation or Python/R comparison yet (E54).",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: complete and report the short live visual/Pixel-Gboard try-out from docs/public-demo.md: options/theme and input spacing, named icons/removal confirmation, Maximum20 Apply then30 Discard restoring20,1000-row recipe/CSV downloads and invented import actions with the keyboard open in both orientations. Record device/browser and acceptance separately. Technical implementation, publication, HTTPS verification and all three implementation CI jobs are complete. No further deploy is needed for documentation-only updates; keep PR25 and the stack unmerged, service on Free, original worktrees and clinical/native/release gates preserved.",
+  "next_action": "Maintainer: perform the short desktop acceptance in docs/integration-main.md on the exact candidate or runtime-identical live demo, in Light/Dark at1366x657/1280x800; record OS/browser and accept/reject observations separately from automated checks. Then explicitly approve the prepared merge sequence #10 -> #18 -> #19 -> #20 -> #21 -> #22 -> #23 -> #24 -> #25 and the candidate documentation follow-up. Keep PRs draft/unmerged until approval. Actual Pixel8/Gboard is deferred, not performed and not passed; do not count reduced-height emulation as device acceptance. Existing Free/manual Render runtime needs no documentation-only redeploy; preserve original worktrees and clinical/native/binary/release gates.",
   "current_task_id": "M4-03",
   "next_task_ids": [
     "M5-04",

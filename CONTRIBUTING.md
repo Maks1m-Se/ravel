@@ -2,12 +2,15 @@
 
 Ravel is an early prototype. Read [AGENTS.md](AGENTS.md), the
 [plan](docs/plan.md) and [current progress](docs/progress.json) before work.
-The bounded explicit-rule single-table generator is implemented; sample and
-clinical generation remain planned. NiceGUI and distribution choices
+Explicit-rule, sample-assisted and generic linked generation are implemented;
+clinical derivation remains planned. NiceGUI and distribution choices
 remain provisional. Discuss clinical rules, recipe changes, dependency/license
 changes and important interface behavior with the maintainer before acceptance.
 
-Use the [single-table source setup](docs/development.md#single-table-source-development).
+Use the [current source setup](docs/development.md#single-table-source-development)
+and [integration handoff](docs/integration-main.md). Desktop maintainer acceptance
+is separate from automated checks; the actual Pixel/Gboard test is deferred and
+has not been performed.
 Historical experiment instructions remain in the
 [Windows workbook setup](docs/development.md#workbook-experiment),
 [verified fresh-checkout commands](docs/development.md#fresh-checkout-smoke) and

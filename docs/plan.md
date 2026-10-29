@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 5 · 27 October 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 6 · 29 October 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -72,6 +72,16 @@ smaller help icons, correct input spacing and compact the three column actions
 without losing names, keyboard access or removal confirmation. Require actual
 visual/device review; this exception does not adopt accounts, persistent hosting
 or mobile/platform support as release commitments.
+
+**Integration preparation, 29 October 2026.** The maintainer authorizes an
+isolated candidate containing the nine open draft PRs, automated verification
+and fresh-checkout setup. Actual merges remain subject to explicit approval.
+Defer the real Pixel 8/Gboard test: it is not performed and must not be counted
+as passed or treated as a prerequisite for this source integration. Desktop
+visual/function acceptance remains a separate maintainer action. Preserve the
+existing worktrees, Free demo and historical evidence. Clinical policy,
+native/offline/platform and binary-redistribution gates retain their original
+scope; source integration does not accept any of them.
 
 **Community add-ons.** Preserve a small boundary between core generation and domain rules now. Keep the clinical module in the same repository and distribution initially. Avoid a plugin loader, registry, or public API stability promise before real extension needs are understood.
 
@@ -220,7 +230,7 @@ At the end of each working week, check one runnable example when one exists, the
 | docs/validation.md | Release criteria, reproducible verification commands, results and limitations |
 | SECURITY.md and CODE_OF_CONDUCT.md | Real reporting/contact routes and concise community expectations, before inviting contributions |
 | examples/ and tests/ | Runnable invented examples and small reviewed reference fixtures |
-| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 4) |
+| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 6) |
 | docs/progress.json | Authoritative milestone/task status, evidence, blockers, and next action |
 | docs/decisions.md | Significant agreed decisions and visibly unresolved choices |
 | [docs/development.md](development.md) | Dashboard usage, maintenance, verification commands and contributor/release preparation |

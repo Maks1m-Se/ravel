@@ -7,6 +7,12 @@ period. This is a small, session-only demonstration of the generic workbench,
 not an accepted release or a public Windows download. The existing draft PRs
 remain unmerged. The source is on `deploy/render-personal-weekend`.
 
+For the 29 October source integration candidate and exact merge order, see
+[integration-main.md](integration-main.md). The real Pixel 8/Gboard test is
+**deferred by the maintainer, not performed and not passed**. It does not block
+this source integration. Desktop maintainer acceptance remains separate. Earlier
+references below to a pending device review describe the historical requirement.
+
 ## Use and limits
 
 No login is required in public mode. Use invented data only: imported CSVs and
@@ -166,7 +172,7 @@ macOS job completed successfully after its initial queued readback; all three
 full job logs confirm 96 tests and OK. Actual Pixel/Gboard and subjective
 maintainer acceptance remain open.
 
-## Verification and required try-out
+## Verification and desktop acceptance
 
 With the source/review dependencies from `development.md`:
 
@@ -187,17 +193,22 @@ geometry, error recovery, 1,000-row generation, CSV/recipe downloads, sample
 import and two independent contexts. Mobile emulation covers portrait, landscape
 and reduced height; it cannot establish actual Android/Gboard behavior.
 
-Required maintainer try-out on the live URL:
+Required desktop maintainer try-out on the live URL (Light/Dark at 1366×657
+and 1280×800; the deployed runtime matches this source candidate):
 
 1. Open `…`, change Light/Dark, close with Escape or a tap outside. Confirm the
    controls feel clear and the input values have comfortable vertical spacing.
 2. Change Maximum to 20, switch themes and Apply. Change it to 30 and Discard;
    expect 20. Generate and download the CSV and recipe.
 3. Try Add/Duplicate/Remove, cancelling removal once. Hover or focus the desktop
-   controls to identify them. On the phone, check the touch targets and help.
-4. Import the invented ten-row example, scroll with the keyboard open, and reach
-   Use sample/Cancel. Rotate the phone and confirm Apply/Discard remain reachable.
+   controls to identify them.
+4. Import the invented ten-row example, inspect the source/assumptions by keyboard
+   and scrolling, then confirm or cancel using the stable footer. Expect ten
+   source rows and 1,000 generated rows after confirmation and Generate.
 
-Record device/browser and observations before accepting this UI. Existing
+Record desktop OS/browser, tested runtime and observations before accepting this
+UI. Pixel/Gboard with the real keyboard open in both orientations is deferred:
+**not performed, not passed**. Reduced-height emulation is automated evidence
+only. Existing
 clinical-policy, native/offline installation and binary-redistribution gates
 remain open. No Windows candidate was rebuilt by this change.

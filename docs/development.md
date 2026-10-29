@@ -4,7 +4,12 @@ Runnable source includes explicit-rule and sample-assisted single-table
 generation through a shared engine, CLI and NiceGUI builder, alongside the
 tracking dashboard and historical workbook experiment. See
 [single-table.md](single-table.md) and [sample-assisted.md](sample-assisted.md).
-Linked/clinical generation and binary distribution remain subsequent packages.
+Clinical generation and public binary distribution remain subsequent packages.
+
+Current integration: [candidate, merge order and acceptance](integration-main.md).
+Generic linked tables are now implemented. The older sections below are dated
+evidence records. Actual Pixel/Gboard testing was deferred on 29 October:
+not performed and not passed. Desktop maintainer acceptance remains separate.
 
 ## Single-table source development
 
@@ -16,9 +21,11 @@ The UI retains the established 48 runtime pins in `requirements-ui.lock`, and
 browser tools remain separate in `requirements-review.lock`. Binary build locks,
 including the setuptools 80.9.0 candidate, are not selected or invoked here.
 
-From the checkout root in PowerShell:
+For a new checkout in PowerShell (an existing candidate checkout starts at venv):
 
 ```powershell
+git clone --branch integration/main-2026-10-29 https://github.com/Maks1m-Se/ravel.git
+Set-Location ravel
 py -3.14 -m venv .venv-source
 .\.venv-source\Scripts\python.exe --version
 .\.venv-source\Scripts\python.exe -m pip install -r requirements-ui.lock
@@ -77,8 +84,9 @@ disconnection, native installation and clean-machine evidence.
 
 The read-only [core workflow](../.github/workflows/core.yml) runs standard-library
 tests, dashboard freshness and whitespace on hosted Windows/Linux/macOS Python
-3.14.8 jobs. Its remote results remain pending until publication and execution;
-the workflow is not native UI/installation testing or support certification.
+3.14.8 jobs. E67 records the passing three-platform implementation run;
+[integration evidence](integration-main.md) identifies candidate-specific checks.
+The workflow is not native UI/installation testing or support certification.
 
 ### Short maintainer walkthrough
 

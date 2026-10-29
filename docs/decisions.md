@@ -605,3 +605,21 @@ focus, pending/error behavior and actual generated/exported data. Larger touch
 targets apply to the column actions without increasing the desktop toolbar height.
 Actual visual and Pixel/Gboard acceptance remain separate from automated checks.
 No clinical, native Windows or binary-redistribution acceptance follows.
+
+## Main integration and deferred phone test (29 October 2026)
+
+Prepare the nine open draft PRs as one isolated source candidate, preserving
+their linear ancestry and all original dirty worktrees. The exact heads/order
+and review disposition are in [integration-main.md](integration-main.md);
+progress.json remains authoritative. Actual PR merges/readiness changes still
+need maintainer approval. Publication of this preparation is authorized today;
+the normal Berlin timing rule remains for later work.
+
+The maintainer defers the actual Pixel8/Gboard test. Record it as not performed
+and not passed, remove it as a source-integration prerequisite and retain the
+limited scope of automated mobile emulation. Desktop acceptance remains a
+separate explicit maintainer decision for this candidate. Clinical numerical
+policy, native/offline/platform and binary-redistribution gates are unchanged;
+integrating preparation documents/build scripts does not adopt those policies
+or publish a new binary. Preserve the existing Free/manual Render service and
+its tested runtime; documentation-only updates do not require redeployment.
