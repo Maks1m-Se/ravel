@@ -286,7 +286,8 @@
         "E58",
         "E59",
         "E60",
-        "E68"
+        "E68",
+        "E69"
       ],
       "blockers": []
     },
@@ -319,7 +320,8 @@
         "E58",
         "E59",
         "E60",
-        "E68"
+        "E68",
+        "E69"
       ],
       "blockers": []
     },
@@ -466,7 +468,8 @@
         "E65",
         "E66",
         "E67",
-        "E68"
+        "E68",
+        "E69"
       ],
       "blockers": [
         "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
@@ -545,7 +548,8 @@
         "E65",
         "E66",
         "E67",
-        "E68"
+        "E68",
+        "E69"
       ],
       "blockers": [
         "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
@@ -1002,6 +1006,11 @@
       "id": "E68",
       "reference": "29 October 2026 isolated main-integration preparation; docs/integration-main.md; outputs/integration-2026-10-29 (ignored raw evidence)",
       "scope": "Read all nine open draft PR metadata/review timelines/threads and linked issue discussions. No review comments or threads; confirmed linear ancestry from main d7d42f8 through PR10/18/19/20/21/22/23/24/25 to 7c6042e532aef523cbd5f32700184e80649ee142. Sequential local fast-forwards in isolated integration/main-2026-10-29 need no conflict repair. Only documentation/progress/dashboard change afterward; checked runtime fingerprint a5b75e9951f4ab5cdf2a11e0c56402a2637ca03835273d93f4799179c8eace19 equals E67/live79e44cb. New Windows/Python3.14.8/NiceGUI3.18.0/Playwright1.58.0/Chrome156.0.8078.73 runs pass96 units,24 full desktop cases and five public cases. Zero page errors and desktop external HTTP/WebSockets. Independent no-local clone at7c6042e with a newly created venv installs all52 exact UI/review pins, passes pip check,96 units/dashboard/clinical structural references, hand CLI reference/no-overwrite and1000-row sample; four extra recovery browser cases and two protected-hosting cases pass from that clone. Protected HTTP/upload/WebSocket access and two contexts are verified using invented ephemeral credentials only. Five fixed-seed n100000 normal/Bernoulli statistical cases pass unchanged thresholds; overallR5 remains incomplete. Two fresh-CLI harness attempts used a wrong expected exit status and colliding output-sidecar name; corrected invocations pass and failed artifacts remain. Actual Light/Dark desktop captures at both laptop sizes inspected; two copied unaltered to docs/images/integration-desktop-*.png. README/current source instructions/demo link updated. Render readback confirms existing Free/manual service and live79e44cb; HTTPS health returns200/ok with TLS validation. Original worktree HEAD/status/file inventories unchanged, including17 recovery and76 staged files. Actual Pixel8/Gboard explicitly deferred by maintainer, not performed/not passed and not a source-integration prerequisite. Desktop maintainer acceptance and actual merge authorization remain separate. No PR merge/readiness/retarget, service/deploy/secret change, binary rebuild, clinical policy adoption or release-gate acceptance."
+    },
+    {
+      "id": "E69",
+      "reference": "29 October 2026 candidate publication and exact-commit fresh-checkout/CI readback; docs/integration-main.md#published-candidate-readback; https://github.com/Maks1m-Se/ravel/actions/runs/40861373393",
+      "scope": "Committed the checked documentation-only integration follow-up as4aa2299278ef91548813e5c762b978832581e6e1 after live Berlin11:55:18 clock; explicitly pushed only integration/main-2026-10-29 after11:55:32 check under the current-day authorization. Remote ref matches; main remainsd7d42f8bd183fd4bb3e7b9005ac7324b7a3d0b90. The independent no-local fresh checkout was advanced to exactly4aa2299 and again passes96 units, dashboard freshness, clinical structural references, pip check and whitespace with clean porcelain status. Its runtime/scripts/tests/examples/locks/CI workflow have no differences from deployed79e44cb. Candidate push workflow40861373393 succeeds on Windows123405163437, macOS123405163737 and Ubuntu123405163746; all three full logs explicitly record96 tests and OK with dashboard/whitespace successful. All nine original PRs remain open/draft/unmerged and their dependency heads unchanged; original worktree HEAD/status/hash inventory is intact. This evidence follow-up only changes documentation/progress/dashboard; no new runtime deploy or binary rebuild. Desktop maintainer acceptance/actual merge approval remain required; actual Pixel8/Gboard remains deferred, not performed/not passed. E68/E67 checks retain their actual scope; no clinical/native/release gate acceptance."
     }
   ],
   "blockers": [

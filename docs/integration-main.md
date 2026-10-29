@@ -191,3 +191,28 @@ and [Dark short-height import footer](images/integration-desktop-import-dark.png
 They were inspected and copied without alteration. Fresh recovery/linked
 captures at1280×800 were also inspected. Human desktop acceptance remains
 separate; actual Pixel/Gboard is **deferred, not performed, not passed**.
+
+
+## Published candidate readback
+
+The combined source plus integration records were published as
+[`4aa2299278ef91548813e5c762b978832581e6e1`](https://github.com/Maks1m-Se/ravel/commit/4aa2299278ef91548813e5c762b978832581e6e1)
+on `integration/main-2026-10-29`. Live Berlin clock immediately before commit:
+11:55:18; before push:11:55:32, within the maintainer's current-day exception.
+Remote readback matches. `main` remains d7d42f8 and all nine draft PRs remain
+unmerged. This later evidence-only follow-up keeps all tested runtime bytes.
+
+The independent fresh clone was advanced to exactly4aa2299. All96 unit tests,
+dashboard freshness, clinical structural references, pip check and whitespace
+pass again; checkout status is clean. Runtime/scripts/tests/examples/locks and
+CI workflow differ in zero files from deployed79e44cb. No borrowed PYTHONPATH
+or source-worktree files are needed.
+
+[Candidate CI40861373393](https://github.com/Maks1m-Se/ravel/actions/runs/40861373393)
+passes on Windows (job123405163437), macOS (123405163737) and Ubuntu (123405163746).
+All three full logs explicitly show96 tests and OK, with successful dashboard
+and whitespace steps. These are core/checkout checks, not native GUI installation
+or clinical validation. Raw final unit log and all three CI logs remain under
+`outputs/integration-2026-10-29/`. Later evidence/dashboard updates do not require
+another Render deployment. Desktop maintainer acceptance and explicit merge
+approval are still outstanding; Pixel/Gboard is deferred and not performed.
