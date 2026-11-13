@@ -291,7 +291,8 @@
         "E69",
         "E74",
         "E75",
-        "E77"
+        "E77",
+        "E78"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -335,7 +336,7 @@
       "id": "M2-01",
       "milestone_id": "M2",
       "title": "Establish twelve cases and selected mappings",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria": [
         "All twelve specified cases have independently established expected results and valid/invalid classification.",
         "Selected source-to-analysis mappings record exact standard versions and limitations.",
@@ -345,7 +346,8 @@
         "R1"
       ],
       "evidence_refs": [
-        "E54"
+        "E54",
+        "E78"
       ],
       "blockers": []
     },
@@ -617,7 +619,9 @@
       "id": "R1",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E78"
+      ]
     },
     {
       "id": "R2",
@@ -1068,6 +1072,11 @@
       "id": "E77",
       "reference": "Clinical source-contract robustness; docs/clinical-template-preparation.md",
       "scope": "Reproduced before repair: ambiguous parameter declaration still produced UNDECLARED_GROUP; supported exact-size/Unicode/deep inputs failed serialize/reload; malformed review adapter inputs raised raw TypeError/AttributeError/KeyError. Compact iterative serialization preserves tokens/Unicode and all accepted nesting; unavailable/ambiguous identity references now yield NOT_EVALUATED without dependent conclusions. Adapter validates shape and rejects silently dropped fields through ValidationError. Three regression methods added;16 focused source methods and124 full units pass. No numeric/time/unit/status policy adopted; explicit nesting cap remains unspecified."
+    },
+    {
+      "id": "E78",
+      "reference": "Twelve clinical scenario references; docs/clinical-template-preparation.md",
+      "scope": "All twelve plan requirements map to explicit source fixtures/hand expectations. Existing C1-C4 and negative a/b retained unchanged; six nonduplicated additional sources cover multiple eligible values, source label, out-of-order input, accepted undosed/empty-group illustrations and three-pair multi-subject grouping. New hand transcriptions await maintainer review, not new policy adoption. Checker verifies coverage, source structure, lossless round trip and reference membership without timestamps/selection/arithmetic. Three regression methods pass;127 full units pass. Clinical derivation, R/SAS and R1 remain unperformed/incomplete."
     }
   ],
   "blockers": [

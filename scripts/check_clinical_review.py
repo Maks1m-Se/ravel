@@ -52,6 +52,8 @@ def check(root=ROOT):
             assert failure['source_ids'] and set(failure['source_ids']) <= identities
             assert failure['code'] != 'NOT_EVALUATED'
     check_source_contract(root)
+    from scripts.check_clinical_scenarios import check as check_scenarios
+    check_scenarios(root)
     return counts
 
 
@@ -134,4 +136,6 @@ def check_source_contract(root=ROOT):
 if __name__ == '__main__':
     print('Review-sheet structural references passed:', check())
     print('Source contract checks:', check_source_contract())
+    from scripts.check_clinical_scenarios import check as check_scenarios
+    print('Twelve-scenario coverage:', check_scenarios())
     print('No clinical derivation, numeric policy adoption or clinical validation was performed.')

@@ -220,3 +220,38 @@ the adapter cannot silently replace supplied provenance.
 No fixed nesting cap is adopted: the pinned JSON parser's supported inputs must
 round-trip, and parser failures remain SourceParseError. A portable explicit
 depth budget is a future resource-policy decision, not a clinical rule.
+
+## Twelve-scenario reference coverage
+
+[scenario-coverage.json](../examples/clinical-review/scenario-coverage.json)
+maps all twelve plan requirements to explicit hand references. Existing C1–C4
+and negative illustrations a/b are reused unchanged. Six additional supplied
+source cases are in
+[additional-scenarios.json](../examples/clinical-review/additional-scenarios.json);
+their hand transcriptions await maintainer review. No new clinical policy is
+selected. Labels are retained as source provenance; output rows are compared
+by explicit IDs without adopting a new row-sort policy.
+
+| Requirement | Reference |
+| --- | --- |
+| Ordinary baseline | C1 |
+| Multiple eligible measurements | multiple-eligible |
+| Latest pre-dose value missing | C2 |
+| No eligible baseline | C3 |
+| Exactly at dose | C4; C3 preserves the no-earlier-value companion |
+| Post-dose labelled baseline | labelled-followup |
+| Duplicate eligible timestamps | negative b |
+| Out-of-order input | out-of-order |
+| Missing actual dose | undosed, transcribed from the accepted auxiliary illustration |
+| Incompatible units | negative a |
+| No usable measurements | empty-measurements, the accepted empty-group illustration |
+| Multiple subjects/parameters | grouping: three explicit pairs, no fourth Cartesian group |
+
+Each requirement identifies classification, explanation, executable source/
+reference checks and future clinical checks. Cases carry selected source IDs,
+expected groups/changes/reasons/diagnostics; intentionally invalid cases retain
+zero successful outputs and the separate NOT_EVALUATED expectations.
+`python scripts/check_clinical_scenarios.py` checks coverage, source structure,
+round trip and reference membership. It performs no timestamp ordering,
+baseline selection, arithmetic or independent R/SAS derivation. R1 remains
+incomplete until the actual clinical implementation and independent comparisons.
