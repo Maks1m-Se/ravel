@@ -200,3 +200,23 @@ The reference sheets remain hand expectations. Illustrations a–c pass source
 structure while their unit/tie/timestamp policy expectations remain unexecuted.
 The crossed pair fails the now implemented membership check. No structural
 success is a claim of clinical validation, derivation or R/SAS comparison.
+
+### Source robustness follow-up
+
+The 14 November batch reproduces round-trip failures at the exact 1 MiB
+boundary, with large non-ASCII strings and with parser-supported nesting.
+Serialization now uses an iterative compact encoder, retaining original number
+tokens and escaping unpaired surrogates without expanding ordinary UTF-8 text.
+It adds no trailing byte that would make an accepted maximum-size input fail
+reload. Cyclic/native non-JSON objects fail with TypeError.
+
+Duplicate declaration IDs make the corresponding reference ambiguous. An
+unavailable identity collection or ambiguous referenced identity produces a
+separate NOT_EVALUATED reference check, then suppresses dependent membership
+conclusions. Independent field checks continue. Malformed review-sheet shapes
+and unexpected record fields fail through ValidationError before mapping;
+the adapter cannot silently replace supplied provenance.
+
+No fixed nesting cap is adopted: the pinned JSON parser's supported inputs must
+round-trip, and parser failures remain SourceParseError. A portable explicit
+depth budget is a future resource-policy decision, not a clinical rule.

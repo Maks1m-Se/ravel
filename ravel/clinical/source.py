@@ -54,33 +54,69 @@ def loads(payload):
 
 def dumps(document):
     """Semantic JSON round trip; numeric tokens retain their lexical spelling."""
-    def encode(value):
+    def quoted(value):
+        # Keep UTF-8 compact while retaining even malformed surrogate tokens.
+        return re.sub('[\\ud800-\\udfff]', lambda match: '\\u%04x' % ord(match[0]),
+                      json.dumps(value, ensure_ascii=False))
+
+    output, active, stack = [], set(), [('value', document)]
+    while stack:
+        operation, value = stack.pop()
+        if operation == 'text':
+            output.append(value)
+            continue
+        if operation == 'leave':
+            active.remove(value)
+            continue
         if isinstance(value, NumberToken):
-            return value.token
-        if value is None or isinstance(value, (str, bool)):
-            return json.dumps(value, ensure_ascii=True)
-        if isinstance(value, list):
-            return '[' + ','.join(encode(item) for item in value) + ']'
-        if isinstance(value, dict) and all(isinstance(key, str) for key in value):
-            return '{' + ','.join(json.dumps(key, ensure_ascii=True) + ':' + encode(item)
-                                  for key, item in value.items()) + '}'
-        raise TypeError('Use parsed source values; native numeric conversions lose original tokens.')
-    return encode(document) + '\n'
+            output.append(value.token)
+        elif isinstance(value, str):
+            output.append(quoted(value))
+        elif value is None or isinstance(value, bool):
+            output.append(json.dumps(value))
+        elif isinstance(value, (list, dict)):
+            identity = id(value)
+            if identity in active:
+                raise TypeError('Circular source value is not JSON.')
+            active.add(identity)
+            stack.append(('leave', identity))
+            if isinstance(value, dict):
+                if not all(isinstance(key, str) for key in value):
+                    raise TypeError('Source object keys must be text.')
+                jobs = []
+                for index, (key, item) in enumerate(value.items()):
+                    if index:
+                        jobs.append(('text', ','))
+                    jobs.extend([('text', quoted(key) + ':'), ('value', item)])
+                opening, closing = '{', '}'
+            else:
+                jobs = []
+                for index, item in enumerate(value):
+                    if index:
+                        jobs.append(('text', ','))
+                    jobs.append(('value', item))
+                opening, closing = '[', ']'
+            output.append(opening)
+            stack.append(('text', closing))
+            stack.extend(reversed(jobs))
+        else:
+            raise TypeError('Use parsed source values; native numeric conversions lose original tokens.')
+    return ''.join(output)
 
 
 def validate(document):
     """Report source structure only; never derive or silently repair records."""
     failures, skipped = [], []
-    registries = {}
+    registries, ambiguous, available = {}, {}, {}
 
     def issue(check, path, message, row=None, code='GENERIC_VALIDATION_FAILED'):
         row = row if isinstance(row, dict) else {}
         identities = [row['id']] if isinstance(row.get('id'), str) else []
         subject, parameter = row.get('subject'), row.get('parameter')
         scope = dict(record=identities[0]) if identities else {}
-        if isinstance(subject, str) and subject in registries.get('subjects', {}):
+        if isinstance(subject, str) and subject in registries.get('subjects', {}) and subject not in ambiguous.get('subjects', set()):
             scope = dict(subject=subject)
-            if isinstance(parameter, str) and parameter in registries.get('parameters', {}):
+            if isinstance(parameter, str) and parameter in registries.get('parameters', {}) and parameter not in ambiguous.get('parameters', set()):
                 scope['parameter'] = parameter
         failures.append(dict(code=code, check=check, path=path, scope=scope,
                              source_ids=identities, message=message))
@@ -146,23 +182,36 @@ def validate(document):
         ('subjects', ('id', 'treatment', 'provenance')),
     ]:
         registry = {}
+        ambiguous[collection] = set()
+        available[collection] = isinstance(document.get(collection), list)
         for index, row in enumerate(rows[collection]):
             path = f'{collection}.{index}'
             if not fields(row, required, path):
+                available[collection] = False
                 continue
             strings(row, required[:-1], path)
             provenance(row, path)
             identity = row.get('id')
             if text(identity):
                 if identity in registry:
+                    ambiguous[collection].add(identity)
                     issue('duplicate_id', path + '.id', f'Duplicate {collection} ID {identity!r}; first at {registry[identity]}.', row)
                 else:
                     registry[identity] = path + '.id'
+            else:
+                available[collection] = False
         registries[collection] = registry
 
     def reference(row, key, registry, path):
         value = row.get(key)
         if not text(value):
+            return False
+        if not available[registry] or value in ambiguous[registry]:
+            prerequisite = registry + ('.identity_unique' if value in ambiguous[registry] else '.identities_available')
+            identity = row.get('id')
+            skipped.append(dict(code='NOT_EVALUATED', check=key + '_reference', path=path + '.' + key,
+                                scope=dict(record=identity) if text(identity) else {},
+                                source_ids=[identity] if text(identity) else [], prerequisites=[prerequisite]))
             return False
         if value not in registries[registry]:
             issue('reference', path + '.' + key, f'Unknown {key} {value!r}.', row)

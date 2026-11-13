@@ -290,7 +290,8 @@
         "E68",
         "E69",
         "E74",
-        "E75"
+        "E75",
+        "E77"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -484,7 +485,8 @@
         "E71",
         "E72",
         "E73",
-        "E75"
+        "E75",
+        "E76"
       ],
       "blockers": [
         "Maintainer desktop acceptance remains open. The earlier Edge workspace reset is evidenced; its trigger remains unknown."
@@ -1056,6 +1058,16 @@
       "id": "E75",
       "reference": "13 November 2026 combined UX/export and clinical-source candidate; docs/development.md#combined-candidate-review",
       "scope": "Separate integration/ux-clinical-2026-11-13 from eed69c6 combines exact saved input implementations, preserving original worktrees/dirty changes/servers and all E70-E74 evidence. Documentation overlaps resolved explicitly; progress records merged by task/evidence identity; dashboard regenerated. Runtime fingerprint99a3410894cf8d711e93323670c1893233db50f10e73079beb1b59a33f9a46d4 covers19 files.121 full units pass, including13 source-contract tests and6 targeted export tests;14 written source rows/eight reference cases verified without derivation. Four new Chrome157.0.8103.51 UX cases cover both themes/two laptop sizes and complete keyboard save/reload/import/extension. Four new Edge157.0.4341.46 export cases cover names/content/client identity, Apply/pending/Discard, deliberate reset and whole-namespace CSV/ZIP refusal. Zero page errors in both, zero external HTTP/WebSockets in Chrome. Other24 browser cases reused from the10November full run only after all16 relevant runtime hashes match; three added clinical files remain internal. Sources/fixtures match their input origins. Review URL http://127.0.0.1:51274/; exact commit, combined diff, source archive/manifest and publication plan in the local review bundle. Earlier Edge reset trigger remains unknown, not fixed. Visual acceptance and numeric policy remain pending; no clinical arithmetic/R-SAS, native/device acceptance, PR merge, deployment or binary publication."
+    },
+    {
+      "id": "E76",
+      "reference": "Maintainer report with approved overnight batch,14 November2026",
+      "scope": "Maintainer confirms only whole-row column selection and preservation of an unapplied edit while switching columns on the cababf38 review candidate. Other UX acceptance, clinical-contract acceptance and numeric-policy adoption remain pending. No complete desktop/device/clinical acceptance inferred."
+    },
+    {
+      "id": "E77",
+      "reference": "Clinical source-contract robustness; docs/clinical-template-preparation.md",
+      "scope": "Reproduced before repair: ambiguous parameter declaration still produced UNDECLARED_GROUP; supported exact-size/Unicode/deep inputs failed serialize/reload; malformed review adapter inputs raised raw TypeError/AttributeError/KeyError. Compact iterative serialization preserves tokens/Unicode and all accepted nesting; unavailable/ambiguous identity references now yield NOT_EVALUATED without dependent conclusions. Adapter validates shape and rejects silently dropped fields through ValidationError. Three regression methods added;16 focused source methods and124 full units pass. No numeric/time/unit/status policy adopted; explicit nesting cap remains unspecified."
     }
   ],
   "blockers": [
@@ -1064,10 +1076,10 @@
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: review the combined fixed snapshot http://127.0.0.1:51274/ using docs/development.md combined acceptance. Check UX keyboard/drafts/markers, named save/reload and portable export refusal, then run python scripts/check_clinical_review.py and inspect the internal contract. Record accept/reject separately for UX and source foundation. The original Edge reset trigger remains unknown. Numeric policy, clinical arithmetic/validation and R/SAS comparison remain pending; Pixel/Gboard remains deferred. Keep the combined PR Draft against integration/main-2026-10-29; no merge, deployment or binary publication. Original branches and review instances remain preserved.",
-  "current_task_id": "M4-03",
+  "next_action": "Codex: complete the approved bounded overnight queue sequentially, preserving cababf38 and original worktrees/servers. Maintainer: review source robustness and remaining UX separately; limited whole-row/draft acceptance is E76, numeric policy remains unadopted. No pushes/remote PRs, merge, deployment, binaries or dependency upgrades.",
+  "current_task_id": "M1-01",
   "next_task_ids": [
-    "M1-01",
+    "M4-03",
     "M5-04"
   ]
 }

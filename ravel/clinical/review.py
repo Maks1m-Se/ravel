@@ -9,13 +9,39 @@ from .source import FORMAT
 def source_case(review, case_id, source):
     if not isinstance(review, dict) or review.get('format') != 'ravel-clinical-review/1':
         raise ValidationError('review.format', 'Expected the explicit ravel-clinical-review/1 reference sheet.')
-    cases = review.get('cases', [])
+    def require(condition, path, message):
+        if not condition:
+            raise ValidationError('review.' + path, message)
+
+    def text(value):
+        return isinstance(value, str) and bool(value) and '\x00' not in value
+
+    require(text(source), 'source', 'Supply explicit source provenance.')
+    cases = review.get('cases')
+    require(isinstance(cases, list), 'cases', 'Expected an ordered case collection.')
+    require(all(isinstance(case, dict) and text(case.get('id')) for case in cases),
+            'cases', 'Every case requires a text identity.')
     matches = [(index, case) for index, case in enumerate(cases) if case.get('id') == case_id]
     if len(matches) != 1:
         raise ValidationError('review.cases', f'Expected exactly one declared case {case_id!r}.')
     index, case = matches[0]
-    declarations = review['declarations']
+    declarations = review.get('declarations')
+    require(isinstance(declarations, dict), 'declarations', 'Expected treatment/unit/parameter declarations.')
+    for key in ['treatment', 'dose_unit']:
+        require(text(declarations.get(key)), 'declarations.' + key, 'Required declaration is absent or malformed.')
+    parameters = declarations.get('parameters')
+    require(isinstance(parameters, dict) and all(text(key) and text(unit) for key, unit in parameters.items()),
+            'declarations.parameters', 'Expected explicit parameter/unit declarations.')
     prefix = f'/cases/{index}'
+    require(isinstance(case.get('declared_subjects'), list) and all(text(identity) for identity in case['declared_subjects']),
+            prefix + '/declared_subjects', 'Expected explicit subject identities.')
+    require(isinstance(case.get('declared_groups'), list) and all(isinstance(pair, list) and len(pair) == 2 and all(text(value) for value in pair)
+            for pair in case['declared_groups']), prefix + '/declared_groups', 'Expected explicit subject/parameter pairs.')
+    require(isinstance(case.get('records'), list), prefix + '/records', 'Expected supplied source records.')
+    required = {'id', 'kind', 'subject', 'parameter', 'timestamp', 'value', 'unit'}
+    for i, record in enumerate(case['records']):
+        require(isinstance(record, dict) and set(record) == required, prefix + f'/records/{i}',
+                'Expected exactly the review source fields; no source fields may be silently dropped.')
 
     def provenance(pointer):
         return dict(source=source, pointer=pointer)

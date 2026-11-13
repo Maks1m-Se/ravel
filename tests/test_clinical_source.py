@@ -22,6 +22,52 @@ def fixture(case='C2', filename='baseline-four-cases.json'):
 
 
 class ClinicalSourceTests(unittest.TestCase):
+    def test_compact_serialization_preserves_supported_size_unicode_and_deep_input(self):
+        for text in ['"' + 'a' * (1_048_576 - 2) + '"', '"' + 'é' * 200_000 + '"',
+                     '[' * 700 + '-0.00e+01' + ']' * 700]:
+            value = source.loads(text)
+            encoded = source.dumps(value)
+            self.assertLessEqual(len(encoded.encode('utf-8')), 1_048_576)
+            self.assertEqual(source.dumps(source.loads(encoded)), encoded)
+        nested = '[' * 10_000 + '0' + ']' * 10_000
+        try:
+            parsed = source.loads(nested)
+        except source.SourceParseError as error:
+            self.assertEqual(error.diagnostic['check'], 'json')
+        else:
+            self.assertEqual(source.dumps(source.loads(source.dumps(parsed))), nested)
+        cyclic = []
+        cyclic.append(cyclic)
+        with self.assertRaisesRegex(TypeError, 'Circular'):
+            source.dumps(cyclic)
+
+    def test_ambiguous_declarations_and_unavailable_registries_suppress_reference_conclusions(self):
+        for collection in ['subjects', 'parameters', 'treatments']:
+            document = fixture()
+            document[collection].append(deepcopy(document[collection][0]))
+            report = source.validate(document)
+            self.assertIn('duplicate_id', [item['check'] for item in report['failures']])
+            self.assertTrue(any(collection + '.identity_unique' in item['prerequisites'] for item in report['not_evaluated']))
+        document = fixture('crossed-pair', 'negative-illustrations.json')
+        document['parameters'].append(deepcopy(document['parameters'][1]))
+        report = source.validate(document)
+        self.assertNotIn('UNDECLARED_GROUP', [item['code'] for item in report['failures']])
+        document['parameters'] = None
+        report = source.validate(document)
+        self.assertNotIn('reference', [item['check'] for item in report['failures']])
+        self.assertTrue(any('parameters.identities_available' in item['prerequisites'] for item in report['not_evaluated']))
+
+    def test_malformed_review_adapter_uses_validation_errors_without_coercion_or_information_loss(self):
+        for malformed in [dict(format='ravel-clinical-review/1', cases=None),
+                          dict(format='ravel-clinical-review/1', cases=[None]),
+                          dict(format='ravel-clinical-review/1', cases=[dict(id='x')])]:
+            with self.assertRaises(ValidationError):
+                source_case(malformed, 'x', 'invented')
+        review = source.loads((FIXTURES / 'baseline-four-cases.json').read_bytes())
+        review['cases'][0]['records'][0]['provenance'] = dict(source='must-not-disappear')
+        with self.assertRaisesRegex(ValidationError, 'silently dropped'):
+            source_case(review, 'C1', 'invented')
+
     def test_numeric_lexemes_timestamp_spelling_ids_order_and_provenance_round_trip(self):
         document = fixture()
         document['records'][0]['timestamp'] = '2026-01-01T11:00:00+02:00'
@@ -127,7 +173,8 @@ class ClinicalSourceTests(unittest.TestCase):
         document['records'][0]['provenance'] = {}
         report = source.validate(document)
         self.assertEqual([f['check'] for f in report['failures']],
-                         ['duplicate_id', 'reference', 'duplicate_pair', 'provenance', 'provenance'])
+                         ['duplicate_id', 'reference', 'provenance', 'provenance'])
+        self.assertTrue(any('parameter_reference' in item['prerequisites'] for item in report['not_evaluated']))
         self.assertEqual(report['failures'][-1]['source_ids'], ['C2-M1'])
         document = fixture()
         del document['subjects']
