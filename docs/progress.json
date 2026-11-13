@@ -292,7 +292,8 @@
         "E74",
         "E75",
         "E77",
-        "E78"
+        "E78",
+        "E79"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -635,20 +636,25 @@
       "status": "unverified",
       "evidence_refs": [
         "E55",
-        "E56"
+        "E56",
+        "E79"
       ]
     },
     {
       "id": "R4",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E79"
+      ]
     },
     {
       "id": "R5",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E79"
+      ]
     },
     {
       "id": "R6",
@@ -1077,6 +1083,11 @@
       "id": "E78",
       "reference": "Twelve clinical scenario references; docs/clinical-template-preparation.md",
       "scope": "All twelve plan requirements map to explicit source fixtures/hand expectations. Existing C1-C4 and negative a/b retained unchanged; six nonduplicated additional sources cover multiple eligible values, source label, out-of-order input, accepted undosed/empty-group illustrations and three-pair multi-subject grouping. New hand transcriptions await maintainer review, not new policy adoption. Checker verifies coverage, source structure, lossless round trip and reference membership without timestamps/selection/arithmetic. Three regression methods pass;127 full units pass. Clinical derivation, R/SAS and R1 remain unperformed/incomplete."
+    },
+    {
+      "id": "E79",
+      "reference": "Local reproducibility and sample evidence; docs/clinical-template-preparation.md",
+      "scope": "New repeatable check_reproducibility command passes20 cases: five fixed seeds x explicit/sample-new/sample-extend/linked, three repeats each =60 primary generations with equal canonical dataset/CSV hashes. Independent-field additions preserve all existing columns across tables. Both ten-to1000 modes preserve expected source cells/order/origins and source hashes; identifier confirmation/collision, supported numeric/category overrides, exact A400/B400/C200 quotas, infeasible retained quotas and unsupported101-category profiles checked. Initial evidence harness failed before expected rejection because it serialized an invalid request; corrected harness passes, no generator change. Unchanged R5 normal/Bernoulli command passes five n100000 seeds with unchanged thresholds; correlation remains unimplemented. Python3.14.8 Windows local source/environment maps and raw results retained.127 full units pass; R3/R4 are local partial evidence, all release gates remain unverified."
     }
   ],
   "blockers": [

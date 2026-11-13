@@ -2662,3 +2662,45 @@ additional PR dependencies. Keep the original nine-PR stack unmerged and follow
 integration. The base must be present in main before retargeting this combined
 PR to main. No merge, readiness change, hosting update or binary publication is
 authorized by preparation of this candidate.
+
+## Approved bounded overnight batch (14 November 2026)
+
+The separate `batch/overnight-2026-11-14` starts at cababf38 and preserves its
+fixed review source/instances and all original dirty worktrees. Maintainer
+acceptance is limited to whole-row field selection and retaining an unapplied
+edit across column selection (E76). Other UX/contract review is still pending.
+
+The source robustness checkpoint is 7704969: compact iterative lossless
+serialization, ambiguous/unavailable declaration prerequisites and controlled
+adapter failures; 16 focused source tests / 124 total tests pass. The reference
+coverage checkpoint is 2c41dcf: twelve requirement references and six new hand
+source transcriptions; three new coverage tests / 127 total tests pass. Both
+checkpoints are local. No arithmetic or numeric policy was adopted.
+
+### Reproducibility and sample evidence
+
+```powershell
+python scripts/check_reproducibility.py --output outputs/reproducibility.json
+python scripts/check_rule_statistics.py --output outputs/rule-statistics.json
+```
+
+The repeatable local command uses the predefined seeds 17,42,101,2026,65537
+and three repeats for each explicit, sample-new, sample-extend and linked
+recipe: 60 primary generations. Canonical hashes bind stable table IDs to CSV
+hashes; changing run timestamps/metadata are excluded. Each seed/recipe also
+checks independent-field addition against all existing columns.
+
+Both ten-to-1,000 modes check generated IDs, retained cells/order, row_origin
+and source checksums. Literal overrides and a new category C are verified.
+Generated/final quotas are exactly A400/B400/C200; infeasible retained quotas,
+unconfirmed/colliding identifiers and unsupported 101-category profiling are
+rejected. The first harness attempt called the validating serializer on an
+intentionally infeasible request before testing rejection; the harness now
+captures the original object without validation. No generator repair was needed.
+
+Actual run: all 20 seed/recipe cases pass. The unchanged normal/Bernoulli
+command also passes all five n100,000 cases with its original seeds/thresholds.
+Source hashes, parent commit plus local-script state, Python/platform and
+per-repeat hashes are retained under `outputs/overnight-2026-11-14/`.
+This advances local R3/R4 evidence without cross-platform or performance
+acceptance. R5 remains incomplete: Gaussian-pair correlation is unimplemented.
