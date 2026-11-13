@@ -31,12 +31,14 @@ The generic core currently supports one parent per child, scalar keys, fixed
 children-per-parent and literal text columns. It does not enforce compound
 subject/parameter membership or understand treatment time. The clinical planner
 will construct the supported structural requests and explicit record schedules;
-subject-specific schedules and supplied record collections need a deliberately
-specified adapter before implementation. They are not features of the current
+subject-specific schedules still need a planner. Supplied record collections
+now have the bounded internal contract below. They are not features of the current
 linked generator. A template must not silently relax a structural constraint to
 make a clinical scenario possible.
 
-Small internal boundary, proposed rather than implemented:
+The complete clinical pipeline below remains proposed. Only the explicit
+source adapter and structural contract described later in this document are
+implemented:
 
 1. `prepare(explicit_template_request, adopted_policy)` returns a generic engine
    request plus immutable clinical declarations/mapping, or actionable errors.
@@ -135,3 +137,66 @@ range/scale, exact representation, overflow, six-place export and comparison
 rules above, then assign an adopted policy ID. Review the fixture transcription
 against the accepted source and the proposed adapter/interface boundary. This
 prerequisite is recorded in progress.json; no review has been assumed.
+
+## Internal source contract
+
+The bounded foundation uses `ravel-clinical-source/1` through an explicit
+internal API in `ravel.clinical.source`. It is not a generation recipe or a
+clinical template request. The public recipe loader continues to reject it.
+No UI entry, arithmetic, dose selection, time comparison or clinical-policy
+validator is introduced. The numeric policy above remains unadopted.
+
+The document contains ordered `subjects`, `treatments`, `parameters`, `pairs`
+and `records` lists and a root `provenance` object. Subjects have `id` and
+`treatment`; treatments/parameters have `id` and `unit`. Each explicit pair
+contains `subject` and `parameter`, with no Cartesian expansion. These rows
+also carry provenance. IDs are opaque nonempty strings; IDs are unique within
+each declaration collection and across all source records. A pair's identity
+is its two references. Empty record collections and unequal per-subject
+counts are allowed.
+
+A source record has `id`, `kind`, `subject`, `timestamp`, `value`, `unit`
+and `provenance`. A `measurement` additionally has `parameter`; an
+`exposure` has `treatment` and `status`. Status is supplied explicitly:
+the review adapter maps the original `actual-dose`, `planned-dose` or
+`not-administered` kind to that exposure status. Unknown statuses and
+unparseable timestamp strings stay available for later clinical checks.
+This structural validator does not interpret them or compare units.
+
+Each provenance object requires nonempty `source` and `pointer` strings.
+The explicit review adapter records the original file and JSON pointer for
+each declaration, pair and source record. It retains source record ordering
+and does not copy expected derived rows into the source contract. A supplied
+contract can reference another explicitly named source without using that
+review adapter.
+
+`loads` parses JSON without binary floating-point conversion: integer and
+fraction/exponent tokens become immutable `NumberToken` objects containing
+their original spelling. `null`, strings and Booleans remain different.
+Duplicate JSON keys and non-JSON NaN/Infinity tokens fail parsing. Parsing is
+separate from `validate`, so a parsed malformed value is still inspectable.
+`validate` requires the value field and permits a number token or explicit
+null; text/Boolean/container values produce structural type diagnostics.
+No scale, range, normalization, positivity, formatting or arithmetic policy is
+selected. The shared 1 MiB input limit is a resource bound.
+
+`dumps` followed by `loads` preserves the parsed document semantically,
+including exact number-token spelling, timestamps, IDs, provenance and list
+order. Whitespace and string-escape spelling are not preserved byte for byte.
+Native Python floats/integers must not be substituted for source number
+tokens. The original input file remains the byte-level authority.
+
+`validate` returns a report explicitly scoped to `source_structure`, with
+`passed`/`failed`, ordered `failures`, separate `not_evaluated` entries,
+and `clinical_policy: not_evaluated`. Failures use the accepted code,
+scope and source-ID conventions, with a check name and path. Ordering follows
+declarations, subjects, pairs, then source records, in supplied order;
+field checks use the contract's fixed order, not object-key order.
+Unknown subject/parameter references are generic structural failures and
+suppress only dependent pair-membership checks. Known references to an
+undeclared pair yield `UNDECLARED_GROUP`, never a new group.
+
+The reference sheets remain hand expectations. Illustrations a–c pass source
+structure while their unit/tie/timestamp policy expectations remain unexecuted.
+The crossed pair fails the now implemented membership check. No structural
+success is a claim of clinical validation, derivation or R/SAS comparison.

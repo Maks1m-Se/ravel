@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 from .engine import csv_text, generate, run_metadata
+from .exports import validate_names
 from .recipe import MAX_BYTES, ValidationError, dumps, loads
 
 
@@ -16,8 +17,10 @@ def read_recipe(path):
 
 def write_outputs(input_path, csv_path, result):
     paths = [csv_path, csv_path.with_suffix(".recipe.json"), csv_path.with_suffix(".run.json")]
+    validate_names([path.name for path in paths])
     resolved = [path.resolve() for path in paths]
-    if len(set(resolved)) != len(paths) or input_path.resolve() in resolved:
+    portable_paths = [str(path).casefold() for path in resolved]
+    if len(set(portable_paths)) != len(paths) or str(input_path.resolve()).casefold() in portable_paths:
         raise ValueError("Output files must be distinct from one another and from the input recipe.")
     for path in paths:
         if path.exists():
@@ -69,6 +72,7 @@ def main(argv=None):
                 print('Ravel stopped.',flush=True)
             return 0
         if args.command == "sample":
+            validate_names([args.recipe.name])
             from .sample import profile
             with args.source.open("rb") as source:
                 payload = source.read(MAX_BYTES + 1)

@@ -4,6 +4,11 @@
   for (const event of ['focusin', 'pointerdown', 'keydown', 'input']) {
     document.addEventListener(event, () => { intent += 1; }, true);
   }
+  const owns = ticket => {
+    if (!ticket || ticket.intent !== intent) return false;
+    const action = document.getElementById(ticket.actionId);
+    return document.activeElement === document.body || action?.contains(document.activeElement);
+  };
   window.ravelEditFocus = {
     capture(actionId) {
       const action = document.getElementById(actionId);
@@ -11,9 +16,7 @@
     },
     async restore({ticket, identity, fallbacks}) {
       await Vue.nextTick();
-      if (!ticket || ticket.intent !== intent) return;
-      const action = document.getElementById(ticket.actionId);
-      if (document.activeElement !== document.body && !action?.contains(document.activeElement)) return;
+      if (!owns(ticket)) return;
       for (const id of [identity, ...fallbacks]) {
         const root = [...document.querySelectorAll('[data-editor]')].find(e => e.dataset.editor === id);
         const input = root?.matches('input, textarea, [role=checkbox], [role=combobox]') ? root : root?.querySelector('input, textarea, [role=combobox]');
@@ -27,6 +30,10 @@
         }
         return;
       }
+    },
+    async restoreTo(ticket, id) {
+      await Vue.nextTick();
+      if (owns(ticket)) document.getElementById(id)?.focus({preventScroll:true});
     },
   };
 })();

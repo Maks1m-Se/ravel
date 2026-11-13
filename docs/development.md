@@ -10,6 +10,8 @@ Current integration: [candidate, merge order and acceptance](integration-main.md
 Generic linked tables are now implemented. The older sections below are dated
 evidence records. Actual Pixel/Gboard testing was deferred on 29 October:
 not performed and not passed. Desktop maintainer acceptance remains separate.
+The separate [UX candidate](#workbench-ux-review-30-october-2026) uses the same
+environment; its local snapshot includes the unpublished interaction changes.
 
 ## Single-table source development
 
@@ -56,8 +58,9 @@ reports an error and removes only files it created during that failed write.
 This is not a crash-atomic multi-file filesystem transaction.
 
 The builder separates applied recipe, explicit drafts and immutable generated
-result. Apply commits table and selected-column edits atomically; selecting,
-adding, duplicating, generating or saving requires applied/discarded drafts.
+result. The separate UX candidate keeps drafts per field; field selection
+preserves them, while Apply commits all changed fields and table settings
+atomically. Adding, duplicating, generating or saving requires applied/discarded drafts.
 Changes mark previous data **Out of date**; CSV/run export requires a current
 matching result without drafts. Preview and CSV use the same cell serializer.
 Loading a valid recipe resets the layout and clears results; invalid and old
@@ -2273,3 +2276,389 @@ all three full logs explicitly record96 tests and OK. The macOS job completed
 after its initial queued readback. Local E66 evidence is preserved.
 A documentation-only follow-up does not require a deploy. PRs remain
 unmerged; no new service, binary build or subjective/device acceptance.
+
+## Workbench UX review (30 October 2026)
+
+Separate branch `feature/workbench-ux-2026-10-29`, based exactly on
+`eed69c60371ebeea0fa0faa17c11117ff7e04d9a`. The
+[interaction contract](single-table.md#workbench-interaction-candidate-2930-october-2026)
+describes whole-row selection, retained per-field drafts, manual keyboard
+selection, pending indicators, status ownership and portable download names.
+The engine, statistical/clinical rules, serializers, dependency locks and valid
+linked export filenames are unchanged. Render stays on79e44cb until review; do not use
+the live demo to accept these new interactions.
+
+The maintainer's earlier report covers only12 generated rows with seed42 and
+values0–20, Apply/Discard/reload, then20-row extension with12 unchanged originals,
+eight new rows and correct origins. It is attributed bounded evidence, not a
+new automated run or complete desktop acceptance. Device/browser/exact tested
+source were not supplied with that report. Pixel8/Gboard remains deferred and
+unperformed; no native OS chooser or cross-platform UI acceptance is inferred.
+
+### Reproduce the checks
+
+With the selected CPython3.14.8 UI/review environment, from this checkout:
+
+```powershell
+python -m unittest discover -s tests -v
+python scripts/check_personal_web.py --desktop --desktop-workflow ux --output outputs/ux-focused-new
+python scripts/check_personal_web.py --desktop --output outputs/ux-desktop-new
+python scripts/check_public_demo.py --output outputs/ux-public-new
+python scripts/build_dashboard.py
+python scripts/build_dashboard.py --check
+git diff --check
+```
+
+The focused UX workflow is part of `--workflow all`: rules, sample, extended,
+linked, pending, recovery and UX, each in Light/Dark at1366×657/1280×800.
+Servers are owned by the wrappers and stopped in their finally blocks; frozen
+manual-review instances are not used. Edge can run a focused case with the
+generator checker's `--channel msedge --smoke --workflow ux` on an owned test
+server. Use new output directories for every attempt.
+
+The keyboard workflow records zero pointer events after its mouse hit-target
+stage: configure → Apply → Generate → CSV/recipe download → recipe chooser/
+reload/replay → CSV import → extend. Enter opens the real browser file chooser;
+Playwright supplies its invented file path. This verifies keyboard access to
+the chooser, not operation of the native Windows file dialog by a human.
+
+### Required desktop acceptance
+
+Use the local UX candidate, not the unchanged Render deployment. Start it from
+this branch with `python -m ravel ui --port 8098`, then open
+http://127.0.0.1:8098/. A fixed local review snapshot and its exact identity are
+recorded with the final evidence below. At1366×657 and1280×800 in both themes:
+
+1. In Fields click name, rule, settings and free row area. Each should select
+   that field exactly once, show its Properties and keep list focus. Change
+   Maximum20, select id, change Start2, then select value again:20 must remain
+   pending. Apply commits both drafts; Discard restores all drafts together.
+2. Use only the keyboard: Tab/Shift+Tab between groups, arrows inside them,
+   Enter/Space to select/activate. Configure table `test_measurements`, Rows12,
+   Seed42, range0–20. Check stronger pending labels/dots/light tint with normal
+   numeric weight. Exact reversion removes the relevant marker. Apply, Generate
+   and export; expect `test_measurements.csv` and `.recipe.json`. Load that
+   recipe through the keyboard-opened chooser and reproduce the output.
+3. Try Minimum200/Maximum20 and Apply. Switch fields and return: drafts/error
+   survive. Apply from another field must reveal/focus the responsible field.
+   Edit a related bound: its old error clears while pending/export blocking
+   remain; unrelated edits must keep relevant errors. Correct and Apply.
+4. After Discard, start a new edit: the old success must no longer contradict
+   it. Check current/stale output, blocked CSV with any hidden draft, and
+   reachable actions. Text-caret selection and browser/OS modifier shortcuts
+   remain normal. Escape closes dialogs/menus without discarding edits; cancel
+   removal and check focus returns to its trigger. No extra Apply shortcut exists.
+5. Import the invented12-row CSV, confirm IDs and extend to20 total. Expect12
+   original cells/order unchanged, eight new rows, `retained`/`generated` origins
+   and an independently scrolling preview below the stable header/tabs. Try the
+   linked template/complete ZIP as a separate preservation check.
+
+Record exact snapshot/branch, OS/browser and accept/reject observations in the
+existing progress record. Successful automation and the bounded earlier manual
+test do not supply that maintainer decision. Do not merge existing PRs or update
+Render as part of this review.
+
+
+### Executed UX verification and fixed local review
+
+The E71 package was saved **uncommitted and unpublished** on the separate
+branch above. The 30 October 10:21 Berlin check fell inside the 08:00–16:30 restriction;
+the previous29October exception expired. The normal rule is recorded in the
+maintainer's personal AGENTS instructions. No commit/push/PR creation was
+performed in that session; publication was left for a later resume.
+
+Runtime fingerprint: `9489f3314c95a12ea18e97444b74b47b1f792313b0b331ac2c1b3d577b58a246`. Fixed manual snapshot **ux-E71-9489f3314c95**:
+**http://127.0.0.1:51272/**. This copies the checked code to a separate source
+root; automated browser checks never target that frozen instance. Identity,
+source archive, saved diff and per-file manifests stay under
+`C:/Git/ravel/outputs/ux-2026-10-29/`. The base remains eed69c6 plus explicitly
+saved changes, not an invented later commit. Start/stop details are in the local
+`review-info.json`/`REVIEW.txt`. The existing older manual review roots and dirty
+worktrees are preserved.
+
+Actual Windows source environment: CPython3.14.8 x64/GIL, NiceGUI3.18.0,
+Playwright1.58.0, Chrome156.0.8078.73, Edge156.0.4314.50.
+
+| Check | Actual scope/result |
+| --- | --- |
+| Units | 102 pass, including six added methods and changed retained-selection regression; atomic multi-field failure, hidden drafts/exact revert/discard, format promotion, source-ID reconfirmation and portable names. |
+| Full Chrome matrix | 28 pass: seven workflows × two themes × two laptop sizes; zero page errors/external HTTP/WebSockets. |
+| Independent Edge UX | Four pass in both themes/sizes; zero page errors/external browser requests. |
+| New keyboard flow | Configure/Apply/Generate/named CSV+recipe/keyboard-opened chooser/reload/replay/import/extend, zero pointer events after the separate mouse stage. IDs2–13/range0–20; all12 source rows retained cell-wise plus eight generated IDs14–21. |
+| Local public hosting | Five pass, covering controls/mobile emulation, uploads/downloads/sessions, HTTP/WebSockets and source/cell limit recovery. |
+| Local protected hosting | Two pass with random invented credentials in memory only; real protected upload/download/socket workflows and separate contexts. |
+| Paired-session download probe | 24 Edge recipe downloads preserve alpha/beta content and filenames across two sessions. |
+
+An initial optional Edge smoke on the shared test server unexpectedly received
+`untitled_table.recipe.json` instead of `test_measurements.recipe.json`. It was
+not reproduced by the independent four-case Edge run or the24-download paired
+probe. Its cause remains unresolved; no filename/session fix is claimed for
+that observation. Keep `edge-smoke` alongside passing `edge-independent` and
+`download-sessions-before`. Verify this in maintainer desktop review; passing
+reruns do not erase the earlier failure. A diagnostic improvement saves future
+download bytes before checking the suggested name.
+
+Earlier attempts are also retained: four expected base draft-transition
+failures; old focus/button-role expectations after field selection; a checkbox
+whose accessible name included a textual CSS dot (replaced by an empty CSS
+shape/stable name); and a preview selector that also counted hidden source
+rows. Actual capture review found the middle heading could partly scroll away
+when a long preview received focus. Desktop pane scrolling now confines result
+overflow; the final heading-visible/zero-sheet-scroll assertions pass.
+The first-import Python JS-regex SyntaxWarning in the pre-existing shared
+helper is not an application failure and was not claimed fixed.
+
+Final unaltered captures:
+[Light pending](images/workbench-ux-light-pending.png),
+[Dark pending](images/workbench-ux-dark-pending.png),
+[actual12-row result](images/workbench-ux-generated.png), and
+[Dark12+8 extension](images/workbench-ux-extended-dark.png).
+The final refresh also checks102 units, regenerated dashboard/freshness,
+documentation links, pip consistency and whitespace. There is no new hosted CI
+until publication and no deployment/native/clinical/full desktop acceptance.
+
+
+Final style verification found that the pre-existing input background used
+`!important`, overriding the first pending-tint rule. `tint-before` reproduces
+the missing tint with equal white backgrounds. The corrected priority now
+passes an actual pending-versus-unchanged background assertion. Minimum pending
+label/value contrast: Light **6.23:1**, Dark **5.54:1**;
+numeric weight400, pending label650, visible5px dot. The unchanged Fichte input
+border token against the selected tint is3.36:1 Light/3.19:1 Dark.
+
+After that correction, `full-final` passes all28 Chrome cases, `edge-final` all
+four Edge cases, `public-final` all five and `protected-final` both cases, all on
+the same15-file runtime map above. Earlier runs retain their actual earlier
+source hashes; the final records do not count failed attempts as passes.
+
+## Export review follow-up
+
+The original UX source branch starts at `eed69c60371ebeea0fa0faa17c11117ff7e04d9a`.
+That repaired package has 16 runtime files, fingerprint
+`8b8545c2cb37156cd4b2215e5ec74816e6420c1b4730cc467703f6f1d7d48181`.
+The earlier E71 snapshot remains on http://127.0.0.1:51272/ with its original
+sources and is only for the earlier UX state.
+
+### Edge investigation
+
+The original failure screenshot shows `Untitled table`, Rows 1,000, Seed 17,
+and no result, even though the preceding CSV has the expected 12 rows and
+`test_measurements.csv` name. `untitled_table.recipe.json` fits the workspace
+shown in the screenshot. The original check asserted the filename before
+saving its bytes; the failed recipe content and navigation/client trace were
+not recorded. The screenshot supports a workspace reset; it cannot identify
+what triggered it.
+
+In Edge and Chrome, in Light and Dark at 1366 × 657, the targeted check loads
+`alpha_measurements` (12 rows, seed 42) and then `beta_samples` (7 rows, seed 17)
+in one client. It compares actual CSV and recipe filenames and JSON content,
+applies a rename to `renamed_beta`, blocks an unapplied rename from export,
+and verifies Discard returns to the applied name. Client IDs and server
+download events agree with the browser records. A held upload proves a stale
+`Recipe loaded` message can satisfy the old status-only wait while the previous
+recipe is still active. That gap is fixed by waiting for the dialog to close
+and the expected applied name. It does not explain the original failure,
+which happened before the first recipe upload.
+
+A controlled reload immediately after a correct CSV download produces a new
+client and the same default name/state pattern; its saved JSON is the default
+1,000-row, seed-17 recipe. The revised check refuses the next download when the
+client changes. It records main-frame navigation and reconnect messages and
+saves received bytes before asserting their name. No product filename fix is
+claimed for the original incident, and its trigger remains unknown.
+
+### Windows reproduction and repair
+
+On Windows 11 build 26300 / CPython 3.14.8, an isolated archive of `eed69c6`
+reported both `DATA.csv` and `data.csv` successfully written. Both CLI output
+and ZIP extraction retained just one CSV containing the second table. The
+filesystem case probe verified that the two names resolve to the same file.
+`CON.csv` was written and extracted successfully on this host, although
+Windows documents it as a reserved name. The candidate refuses both unsafe
+sets before writing; both CLI invocations exit 2 with no destination or
+staging artifacts. The recipe/CSV hashes for both fixtures are unchanged.
+For the ordinary Devices/Measurements example, all five payloads and the
+complete ZIP are byte identical to the base, and Windows extraction produces
+both CSVs and all three metadata files.
+
+Actual error captures with the current preview preserved:
+[Light: case collision](images/export-collision-light.png) and
+[Dark: reserved name](images/export-reserved-dark.png).
+Raw before/after records, original failure and intermediate harness failures
+remain under `outputs/bounded-review-2026-10-30/` and `outputs/ux-2026-10-29/`.
+
+```powershell
+python -m unittest discover -s tests -v
+python scripts/check_export_browser.py --channel msedge --output outputs/export-edge-new
+python scripts/check_export_browser.py --channel chrome --output outputs/export-chrome-new
+python scripts/check_personal_web.py --desktop --output outputs/export-desktop-new
+```
+
+### Short joint acceptance
+
+Recovery on 13 November confirms that the 10 November full Chrome run finished:
+28 cases, Chrome 157.0.8103.40, both themes and both window sizes, zero page
+errors or external HTTP/WebSockets. All 16 runtime hashes equal this candidate.
+The four Edge UX and four export cases per browser from 30 October also match.
+The fresh 108-unit run, dashboard, local links and whitespace are checked again
+with this handoff; previous interrupted/failed runs remain separate. No confirmed
+remaining defect requires a further UX implementation step. The original Edge
+reset trigger remains an explicit uncertainty, not a claimed fix.
+
+The 13 November recovery began inside the Berlin publishing restriction. The
+branch and Draft PR text are prepared locally; no commit or remote PR exists
+at this handoff. Publication must recheck the live time on a permissible resume.
+
+Open the repaired snapshot at http://127.0.0.1:51273/ in Edge, or start this
+checkout with `python -m ravel ui --port 8098` and use http://127.0.0.1:8098/.
+Record the browser, snapshot and any unexpected reload. This is separate from
+the automated results and from the earlier bounded 12+8 manual report.
+
+1. Set the name to `test_measurements`, Rows 12, Seed 42 and Maximum 20.
+   Check row selection, retained drafts and pending markers in a short
+   window. Use Tab, arrows and Enter to Apply, Generate, Export CSV and
+   Save recipe. Expect the two `test_measurements` filenames, 12 rows and
+   the applied name/seed in JSON. Load the saved recipe and compare the CSV.
+2. Open [the hand-worked recipe](../examples/three-rows.recipe.json) in the same
+   tab. Save as `hand_worked_reference.recipe.json`; rename to `renamed_reference`
+   and Apply. The next JSON must use that name in the file and recipe. Edit the
+   name again without Apply: Save recipe must refuse, and Discard must restore
+   the last applied name. Repeat the focus/marker observation in the other theme.
+3. Load the invented [case collision](../tests/fixtures/exports/casefold.recipe.json)
+   and [reserved name](../tests/fixtures/exports/reserved.recipe.json) recipes.
+   Generate each. CSV and ZIP must show the names in the refusal message and
+   create no download, while the preview and recipe save remain available.
+   The normal Devices/Measurements template must still export both CSVs in
+   its ZIP. The earlier full UX acceptance steps cover the separate 12+8 extension.
+
+Record the maintainer decision in `progress.json`. The real Pixel 8/Gboard
+test remains deferred, not performed and not passed.
+
+## Clinical source foundation
+
+The foundation was developed on `feature/clinical-source-contract-2026-11-13`
+from integration `eed69c60371ebeea0fa0faa17c11117ff7e04d9a`.
+Its original independent package and the UX/export candidate are preserved.
+The latter is on `feature/workbench-ux-2026-10-29`, with its 108-unit and
+source-matched 28-case Chrome / four-case Edge UX / eight targeted export
+checks recorded there. The internal foundation changes no generic engine,
+recipe loader, UI, dependencies, deployment or source-review JSON fixtures.
+
+The [contract](clinical-template-preparation.md#internal-source-contract)
+separates lossless JSON parsing, source structure checks and future clinical
+policy. From this worktree with the existing source interpreter:
+
+```powershell
+python -m unittest discover -s tests -p test_clinical_source.py -v
+python scripts/check_clinical_review.py
+python -m unittest discover -s tests -v
+python scripts/build_dashboard.py
+python scripts/build_dashboard.py --check
+git diff --check
+```
+
+The reference checker compares all 14 C1–C4 source rows to the accepted written
+Markdown table rows, plus hand-established dose/baseline/target/result/reason
+references. It checks adapter preservation and round trips across eight case
+sheets. C1/C2 retain expected changes 3; C3 retains missing baseline/change and
+the excluded at-dose record; C4 retains expected change 5 and its excluded
+boundary. These are transcription checks, never production derivation results.
+
+The three negative unit/tie/time illustrations pass only source structure.
+Their clinical failures and skipped-check expectations remain reference data.
+The crossed pair is rejected by the implemented membership check with X-M1
+and the supplied S-A/BX-2 scope. Malformed source boundaries distinguish absent
+values, explicit null and wrong types, reject duplicate JSON keys, report
+broken references, and preserve extreme numeric token spellings without
+adopting the proposed range/scale policy.
+
+Executed with CPython 3.14.8: 13 focused contract tests and all 109 repository
+tests pass. No new browser matrix is needed for this internal-only change;
+the unchanged generic/UI sources retain their existing evidence. No clinical
+policy validation, arithmetic, R/SAS comparison, standards qualification or
+maintainer acceptance has been executed.
+
+### Required foundation review
+
+Run `python scripts/check_clinical_review.py`; expect 14 reference records,
+eight source cases, and explicit `clinical_policy: not_evaluated` /
+`derivation: not_implemented`. Inspect the contract and
+`tests/test_clinical_source.py`: the crossed pair must fail with X-M1,
+while malformed timestamp text and mismatched unit remain unchanged for
+future policy checks. Review this boundary and the separate UX acceptance;
+record the maintainer decision in progress.json. Numeric implementation
+still requires explicit adoption or amendment of the proposed numeric policy.
+
+## Combined candidate review
+
+`integration/ux-clinical-2026-11-13` combines the saved UX/export and clinical
+source packages from `eed69c60371ebeea0fa0faa17c11117ff7e04d9a`.
+Original worktrees, uncommitted changes, E71/E73 review servers and reference
+JSON files are preserved. Tracking retains E70–E74 and both pending reviews;
+the dashboard is regenerated. All implementation files retain their input
+package content; only documentation/tracking overlaps needed resolution.
+
+The 19 runtime files have SHA256 fingerprint
+`99a3410894cf8d711e93323670c1893233db50f10e73079beb1b59a33f9a46d4`.
+The local review bundle records the exact commit, full file manifest,
+base-to-candidate diff and standalone source archive under
+`outputs/ux-clinical-integration-2026-11-13/`.
+The fixed combined review URL is **http://127.0.0.1:51274/**.
+
+### Combined verification
+
+| Check | Result on the combined sources |
+| --- | --- |
+| Complete unit suite | 121 passed, including tracking, generic generation/session/CLI and mocked packaging checks. |
+| Clinical contract | All 13 new tests passed; original numeric-token spellings, provenance, ordering and round trip, precise undeclared-pair rejection and public-loader isolation. |
+| References | Fourteen source rows agree with accepted written tables; eight source cases retain the hand expectations, with clinical policy explicitly not evaluated. |
+| Portable export | Six targeted tests passed; reserved/colliding names refused without partial output and compatible IDs/values retained. |
+| Chrome UX | Four new cases, both themes at 1366 × 657 and 1280 × 800; mouse row targets followed by keyboard-only configure/Apply/generate/export/chooser/reload/import/12+8 extension. Zero page errors or external HTTP/WebSockets; Chrome 157.0.8103.51. |
+| Edge exports | Four new cases at 1366 × 657; sequential named recipe/CSV, Apply rename, pending refusal/Discard, held-upload barrier, controlled reload/client guard and unsafe CSV/ZIP refusal. Zero page errors; Edge 157.0.4341.46. |
+| Reused browser evidence | Other 24 workflows/cases from the 10 November full matrix retain all 16 relevant runtime hashes. The only added runtime files are the three internal clinical modules, not selected by the UI. This is reused evidence from Chrome 157.0.8103.40, not a new 28-case run. |
+
+Actual combined captures:
+[Light generated table](images/combined-review-light.png) and
+[Dark retained/extended table](images/combined-review-dark.png).
+Earlier failures remain in the original evidence folders. The initial file-merge
+helper also stopped on a multi-conflict return count; its saved overlap inputs
+are retained. This did not alter either input worktree.
+
+The original intermittent Edge workspace reset is not labelled fixed. Its
+trigger is unknown. Visual acceptance, actual Pixel/Gboard, native/offline
+installation and clinical-policy/derivation/R-SAS checks remain unperformed
+or pending as specified. No numeric policy is adopted.
+
+### Combined manual acceptance
+
+1. Open the fixed URL in Edge, choose Create table, and use a short window.
+   Set name `test_measurements`, Rows 12, Seed 42 and Maximum 20. Click different
+   field-row surfaces; edit another field and return. Drafts must survive and
+   only changed settings show pending dots/tint.
+2. Use Tab/arrows/Enter to Apply, Generate, Export CSV and Save recipe.
+   Expect `test_measurements.csv` and `test_measurements.recipe.json`.
+   Reload the recipe and reproduce the CSV. Rename with Apply and check the
+   new filename/JSON name; an unapplied rename must block save/export until
+   Apply or Discard. Repeat the focus/marker observation in Dark.
+3. Load [case collision](../tests/fixtures/exports/casefold.recipe.json), then
+   [reserved name](../tests/fixtures/exports/reserved.recipe.json). Generate each;
+   selected CSV and ZIP must refuse with the relevant names and no download.
+   The normal Devices/Measurements template must still produce its full ZIP.
+4. From the candidate source run `python scripts/check_clinical_review.py`.
+   Expect 14 records, eight source cases, `clinical_policy: not_evaluated` and
+   `derivation: not_implemented`. Review the
+   [clinical contract](clinical-template-preparation.md#internal-source-contract)
+   and 13 tests. No clinical template should appear in the UI.
+
+Record UX and source-contract acceptance separately in progress.json.
+
+### Publication recommendation
+
+The integration base is already published. Push the reviewed combined branch
+and open **one Draft PR against `integration/main-2026-10-29`**, using the prepared
+bundle text. The two uncommitted source branches are preserved inputs, not
+additional PR dependencies. Keep the original nine-PR stack unmerged and follow
+[its existing order](integration-main.md) when the maintainer later authorizes
+integration. The base must be present in main before retargeting this combined
+PR to main. No merge, readiness change, hosting update or binary publication is
+authorized by preparation of this candidate.

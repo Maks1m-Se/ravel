@@ -127,6 +127,13 @@ from the structural request, without executing generation or clinical derivation
 
 ## Ownership boundary
 
+The bounded [internal clinical source contract](clinical-template-preparation.md#internal-source-contract)
+now accepts explicitly supplied ordered records outside the fixed-count
+generic generator. Its parser retains numeric tokens; its checks cover source
+structure and explicit pair membership only. Clinical validation and derivation
+remain unimplemented. The reference adapter performs explicit field mapping
+and preserves provenance, without changing the generic recipe loader.
+
 | Owner | Responsibilities |
 | --- | --- |
 | General engine | Generic counts, typed fields, keys, relationship expansion, distributions, random streams, explicit constraints, recipe/input validation, and structural output validation; reject unsupported or infeasible requests clearly without silently relaxing rules or returning successful partial output |

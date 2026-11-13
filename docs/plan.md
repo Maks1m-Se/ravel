@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 6 · 29 October 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 10 · 13 November 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -83,6 +83,25 @@ existing worktrees, Free demo and historical evidence. Clinical policy,
 native/offline/platform and binary-redistribution gates retain their original
 scope; source integration does not accept any of them.
 
+**Workbench UX package, 29–30 October 2026.** Implement the approved interaction
+package separately from integration/main-2026-10-29 at eed69c6: whole-row field
+selection with retained drafts, conventional scoped keyboard groups/focus,
+per-setting pending indicators, fresh status messages and table-based download
+names. Keep generation semantics, Fichte styling, existing worktrees, draft PRs
+and live deployment unchanged. Verify actual Light/Dark pointer/keyboard flows,
+short laptop height, import/extension, error recovery and export blocking; provide
+actual captures and a separate draft PR under the publishing time rule. The
+maintainer's12-row/seed42/range0–20 and12+8 extension report is bounded evidence,
+not complete desktop acceptance. Details: [single-table contract](single-table.md#workbench-interaction-candidate-2930-october-2026).
+
+**Bounded export follow-up.** Preserve the UX candidate and its test instance.
+Investigate the isolated Edge recipe download with applied-name, client and
+content checks. Prevent Windows filename collisions and reserved names before
+CSV, ZIP and CLI writes. Keep valid files, stable IDs and generated values.
+Verify on the Windows filesystem and in the workbench. The separate PR stays
+draft; desktop acceptance is still a maintainer decision, with no merge or
+live deployment in this package.
+
 **Community add-ons.** Preserve a small boundary between core generation and domain rules now. Keep the clinical module in the same repository and distribution initially. Avoid a plugin loader, registry, or public API stability promise before real extension needs are understood.
 
 | Stage | Extension capability | Completion evidence |
@@ -96,6 +115,14 @@ Recipe packs are declarative and validated; importing them must not execute arbi
 Python packaging already provides entry points for discovering installed extensions, so a future loader can use that standard mechanism.[5] Executable extensions run code with the application's permissions; enable them explicitly from trusted packages, including offline installation. Do not describe them as sandboxed. Community contributions can begin earlier with cases, recipes, bug reports, documentation, and platform testing.
 
 **Milestones.** Each milestone produces something runnable or reviewable. Testing accompanies implementation throughout.
+
+**Bounded clinical source foundation, 13 November 2026.** After recovery of the
+separate UX/export candidate, define an internal supplied-record contract,
+lossless numeric-token boundary and structural reference/pair checks. Preserve
+the four accepted cases and negative illustrations as hand reference data.
+Keep the numeric policy pending and implement no clinical arithmetic, generator,
+public template, standards importer or extension framework. Foundation checks
+do not complete M1, the clinical module or the release gates.
 
 | Milestone | Deliverable | Exit condition |
 | --- | --- | --- |
@@ -230,7 +257,7 @@ At the end of each working week, check one runnable example when one exists, the
 | docs/validation.md | Release criteria, reproducible verification commands, results and limitations |
 | SECURITY.md and CODE_OF_CONDUCT.md | Real reporting/contact routes and concise community expectations, before inviting contributions |
 | examples/ and tests/ | Runnable invented examples and small reviewed reference fixtures |
-| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 6) |
+| docs/plan.md | Maintained scope, milestones, acceptance criteria, and release gates (planning revision 7) |
 | docs/progress.json | Authoritative milestone/task status, evidence, blockers, and next action |
 | docs/decisions.md | Significant agreed decisions and visibly unresolved choices |
 | [docs/development.md](development.md) | Dashboard usage, maintenance, verification commands and contributor/release preparation |

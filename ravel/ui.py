@@ -11,6 +11,7 @@ from .engine import generate, preview_rows, run_metadata
 from .recipe import MAX_BYTES, ValidationError, loads
 from .sample import assumption_origin, context as sample_context, parse_csv, profile
 from .workspace import Workspace, field_form, whole
+from .downloads import table_stem
 from .dataset import template as devices_template
 from .web import DEMO_ROWS, DemoCapacity, check_demo_source
 
@@ -89,6 +90,7 @@ def chrome(theme, *, workbench=False):
     with ui.dialog() as session_dialog, ui.card().classes("session-dialog"):
         ui.label("Session help").classes("section-title")
         ui.label("State is local to this page. Apply or discard pending edits before generating or saving. Exact quotas and linked tables are available. Save your recipe and CSV or dataset ZIP before closing. Run records include the generating environment and checksums.").classes("help")
+        ui.label('Keyboard: Tab / Shift+Tab between controls and groups. Up/Down in Fields; Left/Right in tabs and action bars; Home/End at either edge. Enter/Space selects or activates. Field and tab selection is explicit. Escape closes a popup; it never discards edits. Apply/Discard have no extra global shortcuts.').classes('help')
         action("Close help", "close", session_dialog.close, "Return to the workbench")
     with ui.element("header").classes("toolbar"):
         mark = ui.element("img").classes("mark").props(
@@ -147,12 +149,15 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     choice = chrome(theme, workbench=True)
     ui.add_head_html("<script>" + (STATIC / "layout.js").read_text(encoding="utf-8") + "</script>")
     ui.add_head_html("<script>" + (STATIC / "edit_focus.js").read_text(encoding="utf-8") + "</script>")
+    ui.add_head_html("<script>" + (STATIC / "workbench_keyboard.js").read_text(encoding="utf-8") + "</script>")
     ui.add_head_html('''<script>
         window.addEventListener('beforeunload', e => {
             if (window.ravelUnsaved) { e.preventDefault(); e.returnValue = ''; }
         });
     </script>''')
     controls, table_controls, errors, marks = {}, {}, {}, {}
+    draft_controls = {}
+    field_rows = {}
     view_buttons = {}
     active_view = "Fields"
     busy = False
@@ -204,6 +209,18 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             applied = field_form(state.field)
             for key, mark in marks.items():
                 mark.set_visibility(state.field_draft.get(key) != applied.get(key))
+        table_applied = state.table_form()
+        for key, control in draft_controls.items():
+            mark_pending(control, state.field_draft.get(key) != field_form(state.field).get(key))
+        for key, control in table_controls.items():
+            form_key = {'table_name':'name', 'table_row_count':'row_count', 'table_primary_key':'primary_key'}.get(key, key)
+            mark_pending(control, state.table_draft.get(form_key) != table_applied.get(form_key))
+        for identity, row in field_rows.items():
+            pending_field = state.field_pending(identity)
+            row.props(f'aria-selected={str(identity == state.selected).lower()}')
+            row.classes(add='selected-row' if identity == state.selected else '', remove='' if identity == state.selected else 'selected-row')
+            row.classes(add='draft-row' if pending_field else '', remove='' if pending_field else 'draft-row')
+            row.props('aria-description="Unapplied changes"' if pending_field else '', remove='' if pending_field else 'aria-description')
         if table_name_label is not None:
             table_name_label.set_text(state.table["name"])
         if sample_summary is not None:
@@ -217,6 +234,21 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             if table_controls['table_primary_key'].options!=options:
                 table_controls['table_primary_key'].set_options(options)
         client.run_javascript(f"window.ravelUnsaved = {json.dumps(bool(state.has_unsaved))};")
+
+    def mark_pending(control, pending):
+        control.classes(add='has-draft' if pending else '', remove='' if pending else 'has-draft')
+        control.props(f'data-draft={str(pending).lower()}')
+        control.props('aria-description="Unapplied change"' if pending else '', remove='' if pending else 'aria-description')
+
+    def visible_editor(identity):
+        return next(((key, control) for key, control in {**controls, **table_controls}.items()
+                     if control._props.get('data-editor') == identity), (None, None))
+
+    def restore_errors():
+        for identity, error in validation_errors.items():
+            key, control = visible_editor(identity)
+            if control is not None:
+                set_error(key, control, error['message'])
 
     def wire_error(key, control):
         control.without_auto_validation()
@@ -243,15 +275,17 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
 
     def wire_editor(key, control, column=False):
         control.props(f'data-editor={editor_identity(key, column)}')
+        if column:
+            draft_controls[key] = control
 
     def clear_edited_errors(identity):
-        for key, dependencies in list(validation_errors.items()):
-            if identity in dependencies:
-                control = {**controls, **table_controls}.get(key)
+        for error_identity, error in list(validation_errors.items()):
+            if identity in error['dependencies']:
+                key, control = visible_editor(error_identity)
                 if control is not None:
                     set_error(key, control)
-                del validation_errors[key]
-                if reported_error_key == key:
+                del validation_errors[error_identity]
+                if reported_error_key == error_identity:
                     report('')
 
     async def restore_editor_focus(ticket):
@@ -286,16 +320,16 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         if exc.path == "seed":
             key = "seed"
         elif exc.path.startswith("table.fields."):
+            index = int(exc.path.split(".")[2])
+            field = state.table["fields"][index]
+            if field['id'] != state.selected:
+                state.select(field['id'])
+                await properties.refresh()
             key = exc.path.rsplit(".", 1)[-1]
             if key in {"values", "probabilities"}:
                 key = "categories"
             elif key in {"counts", "unique"}:
                 key = "quotas" if key=="counts" else "maximum" if "maximum" in controls else "table_row_count"
-            index = int(exc.path.split(".")[2])
-            field = state.table["fields"][index]
-            if field["id"] != state.selected:
-                report(f'Column “{field["name"]}”: {exc.message}', True)
-                key = "table_row_count"
         else:
             key = "table_" + exc.path.rsplit(".", 1)[-1]
         control = {**controls, **table_controls}.get(key)
@@ -317,8 +351,9 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     dependencies.update([editor_identity('row_count'), editor_identity('mode')])
             else:
                 dependencies = {editor_identity({'table_name':'name', 'table_row_count':'row_count', 'table_primary_key':'primary_key'}.get(key, key))}
-            validation_errors[key] = dependencies
-            reported_error_key = key
+            identity = control._props['data-editor']
+            validation_errors[identity] = dict(dependencies=dependencies, message=exc.message)
+            reported_error_key = identity
             await focus_control(control)
         update_state()
 
@@ -328,7 +363,12 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         if state.field_draft.get(key) != value:
             last_edited = editor_identity(key, True)
             clear_edited_errors(last_edited)
-        state.field_draft[key] = value
+            if not reported_error:
+                report('')
+        if key == 'unique' and value == 'False' and 'unique' not in state.field:
+            state.field_draft.pop(key, None)
+        else:
+            state.field_draft[key] = value
         update_state()
 
     def edit_table(key, value):
@@ -337,6 +377,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         if state.table_draft.get(key) != value:
             last_edited = editor_identity(key)
             clear_edited_errors(last_edited)
+            if not reported_error:
+                report('')
         state.table_draft[key] = value
         update_state()
 
@@ -344,6 +386,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         nonlocal last_edited
         last_edited = editor_identity('kind', True)
         clear_edited_errors(last_edited)
+        if not reported_error:
+            report('')
         state.change_kind(event.value)
         await properties.refresh()
         update_state()
@@ -363,8 +407,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         if state.is_dataset:
             await navigation.refresh()
             await relationships.refresh()
-        if "sample" in state.recipe or state.is_dataset:
-            await properties.refresh()
+        await properties.refresh()
         update_state()
         report("Changes applied. Generate to update the result.")
         await restore_editor_focus(ticket)
@@ -377,6 +420,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         for key, control in table_controls.items():
             control.set_value(state.table_draft[{'table_name':'name','table_row_count':'row_count','table_primary_key':'primary_key'}.get(key,key)])
         await properties.refresh()
+        await definitions.refresh()
         clear_errors()
         update_state()
         report("Unapplied edits discarded.")
@@ -391,13 +435,14 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         except ValidationError as exc:
             await show_error(exc)
             return
-        await definitions.refresh()
+        if identity is None:
+            await definitions.refresh()
         await properties.refresh()
+        restore_errors()
         update_state()
-        report("Column selected." if identity else {
-            "add": "Column added.", "duplicate": "Column duplicated.", "remove": "Column removed."
-        }[operation])
-        await focus_control(controls["name"])
+        if identity is None:
+            report({'add': 'Column added.', 'duplicate': 'Column duplicated.', 'remove': 'Column removed.'}[operation])
+            await focus_control(controls['name'])
 
     async def confirm_remove():
         try:
@@ -423,6 +468,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             return
         if busy:
             return
+        ticket = await client.run_javascript(f'window.ravelEditFocus.capture({json.dumps(generate_button.html_id)})')
         busy = True
         generate_button.disable()
         update_state()
@@ -440,6 +486,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             busy = False
             generate_button.enable()
             update_state()
+            await client.run_javascript('window.ravelEditFocus.restoreTo(' + json.dumps(ticket) + ', ' + json.dumps(view_buttons[active_view].html_id) + ')')
 
     async def save():
         try:
@@ -447,7 +494,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         except ValidationError as exc:
             await show_error(exc)
             return
-        ui.download.content(payload, filename="dataset.recipe.json" if state.is_dataset else "table.recipe.json", media_type="application/json")
+        ui.download.content(payload, filename="dataset.recipe.json" if state.is_dataset else table_stem(state.table['name']) + '.recipe.json', media_type="application/json")
         state.mark_saved()
         update_state()
         report("Recipe saved.")
@@ -458,7 +505,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         except ValidationError as exc:
             await show_error(exc)
             return
-        ui.download.content(payload.encode("utf-8"), filename=state.table_id+'.csv' if state.is_dataset else "table.csv", media_type="text/csv")
+        ui.download.content(payload.encode("utf-8"), filename=state.table_id+'.csv' if state.is_dataset else table_stem(state.table['name']) + '.csv', media_type="text/csv")
         state.mark_exported()
         update_state()
         report(f"Exported {len(state.table_result.rows):,} rows.")
@@ -479,7 +526,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             await show_error(ValidationError("result", "Generate a current result before saving its run record."))
             return
         payload = dict(run_metadata(state.result), recipe=json.loads(state.result.recipe_json))
-        ui.download.content(json.dumps(payload, indent=2), filename="dataset.run.json" if state.is_dataset else "table.run.json", media_type="application/json")
+        ui.download.content(json.dumps(payload, indent=2), filename="dataset.run.json" if state.is_dataset else table_stem(state.table['name']) + '.run.json', media_type="application/json")
         report("Run record saved with the exact recipe and CSV checksum.")
 
     async def load_file(event):
@@ -604,12 +651,12 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             sample_delimiter = ui.select({',':'Comma', ';':'Semicolon', '\t':'Tab'}, value=',', label="CSV delimiter", on_change=delimiter_changed).props("outlined dense options-dense")
             sample_error = ui.label("").props("role=alert").classes("error")
             sample_uploader = ui.upload(label="Choose sample CSV", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
-                on_upload=sample_file, on_rejected=lambda: sample_error.set_text("Choose a UTF-8 CSV no larger than 1 MiB.")).props("accept=.csv,.tsv")
+                on_upload=sample_file, on_rejected=lambda: sample_error.set_text("Choose a UTF-8 CSV no larger than 1 MiB.")).props('accept=.csv,.tsv data-file-label="Choose sample CSV"')
             sample_review()
             ui.label("Suggestions describe this sample. Review ranges and frequencies; generation treats columns independently.").classes("help")
         with ui.element('div').classes('sample-actions').props('role=group aria-label="Import confirmation"'):
             confirm_ids = ui.checkbox("Use the displayed sequential identifier rules", value=False)
-            with ui.row():
+            with ui.row().props('role=group aria-label="Import actions" data-ravel-roving=horizontal'):
                 use_sample = action("Use sample", "check", use_import, "Replace current table with the reviewed sample and assumptions", True)
                 use_sample.disable()
                 action("Cancel import", "close", sample_dialog.close, "Keep the current table and edits")
@@ -622,12 +669,12 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         load_error = ui.label("").props("role=alert").classes("error")
         uploader = ui.upload(label="Choose recipe JSON", auto_upload=True, max_files=1, max_file_size=MAX_BYTES,
                              on_upload=load_file,
-                             on_rejected=lambda: load_error.set_text("Choose a JSON recipe no larger than 1 MiB.")).props("accept=.json")
+                             on_rejected=lambda: load_error.set_text("Choose a JSON recipe no larger than 1 MiB.")).props('accept=.json data-file-label="Choose recipe JSON"')
         action("Cancel", "close", load_dialog.close, "Keep the current table")
     with ui.dialog() as remove_dialog, ui.card().classes("remove-dialog"):
         ui.label("Remove column?").classes("section-title")
         remove_note = ui.label("").classes("help")
-        with ui.row():
+        with ui.row().props('role=group aria-label="Removal actions" data-ravel-roving=horizontal'):
             action("Cancel removal", "close", remove_dialog.close, "Keep the column")
             action("Remove column", "delete_outline", remove, "Confirm removal")
 
@@ -644,7 +691,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     with ui.dialog() as leave_dialog, ui.card().classes("leave-dialog"):
         ui.label("Leave this table?").classes("section-title")
         ui.label("Unsaved settings, edits or output will be lost. Save your recipe and export current data to keep them.").classes("help")
-        with ui.row():
+        with ui.row().props('role=group aria-label="Leave actions" data-ravel-roving=horizontal'):
             action("Keep editing", "edit", leave_dialog.close, "Stay with this table")
             action("Leave table", "home", leave_table, "Discard unsaved work and return Home")
 
@@ -730,13 +777,13 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         rel_per=ui.input('Rows per parent',value='2',on_change=preview_relationship).props('outlined dense')
         rel_counts=ui.label('').classes('relationship-counts').props('role=status')
         rel_error=ui.label('').classes('error').props('role=alert')
-        with ui.row():
+        with ui.row().props('role=group aria-label="Relationship actions" data-ravel-roving=horizontal'):
             rel_apply=action('Apply relationship and counts','check',apply_relationship,'Apply the parent link and every displayed row count',True)
             action('Cancel relationship','close',relationship_dialog.close,'Keep the current recipe and counts')
         ui.label('Remove also removes this table’s Parent key and Child row index columns. Save the current recipe first to keep the relationship.').classes('help')
         rel_remove=action('Remove relationship','link_off',remove_relationship,'Remove the link and its derived columns after reviewing this notice')
 
-    with ui.element("nav").classes("action-toolbar").props('aria-label="Table actions"'):
+    with ui.element("nav").classes("action-toolbar").props('role=toolbar aria-label="Table actions" data-ravel-roving=horizontal'):
         with ui.link(target=f"/?theme={choice.value.lower()}").classes("home-link") as home_link:
             ui.icon("home").props("aria-hidden=true")
             ui.label("Home")
@@ -760,7 +807,9 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         source_region.set_visibility(view == "Source")
         relationships_region.set_visibility(view=='Relationships')
         for name, button in view_buttons.items():
-            button.props(f"aria-pressed={str(name == view).lower()}")
+            panel = {'Fields':fields_region, 'Preview':preview_region, 'Source':source_region, 'Relationships':relationships_region}[name]
+            button.props(f'aria-selected={str(name == view).lower()} aria-controls={panel.html_id} tabindex={0 if name == view else -1}')
+            panel.props(f'role=tabpanel aria-labelledby={button.html_id}')
             button.classes(add="active-view" if name == view else "", remove="" if name == view else "active-view")
 
     @ui.refreshable
@@ -796,22 +845,29 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
 
     @ui.refreshable
     def definitions():
-        with ui.element("table").classes("definition-table generator-definitions"):
-            with ui.element("thead"), ui.element("tr"):
+        field_rows.clear()
+        with ui.element("table").classes("definition-table generator-definitions").props('role=presentation'):
+            with ui.element("thead").props('aria-hidden=true'), ui.element("tr"):
                 for title in ["Column", "Rule", "Applied settings"]:
                     with ui.element("th").props("scope=col"):
                         ui.label(title)
-            with ui.element("tbody"):
+            with ui.element("tbody").props('role=listbox aria-label="Fields" data-ravel-roving=fields'):
                 for field in state.table["fields"]:
-                    with ui.element("tr").classes("selected-row" if field["id"] == state.selected else "").props(f'data-field-id={field["id"]}'):
+                    with ui.element("tr").classes("selected-row" if field["id"] == state.selected else "").props(
+                            f'data-field-id={field["id"]} role=option data-ravel-item tabindex={0 if field["id"] == state.selected else -1}') as row:
+                        field_rows[field['id']] = row
+                        row._props['aria-label'] = 'Select column ' + field['name']
+                        row.on('click', lambda e, identity=field['id']: column_action('select', identity), js_handler='''e => {
+                            if (e.target.closest('button, a, input, select, textarea, [contenteditable=true]')) return;
+                            e.currentTarget.focus({preventScroll:true}); emit();
+                        }''')
                         with ui.element("td"):
-                            button = ui.button(field["name"], color=None, on_click=lambda f=field: column_action("select", f["id"])).props(
-                                'flat no-caps').classes("field-button")
-                            button._props["aria-label"] = "Select column " + field["name"]
+                            ui.label(field['name']).classes('field-button field-name')
                         with ui.element("td"):
-                            ui.label(RULES[field["kind"]])
+                            rule = ui.label(RULES[field["kind"]])
                         with ui.element("td").classes("applied-settings"):
-                            ui.label(rule_summary(field))
+                            summary = ui.label(rule_summary(field))
+                        row.props(f'aria-describedby="{rule.html_id} {summary.html_id}"')
 
     @ui.refreshable
     def preview():
@@ -840,6 +896,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     def properties():
         controls.clear()
         marks.clear()
+        draft_controls.clear()
         with ui.element("div").classes("property-fields"):
             labels = dict(name="Column name", kind="Rule", start="Start", step="Step", minimum="Minimum",
                           maximum="Maximum", places="Decimal places", value="Constant value",
@@ -870,7 +927,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         marks[key] = ui.label("Draft").classes("draft-mark")
             if form['kind'] in {'integer','decimal','date','id','text_id'}:
                 with ui.element('div').classes('setting-row').props('data-setting=unique'):
-                    unique = ui.checkbox('Require unique values',value=form.get('unique')=='True',on_change=lambda e: edit_field('unique',str(e.value)))
+                    unique = ui.checkbox('Require unique values',value=form.get('unique')=='True',on_change=lambda e: edit_field('unique',str(e.value))).props('aria-label="Require unique values"')
                     wire_editor('unique', unique, True)
                     marks['unique']=ui.label('Draft').classes('draft-mark')
         if state.selected in state.recipe.get("sample", {}).get("identifiers", []):
@@ -897,11 +954,12 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     ui.label("Columns & data").classes("sheet-title")
                     draft_summary = ui.label("").classes("draft-summary muted")
                 with ui.row().classes("view-bar"):
-                    for name in ["Fields", "Preview"] + (["Source"] if "sample" in state.recipe else []) + (['Relationships'] if state.is_dataset else []):
-                        view_buttons[name] = ui.button(name, color=None, on_click=lambda v=name: switch_view(v)).props(
-                            "flat no-caps").classes("view-button")
+                    with ui.row().classes('view-tabs').props('role=tablist aria-label="Table views" data-ravel-roving=tabs'):
+                        for name in ["Fields", "Preview"] + (["Source"] if "sample" in state.recipe else []) + (['Relationships'] if state.is_dataset else []):
+                            view_buttons[name] = ui.button(name, color=None, on_click=lambda v=name: switch_view(v)).props(
+                                'flat no-caps role=tab').classes("view-button")
                     help_note("Preview", "The first 100 rows of the actual generated table, formatted exactly as CSV. Previous data remains visible but export is blocked when edits make it out of date.")
-                with ui.row().classes("column-actions"):
+                with ui.row().classes("column-actions").props('role=toolbar aria-label="Column actions" data-ravel-roving=horizontal'):
                     action("Add column", "add", lambda: column_action("add"), "Add a new random integer column", compact=True)
                     action("Duplicate column", "content_copy", lambda: column_action("duplicate"), "Copy settings with a new identity and random stream", compact=True)
                     action("Remove selected column", "delete_outline", confirm_remove, "Remove this column after confirmation", compact=True)
@@ -909,7 +967,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         action('Relationship','account_tree',open_relationship,'Review the selected table’s parent and explicit row counts')
                 result_state = ui.label("").classes("result-state").props("role=status aria-live=polite")
                 sample_summary = ui.label("").classes("sample-summary muted").props("role=status")
-                with ui.element("div").classes("fields-view").props('tabindex=0 role=region aria-label="Column definitions; scroll horizontally if needed"') as fields_region:
+                with ui.element("div").classes("fields-view") as fields_region:
                     definitions()
                 with ui.element("div").classes("preview-view") as preview_region:
                     preview()
@@ -928,7 +986,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                                         for cell in row:
                                             with ui.element("td"):
                                                 ui.label(cell)
-                with ui.element('div').classes('relationships-view') as relationships_region:
+                with ui.element('div').classes('relationships-view').props('tabindex=0') as relationships_region:
                     relationships()
             divider = ui.element("div").classes("workspace-divider").props(
                 'role=separator tabindex=0 aria-label=Properties aria-orientation=vertical '
@@ -950,7 +1008,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                 divider.props(f"aria-controls={pane.html_id} aria-describedby={hint.html_id}")
                 with ui.element('div').classes('property-body'):
                     properties()
-                with ui.element('div').classes('edit-actions').props('role=group aria-label="Apply or discard changes" data-pending=false') as edit_actions:
+                with ui.element('div').classes('edit-actions').props('role=group aria-label="Apply or discard changes" data-ravel-roving=vertical data-pending=false') as edit_actions:
                     pending_note = ui.label('All changes applied').classes('pending-note')
                     apply_button = action("Apply changes", "check", apply, "Apply column, row count, seed and table name edits", True).classes("apply-button")
                     discard_button = action("Discard edits", "undo", discard, "Restore the applied settings").classes("discard-button")
@@ -973,7 +1031,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                         wire_error('table_primary_key',key_control)
                     limits = "Public demo: at most 1,000 rows across all tables and 20,000 cells per run. Larger recipes can run locally. " if PUBLIC_DEMO else "Rows: 1–100,000; columns: 1–50; at most 2 million cells. "
                     help_note("Generation", limits + "Seed: 0–2^63−1. Apply both table and column edits before generating. The same recipe and pinned environment reproduce the same CSV.")
-        ui.label("Session only · Save your recipe and CSV to keep them").classes("footer-note")
+        ui.label("Session only · Save your recipe and CSV · Tab groups · Arrows within · Enter/Space activate").classes("footer-note")
         switch_view(active_view)
         ui.run_javascript("await Vue.nextTick(); window.ravelWorkspaceLayout.init();")
         update_state()

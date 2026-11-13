@@ -38,7 +38,7 @@ def exercise(page,base,out,viewport,theme):
     activate(page,'Select table Measurements')
     expect(page.get_by_label('Column name',exact=True)).to_be_focused()
     properties_width(page,560)
-    expect(page.get_by_role('button',name='Preview',exact=True)).to_have_attribute('aria-pressed','true')
+    expect(page.get_by_role('tab',name='Preview',exact=True)).to_have_attribute('aria-selected','true')
     expected=json.loads((ROOT/'examples/linked/structural.expected.json').read_text())
     cells=preview_cells(page)
     assert [[row[1],int(row[2])] for row in cells]==expected['device_slot_pairs']

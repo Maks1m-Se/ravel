@@ -9,12 +9,20 @@ CSV sample. The current preview supports editable sample assumptions, new-row or
 retain-and-extend generation, and small linked datasets. It is available for
 review and is not a supported application release.
 
-The reviewed source candidate for `main` is on
+The published integration baseline is on
 [`integration/main-2026-10-29`](https://github.com/Maks1m-Se/ravel/tree/integration/main-2026-10-29).
 The nine draft PRs are still unmerged. See the
 [integration handoff](docs/integration-main.md) for their order, checks and the
 separate desktop acceptance. The actual Pixel 8/Gboard test was deferred by the
 maintainer: **not performed, not passed**.
+
+This branch combines the [workbench and clinical source reviews](docs/development.md#combined-candidate-review)
+on that integration base: full-row field selection with retained drafts,
+keyboard groups, per-setting pending markers and table-named downloads. It also
+[refuses nonportable export names](docs/linked-tables.md) before writing. The
+public demo keeps the earlier runtime until review; it does not show these new
+interactions yet. The internal clinical source foundation adds structural
+checks without exposing a clinical template. Use the combined local review.
 
 **Compose the data you need.**
 
@@ -61,7 +69,10 @@ serializer as the UI. Stable field identities and separate random streams mean
 adding an independent column preserves existing generated columns. Duplicated
 columns get new identities. Reproducibility is scoped to the recorded environment.
 
-### Source quickstart
+### Published integration quickstart
+
+These commands install the published integration baseline. For the separate UX
+candidate on this branch, use the [local review instructions](docs/development.md#workbench-ux-review-30-october-2026).
 
 Use standard **CPython 3.14.8 x64**, with the GIL enabled, on Windows. For a new
 checkout in PowerShell:
@@ -120,6 +131,11 @@ The original [personal test record](docs/personal-render.md)
 is retained as history.
 
 ## Documentation and contributing
+
+An internal [clinical source contract](docs/clinical-template-preparation.md#internal-source-contract)
+now preserves explicit supplied records and original numeric tokens, with
+structural reference checks. It provides no clinical generator or derivation
+and adds no public template. The proposed numeric policy still needs adoption.
 
 - [Product plan](docs/plan.md) and [recipe architecture](docs/specification.md)
 - [Clinical reference cases](docs/baseline-specification.md): an optional domain

@@ -76,7 +76,7 @@ def exercise(page,base,out,viewport,theme):
     activate(page,'Fields')
     type_value(page,'Rows','4')
     activate(page,'Apply changes')
-    assert_error(page,'Rows','3 available')
+    assert_error(page,'Maximum','3 available')
     type_value(page,'Rows','3')
     expect(page.locator('.draft-summary')).to_have_text('All changes applied')
     expect(page.get_by_role('button',name='Apply changes',exact=True)).to_be_disabled()
@@ -101,7 +101,7 @@ def exercise(page,base,out,viewport,theme):
     assert Counter(row[2] for row in expected_preview)=={'A':7,'B':5}
     assert [row[-1] for row in expected_preview]==['retained']*10+['generated']*2
     activate(page,'Fields')
-    expect(page.get_by_role('button',name='Fields',exact=True)).to_have_attribute('aria-pressed','true')
+    expect(page.get_by_role('tab',name='Fields',exact=True)).to_have_attribute('aria-selected','true')
     expect(page.locator('.definition-table')).to_be_visible()
     applied=page.locator('.definition-table').text_content()
     type_value(page,'Categories and exact counts','A,5\nB,7')

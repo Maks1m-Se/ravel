@@ -216,3 +216,19 @@ or clinical validation. Raw final unit log and all three CI logs remain under
 `outputs/integration-2026-10-29/`. Later evidence/dashboard updates do not require
 another Render deployment. Desktop maintainer acceptance and explicit merge
 approval are still outstanding; Pixel/Gboard is deferred and not performed.
+
+## Combined follow-up candidate
+
+`integration/ux-clinical-2026-11-13` now prepares the UX/export and internal
+clinical-source changes together from eed69c6. See the
+[combined review](development.md#combined-candidate-review) for its fixed local
+URL, checks, limitations and manual script. Original input branches remain
+uncommitted and preserved. Their E70–E74 evidence is retained alongside E75.
+
+Recommend one Draft PR with base `integration/main-2026-10-29`, rather than
+publishing overlapping UX and clinical PRs as well. Publish the combined branch
+after verifying its local commit and the live permitted Berlin time; remote
+publication is prepared separately from this local review. The existing
+nine-PR order above remains unchanged. Do not target main until the required
+integration ancestry is present there. All actual merges, visual/contract
+acceptance and deployment remain separate maintainer decisions.

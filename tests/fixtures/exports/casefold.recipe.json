@@ -1,0 +1,77 @@
+{
+  "format": "ravel-dataset/1",
+  "relationships": [
+    {
+      "child": "data",
+      "children_per_parent": 2,
+      "foreign_key": "device_ref",
+      "id": "device_measurements",
+      "parent": "DATA",
+      "parent_key": "device_key"
+    }
+  ],
+  "seed": 17,
+  "tables": [
+    {
+      "fields": [
+        {
+          "id": "device_key",
+          "kind": "text_id",
+          "missing_probability": "0",
+          "name": "device_id",
+          "prefix": "D",
+          "start": 1,
+          "width": 2
+        },
+        {
+          "id": "device_type",
+          "kind": "constant",
+          "missing_probability": "0",
+          "name": "type",
+          "value": "invented"
+        }
+      ],
+      "id": "DATA",
+      "name": "Devices",
+      "primary_key": "device_key",
+      "row_count": 3
+    },
+    {
+      "fields": [
+        {
+          "id": "measurement_key",
+          "kind": "text_id",
+          "missing_probability": "0",
+          "name": "measurement_id",
+          "prefix": "M",
+          "start": 1,
+          "width": 2
+        },
+        {
+          "id": "device_ref",
+          "kind": "foreign_key",
+          "missing_probability": "0",
+          "name": "device_id"
+        },
+        {
+          "id": "slot",
+          "kind": "child_index",
+          "missing_probability": "0",
+          "name": "slot"
+        },
+        {
+          "id": "value",
+          "kind": "integer",
+          "maximum": 100,
+          "minimum": 0,
+          "missing_probability": "0",
+          "name": "value"
+        }
+      ],
+      "id": "data",
+      "name": "Measurements",
+      "primary_key": "measurement_key",
+      "row_count": 6
+    }
+  ]
+}

@@ -89,6 +89,68 @@ the edits, pending treatment and specific error. Successful Apply clears the
 draft indication while a prior result remains out of date until regeneration.
 Recipe saving and output export remain separate from applying edits.
 
+### Workbench interaction candidate (29–30 October 2026)
+
+The separate UX review starts at integration commit
+`eed69c60371ebeea0fa0faa17c11117ff7e04d9a`. It does not change generation,
+the recipe formats or the live Render deployment.
+
+Every Fields row is one selectable option: name, rule, applied summary and
+remaining row area all select the same field. Interactive descendants are
+excluded from row delegation; one activation must not also select a second
+time. Selection stays in the list and updates Properties without applying or
+discarding anything. Each field in the current table has its own draft form;
+switching fields preserves all those drafts. Apply validates and commits all
+changed field forms and table settings atomically. Failure preserves every
+draft, the applied recipe and the prior result. Discard restores all current
+table drafts together. Adding, duplicating, removing or switching tables still
+requires applied/discarded drafts. All hidden drafts also block generation,
+recipe saving and current-result export.
+
+Fields uses a single-select listbox with manual selection: Tab enters at the
+selected row, Up/Down moves focus, and Enter/Space selects. Tabs likewise use
+Left/Right for focus and Enter/Space for activation. Home/End moves to either
+edge of a group. One roving Tab stop per toolbar/group avoids a long sequence
+of toolbar buttons; disabled/hidden actions are skipped. Normal editors retain
+their arrow, Home/End, selection and modifier behavior. No new Apply/Discard
+shortcut is registered. Escape closes the current popup or cancels an active
+divider drag; it never globally discards drafts. Available keys are summarized
+in the footer and Session help.
+
+Actual pending settings have a slightly stronger label, a small dot and a light
+Fichte tint; numeric values keep normal weight. Visible Draft text in Properties
+and an accessible pending description complement the shape/weight distinction.
+Unselected fields with saved drafts also show a dot beside their applied name.
+Table name, Rows, Seed, Sample mode and the applicable primary-key editor use
+the same treatment. Exact reversion, Apply and Discard remove only the pending
+markers; applied-origin badges keep their separate meaning. A normal off→on→off
+uniqueness toggle must return to the original unmodified state.
+
+An actual new edit clears an obsolete success status. Relevant validation errors
+remain until a participating setting changes or the drafts are discarded/reverted.
+If validation identifies a different field, select that field and focus its
+responsible input, without losing other drafts. The separate result status
+continues to distinguish current, stale and absent output. Apply/Discard restore
+the last visible edited input or the selected name fallback; successful Generate
+returns focus to the active result tab only while the triggering action still
+owns focus. Dialog cancellation returns to its trigger. Table headings/tabs stay
+above their own scrollable result area at desktop sizes.
+
+Single-table browser downloads derive a portable stem from the **applied** table
+name: `test_measurements.csv`, `test_measurements.recipe.json` and the matching
+`.run.json`. Normalize Unicode compatibility forms/case, replace punctuation,
+spaces, separators and controls with underscores, collapse/trim separators and
+bound the stem to80 characters. Empty/punctuation-only names use `table`; Windows
+reserved device names receive a `table_` prefix. Linked-table CSV IDs, complete
+dataset filenames and every serialized file's contents remain unchanged.
+
+The source/browser implementation follows the W3C APG
+[keyboard conventions](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/),
+[listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/),
+[manual tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) and
+[toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) patterns. This is not
+screen-reader, native OS-dialog or cross-platform accessibility certification.
+
 After successful Apply or Discard, return focus to the last edited field,
 including Rows or Seed when those alone changed. Field identity uses table,
 column and setting keys, so refreshing Properties does not invalidate the
