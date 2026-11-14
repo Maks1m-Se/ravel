@@ -101,3 +101,42 @@ component retains the original supplied path, actual text SHA-256 and copied
 path in python-components.json; identical texts may share a file. Originals and
 all distinct text remain intact. Choose a reasonably short writable build and
 extraction directory; the final inventory reports actual relative path lengths.
+
+## Exact archive follow-up, 14 November 2026
+
+The overnight audit uses only the documented primary ZIP, SHA256
+`eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91`,
+version `source-b99a360a14c4eb8d`. It reads the archive without executing,
+extracting into or modifying the private artifact. No older artifact was used.
+
+```powershell
+python scripts/audit_private_archive.py --archive PATH/TO/Ravel-source-b99a360a14c4eb8d-windows-x64-private.zip --sha256 eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91 --output outputs/private-audit-new
+```
+
+| Established correspondence | Result |
+| --- | --- |
+| Actual archive manifest | All1,226 file sizes/hashes agree. |
+| Retained material index | All170 source/material record hashes agree. |
+| Python component index | 55 records; versioned analysis labels reconcile with this index. This is not a claim that every build tool ships. |
+| Native build origins | All85 DLL/PYD hashes match their recorded build-origin hashes; Ravel.exe is the86th native file in the earlier all-native count. Upstream vendor/terms mapping is still separate. |
+| Fonts | All16 shipped font hashes agree with metadata and the exact paths in retained NiceGUI3.18.0 sdist74cf67c5…; original font-variant license association remains open. |
+| Direct frontend files | Eight shipped files rechecked against actual member bytes in retained, hash-verified versioned npm archives. Removed nonproduction assets are reported as not shipped. |
+| orjson3.13.0 vendor material | 42 source-notice records collected with full source URL/archive/member/hash provenance;22 unique texts are absent from the flat shipped-notice index. They already existed inside the retained source archive and are now explicit review-side copies, not newly asserted binary obligations. |
+
+The retained orjson source is
+[orjson3.13.0](https://pypi.org/project/orjson/3.13.0/), with archive SHA256
+`d1de5eb04485110c5da4c657e49168995d55e076b1ce60f1a042e254f4186c4f`.
+Actual material and copied texts are in the local
+`outputs/overnight-2026-11-14/artifact-audit-recorded/` report. Correspondence
+records created against an earlier bootstrap version are not blindly trusted:
+the new tool recomputes member hashes against the exact primary archive.
+
+Blocked attribution work remains precise: the transformed core assets lack
+recorded minifier/version correspondence; the nicegui byte match does not
+identify the original Material Symbols2.911 source/terms; retained
+pydantic-core2.50.0/watchfiles1.3.0 sdists have Cargo.lock but no vendored
+dependency license material; CPython's retained SPDX document has zero file
+entries and cannot resolve the Microsoft-runtime file/terms questions.
+Source dependency presence alone does not prove inclusion in a compiled wheel.
+These gaps stop further attribution in this bounded stage. No substitute
+version, guessed license, legal clearance, asset removal or publication follows.

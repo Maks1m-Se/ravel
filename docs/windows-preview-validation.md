@@ -98,7 +98,7 @@ the tagged NiceGUI core extraction script/lock, and 107 npm lock entries with
 verified archive integrity and retained supplied notices/source. All 16 actual
 font files were separately decoded and their hashes match the retained metadata.
 Eight retained direct-copy core JavaScript assets match their exact upstream
-bytes. The artifact inventory records 118 JavaScript files, 86 DLL/PYD files and
+bytes. The artifact inventory records 118 JavaScript files, 85 DLL/PYD files plus Ravel.exe and
 75 loose Docutils files, with no Docutils editor/emacs helper.
 
 Eleven unused lazy element asset families and unused nonproduction Vue/Quasar

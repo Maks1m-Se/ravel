@@ -293,7 +293,8 @@
         "E75",
         "E77",
         "E78",
-        "E79"
+        "E79",
+        "E80"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -569,7 +570,8 @@
         "E66",
         "E67",
         "E68",
-        "E69"
+        "E69",
+        "E80"
       ],
       "blockers": [
         "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
@@ -1088,6 +1090,11 @@
       "id": "E79",
       "reference": "Local reproducibility and sample evidence; docs/clinical-template-preparation.md",
       "scope": "New repeatable check_reproducibility command passes20 cases: five fixed seeds x explicit/sample-new/sample-extend/linked, three repeats each =60 primary generations with equal canonical dataset/CSV hashes. Independent-field additions preserve all existing columns across tables. Both ten-to1000 modes preserve expected source cells/order/origins and source hashes; identifier confirmation/collision, supported numeric/category overrides, exact A400/B400/C200 quotas, infeasible retained quotas and unsupported101-category profiles checked. Initial evidence harness failed before expected rejection because it serialized an invalid request; corrected harness passes, no generator change. Unchanged R5 normal/Bernoulli command passes five n100000 seeds with unchanged thresholds; correlation remains unimplemented. Python3.14.8 Windows local source/environment maps and raw results retained.127 full units pass; R3/R4 are local partial evidence, all release gates remain unverified."
+    },
+    {
+      "id": "E80",
+      "reference": "Exact private Windows archive provenance audit; docs/clinical-template-preparation.md",
+      "scope": "Primary source-b99a360a14c4eb8d ZIP hash eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91 verified read-only. New bounded archive tool verifies1226 manifest files,170 retained material hashes and55 Python inventory records; versioned analysis labels reconcile.85DLL/PYD hashes match build origins;16fonts match retained NiceGUI3.18.0 source paths;8directfrontend assets match actual retained npm members.42orjson3.13.0 vendor notice records collected with URL/archive/member/hash provenance;22unique texts absent from flat notice index, already present inside source archive. Two focused audit regression methods pass. Artifact unchanged, no native execution, binary redistribution or legal clearance. Further attribution blocked by missing transformed minifier/version mapping, originalfontvariant source/terms, pydantic-core/watchfiles vendored dependency material and Microsoft file/terms mapping; no older substitute or guessed license."
     }
   ],
   "blockers": [
