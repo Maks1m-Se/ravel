@@ -2704,3 +2704,11 @@ Source hashes, parent commit plus local-script state, Python/platform and
 per-repeat hashes are retained under `outputs/overnight-2026-11-14/`.
 This advances local R3/R4 evidence without cross-platform or performance
 acceptance. R5 remains incomplete: Gaussian-pair correlation is unimplemented.
+
+The first stage-3 full-suite run exposed a tracking-test assumption: setting
+the first gate to passed was only invalid while it had no evidence. The new
+R1 reference coverage made that implicit fixture assumption false. The test
+now explicitly removes its evidence when testing rejection. No gate was marked
+passed. The provisional stage-3 commit was created before its failed full-suite
+result was evaluated; the failed log and checkpoint remain, with a subsequent
+repair checkpoint after the full suite passes.
