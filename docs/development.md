@@ -2712,3 +2712,28 @@ now explicitly removes its evidence when testing rejection. No gate was marked
 passed. The provisional stage-3 commit was created before its failed full-suite
 result was evaluated; the failed log and checkpoint remain, with a subsequent
 repair checkpoint after the full suite passes.
+
+### Overnight handoff and limits
+
+The bounded queue is complete. Local stage checkpoints are 7704969 (robustness),
+2c41dcf (scenario coverage), 2d49641 plus 45e4dbc (reproducibility and tracking-test
+repair), and ea42696 (exact private archive audit). These are sequential local
+checkpoints, not PR merges. The final follow-up records the combined checks.
+
+The archive audit is complete within its recorded evidence scope; further
+license/source attribution is blocked by the specific gaps in
+[windows-preview-notices.md](windows-preview-notices.md#exact-archive-follow-up-14-november-2026).
+It does not grant redistribution clearance. The source contract, scenario hand
+transcriptions and remaining UX still need maintainer review; only the limited
+whole-row/draft report is accepted. Numeric policy and R/SAS derivation remain
+unperformed/unadopted. All ten release gates remain unverified.
+
+Final verification runs the full 129-test suite, source/reference checks,
+dashboard/tracking, local Markdown links and whitespace. No new browser run is
+needed: every generic runtime/UI/browser-helper source relevant to the cababf38
+browser evidence matches exactly; changes are internal clinical code, fixtures,
+evidence/audit tooling and documentation. The new source formats remain excluded
+from the public recipe loader. No new UI review server is created; all three
+earlier fixed instances remain untouched. Raw results, source maps, failures,
+checkpoints and the source-only review bundle are under
+`outputs/overnight-2026-11-14/`; no private binary is included in that bundle.

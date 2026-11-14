@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "planning_revision": 10,
+  "planning_revision": 11,
   "plan_ref": "docs/plan.md",
   "milestones": [
     {
@@ -294,7 +294,8 @@
         "E77",
         "E78",
         "E79",
-        "E80"
+        "E80",
+        "E81"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -349,7 +350,8 @@
       ],
       "evidence_refs": [
         "E54",
-        "E78"
+        "E78",
+        "E81"
       ],
       "blockers": []
     },
@@ -490,7 +492,8 @@
         "E72",
         "E73",
         "E75",
-        "E76"
+        "E76",
+        "E81"
       ],
       "blockers": [
         "Maintainer desktop acceptance remains open. The earlier Edge workspace reset is evidenced; its trigger remains unknown."
@@ -571,7 +574,8 @@
         "E67",
         "E68",
         "E69",
-        "E80"
+        "E80",
+        "E81"
       ],
       "blockers": [
         "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
@@ -1095,6 +1099,11 @@
       "id": "E80",
       "reference": "Exact private Windows archive provenance audit; docs/clinical-template-preparation.md",
       "scope": "Primary source-b99a360a14c4eb8d ZIP hash eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91 verified read-only. New bounded archive tool verifies1226 manifest files,170 retained material hashes and55 Python inventory records; versioned analysis labels reconcile.85DLL/PYD hashes match build origins;16fonts match retained NiceGUI3.18.0 source paths;8directfrontend assets match actual retained npm members.42orjson3.13.0 vendor notice records collected with URL/archive/member/hash provenance;22unique texts absent from flat notice index, already present inside source archive. Two focused audit regression methods pass. Artifact unchanged, no native execution, binary redistribution or legal clearance. Further attribution blocked by missing transformed minifier/version mapping, originalfontvariant source/terms, pydantic-core/watchfiles vendored dependency material and Microsoft file/terms mapping; no older substitute or guessed license."
+    },
+    {
+      "id": "E81",
+      "reference": "14 November2026 completed bounded overnight batch; docs/development.md#overnight-handoff-and-limits",
+      "scope": "Sequential local checkpoints from cababf38:7704969 source robustness,2c41dcf twelve-scenario references,2d49641 reproducibility followed by45e4dbc explicit missing-evidence test precondition,ea42696 exact archive audit. Eight new unit methods plus an existing tracking fixture correction; final129 tests pass. The initial stage3 full run failed that tracking assumption and its provisional commit preceded evaluation; log/history retained, no gate marked passed. Browser evidence is reused by exact relevant generic/UI/helper hashes; no affected UI code changed or server replaced. Original cababf38, dirty worktrees and fixed instances preserved. Morning source-only bundle includes final diff, source manifest, raw evidence and collected notice/provenance material; private executable/archive excluded. Stage4 attribution beyond the completed audit is blocked by recorded missing minifier/font/vendor/runtime material. Numeric policy, clinical derivation/R-SAS, broader UX/device/native acceptance and all release gates remain pending. No remote push/PR, merge, deployment, binary publication, paid service, dependency/security change."
     }
   ],
   "blockers": [
@@ -1103,7 +1112,7 @@
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Codex: complete the approved bounded overnight queue sequentially, preserving cababf38 and original worktrees/servers. Maintainer: review source robustness and remaining UX separately; limited whole-row/draft acceptance is E76, numeric policy remains unadopted. No pushes/remote PRs, merge, deployment, binaries or dependency upgrades.",
+  "next_action": "Maintainer: (1) review source robustness and six new hand scenario transcriptions with scripts/check_clinical_review.py; contract acceptance and numeric-policy adoption remain separate, with no arithmetic implemented. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance identified by the exact artifact audit before further redistribution work. The approved overnight queue is complete; stop rather than invent more work. Remote publication needs separate authorization, live Berlin timing checks and Draft status; no merges or deployment.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M4-03",

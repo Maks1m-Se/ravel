@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 10 · 13 November 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 11 · 14 November 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -115,6 +115,15 @@ Recipe packs are declarative and validated; importing them must not execute arbi
 Python packaging already provides entry points for discovering installed extensions, so a future loader can use that standard mechanism.[5] Executable extensions run code with the application's permissions; enable them explicitly from trusted packages, including offline installation. Do not describe them as sandboxed. Community contributions can begin earlier with cases, recipes, bug reports, documentation, and platform testing.
 
 **Milestones.** Each milestone produces something runnable or reviewable. Testing accompanies implementation throughout.
+
+**Approved bounded overnight batch, 14 November 2026.** From the fixed cababf38
+review candidate, sequentially repair demonstrated source-contract violations,
+complete reference coverage for the existing twelve clinical scenarios, record
+local five-seed/three-repeat generic reproducibility and sample evidence, and
+audit the exact identified private Windows artifact's notices/provenance.
+Preserve all earlier work/instances and checkpoint locally. Stop after this
+queue; no arithmetic, numeric-policy adoption, remote publication, deployment,
+dependency upgrades or release acceptance is included.
 
 **Bounded clinical source foundation, 13 November 2026.** After recovery of the
 separate UX/export candidate, define an internal supplied-record contract,
