@@ -295,7 +295,8 @@
         "E78",
         "E79",
         "E80",
-        "E81"
+        "E81",
+        "E82"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -1104,6 +1105,11 @@
       "id": "E81",
       "reference": "14 November2026 completed bounded overnight batch; docs/development.md#overnight-handoff-and-limits",
       "scope": "Sequential local checkpoints from cababf38:7704969 source robustness,2c41dcf twelve-scenario references,2d49641 reproducibility followed by45e4dbc explicit missing-evidence test precondition,ea42696 exact archive audit. Eight new unit methods plus an existing tracking fixture correction; final129 tests pass. The initial stage3 full run failed that tracking assumption and its provisional commit preceded evaluation; log/history retained, no gate marked passed. Browser evidence is reused by exact relevant generic/UI/helper hashes; no affected UI code changed or server replaced. Original cababf38, dirty worktrees and fixed instances preserved. Morning source-only bundle includes final diff, source manifest, raw evidence and collected notice/provenance material; private executable/archive excluded. Stage4 attribution beyond the completed audit is blocked by recorded missing minifier/font/vendor/runtime material. Numeric policy, clinical derivation/R-SAS, broader UX/device/native acceptance and all release gates remain pending. No remote push/PR, merge, deployment, binary publication, paid service, dependency/security change."
+    },
+    {
+      "id": "E82",
+      "reference": "15 November 2026 clinical review adapter recursion follow-up; docs/development.md#clinical-review-adapter-recursion-follow-up",
+      "scope": "On overnight candidate 698005d, a valid review sheet with one value replaced by 700 nested arrays, serialized and parsed through the clinical source loader, reproduced uncontrolled RecursionError in deepcopy. Record container fields now fail with source-located ValidationError before any recursive record copying; no source-loader depth cap or numeric policy introduced. One focused regression covers deep value/timestamp/kind rejection, unchanged caller serialization, valid negative-zero exponent token, supplied record order and provenance, and output/input independence. Focused17 tests and full130 tests pass, with clinical structural/reference checks for all12 requirements, dashboard freshness and whitespace. Before/after and failed regression logs retained under outputs/clinical-adapter-recursion-2026-11-15. No arithmetic, policy adoption, new browser/clinical acceptance, merge or deployment; release gates unchanged."
     }
   ],
   "blockers": [
@@ -1112,7 +1118,7 @@
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: (1) review source robustness and six new hand scenario transcriptions with scripts/check_clinical_review.py; contract acceptance and numeric-policy adoption remain separate, with no arithmetic implemented. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance identified by the exact artifact audit before further redistribution work. The approved overnight queue is complete; stop rather than invent more work. Remote publication needs separate authorization, live Berlin timing checks and Draft status; no merges or deployment.",
+  "next_action": "Maintainer: (1) review source robustness including E82 controlled adapter rejection and six new hand scenario transcriptions with scripts/check_clinical_review.py; contract acceptance and numeric-policy adoption remain separate, with no arithmetic implemented. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance identified by the exact artifact audit before further redistribution work. The approved overnight queue is complete; stop rather than invent more work. Remote publication needs separate authorization, live Berlin timing checks and Draft status; no merges or deployment.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M4-03",

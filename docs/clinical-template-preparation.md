@@ -217,6 +217,14 @@ conclusions. Independent field checks continue. Malformed review-sheet shapes
 and unexpected record fields fail through ValidationError before mapping;
 the adapter cannot silently replace supplied provenance.
 
+The 15 November adapter follow-up rejects container-valued review record fields
+with a source-located ValidationError before recursively copying any records.
+A loader-supported value containing 700 nested arrays previously raised an
+uncontrolled RecursionError in the adapter. Record fields in this review format
+are scalar; no new numeric restriction or nesting limit is applied to the source
+loader. Numeric tokens, explicit nulls and other scalar values remain available
+for structural validation, with supplied ordering and adapter provenance intact.
+
 No fixed nesting cap is adopted: the pinned JSON parser's supported inputs must
 round-trip, and parser failures remain SourceParseError. A portable explicit
 depth budget is a future resource-policy decision, not a clinical rule.

@@ -85,6 +85,33 @@ class ClinicalSourceTests(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             document['records'][0]['value'].token = '7'
 
+    def test_review_adapter_rejects_deep_record_containers_before_copying(self):
+        original = source.loads((FIXTURES / 'baseline-four-cases.json').read_bytes())
+        original['cases'][0]['records'][0]['value'] = source.loads('-0.00e+01')
+        valid_text = source.dumps(original)
+        for field in ['value', 'timestamp', 'kind']:
+            with self.subTest(field=field):
+                review = source.loads(valid_text)
+                review['cases'][0]['records'][0][field] = source.loads('[' * 700 + '0' + ']' * 700)
+                review = source.loads(source.dumps(review))
+                before = source.dumps(review)
+                with self.assertRaises(ValidationError) as caught:
+                    source_case(review, 'C1', 'invented-review.json')
+                self.assertEqual(caught.exception.path, 'review./cases/0/records/0/' + field)
+                self.assertIn('scalar', caught.exception.message)
+                self.assertEqual(source.dumps(review), before)
+
+        adapted = source_case(original, 'C1', 'invented-review.json')
+        self.assertEqual(source.dumps(original), valid_text)
+        self.assertEqual(adapted['records'][0]['value'].token, '-0.00e+01')
+        self.assertEqual([row['id'] for row in adapted['records']], ['C1-M1', 'C1-D1', 'C1-M2'])
+        self.assertEqual([row['provenance'] for row in adapted['records']],
+                         [dict(source='invented-review.json', pointer=f'/cases/0/records/{i}') for i in range(3)])
+        self.assertEqual(source.validate(adapted)['status'], 'passed')
+        adapted['records'][0]['value'] = None
+        adapted['records'][0]['provenance']['pointer'] = '/changed'
+        self.assertEqual(source.dumps(original), valid_text)
+
     def test_explicit_null_absent_and_malformed_values_remain_distinct(self):
         document = fixture()
         record = document['records'][1]

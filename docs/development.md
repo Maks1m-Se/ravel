@@ -2737,3 +2737,28 @@ from the public recipe loader. No new UI review server is created; all three
 earlier fixed instances remain untouched. Raw results, source maps, failures,
 checkpoints and the source-only review bundle are under
 `outputs/overnight-2026-11-14/`; no private binary is included in that bundle.
+
+### Clinical review adapter recursion follow-up
+
+On 15 November, the overnight candidate `698005d` reproduced an uncontrolled
+`RecursionError`: replace C1-M1's value in the valid four-case review sheet with
+700 nested arrays, serialize and parse with the clinical source loader, then
+call `source_case`. The loader succeeds; the adapter's record `deepcopy` fails.
+The new regression fails on the original adapter and passes after container
+fields are rejected before copying, with a `ValidationError` identifying
+`review./cases/0/records/0/value`. The supplied review input stays unchanged.
+
+The same regression covers timestamp/kind containers and confirms valid numeric
+token spelling, ordering, provenance and independent output records. This is a
+review-format structural check; malformed scalar values remain available to
+the source validator. No loader nesting cap, numeric policy or arithmetic is
+introduced. Source-contract checks pass with clinical policy `not_evaluated`
+and derivation `not_implemented`; all twelve references remain covered.
+
+Verification uses the existing pinned Python 3.14.8 environment: 17 focused
+source tests and 130 full-suite tests pass, as do the reference checker,
+dashboard freshness and whitespace checks. Raw before/after reproduction,
+failing regression and final logs are retained in
+`outputs/clinical-adapter-recursion-2026-11-15/`. No UI or generic code changes;
+no new browser run, merge or deployment. Earlier evidence and acceptance limits
+remain unchanged.

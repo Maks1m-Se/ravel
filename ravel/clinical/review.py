@@ -42,6 +42,9 @@ def source_case(review, case_id, source):
     for i, record in enumerate(case['records']):
         require(isinstance(record, dict) and set(record) == required, prefix + f'/records/{i}',
                 'Expected exactly the review source fields; no source fields may be silently dropped.')
+        for field in ['id', 'kind', 'subject', 'parameter', 'timestamp', 'value', 'unit']:
+            require(not isinstance(record[field], (dict, list)), prefix + f'/records/{i}/{field}',
+                    'Expected a scalar review source field; nested objects or arrays are malformed.')
 
     def provenance(pointer):
         return dict(source=source, pointer=pointer)
