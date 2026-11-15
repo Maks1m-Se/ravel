@@ -712,3 +712,16 @@ The optional secondary absolute `5e-7`, relative `0` R/SAS diagnostic tolerance
 remains provisional and excluded from adoption until independent verification
 and separate acceptance. Adoption is documentation only; no clinical calculation
 code, source-implementation acceptance, release completion, merge or deployment.
+
+## Full source integration authorization (15 November 2026)
+
+Maksim explicitly selects Option1: merge the entire checked source stack,
+including all nine predecessor PRs and PR26, with merge commits preserving the
+tested source ancestry. Integrate the base documentation follow-up between them.
+Keep the original branches, dirty worktrees and fixed review instances.
+
+This authorization supersedes earlier draft/no-merge instructions for this
+source integration only. It does not accept the remaining desktop/source or
+device/native checks, complete release gates, adopt the provisional secondary
+R/SAS tolerance, authorize clinical calculations or update Render. E87 records
+execution and the actual merged source identity.

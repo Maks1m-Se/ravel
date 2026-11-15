@@ -2823,3 +2823,29 @@ checks, not native/clinical acceptance. All ten PRs have no inline review thread
 
 The fixed local instances and existing Render deployment are preserved. No
 merge, deployment, binary publication or clinical calculation is performed.
+
+### Full source integration executed (15 November 2026)
+
+Maksim explicitly selected Option1. The nine predecessor PRs were retargeted to
+main and merged in their checked order, followed by base-documentation PR27 and
+PR26. All original commits/branches remain; each merge had a live Berlin guard,
+expected-head check and successful exact-source CI. Every complete merged file
+tree was read back and matched its original head, with no conflict repair.
+
+Actual source main `2466d9eeea9ca3317563179fdc7ea2af7a8db453` has the exact tree
+of final candidate `bf5c8ecb81f50af23be313945b9413fa3524596e`. A fresh GitHub
+checkout passes130units, twelve clinical-reference requirements, dashboard and
+whitespace. Actual main push CI43762039539 also passes130tests plus dashboard/
+whitespace on all three platforms; its full logs are retained. The documentation
+closeout CI is checked separately. No runtime,
+fixtures or dependency bytes change in the closeout. Browser evidence is reused
+only at its attested source identity; no additional browser/device run is claimed.
+
+E87 records integration without extending E76/E83/E85 acceptance. README now
+starts from main and the demo guide keeps its earlier deployed identity explicit.
+The full commit ledger is in [integration-main.md](integration-main.md#executed-main-integration-15-november-2026).
+Raw logs, source/tree comparisons and final CI readbacks remain under
+`outputs/main-integration-2026-11-15/`. All original dirty worktrees and fixed
+instances remain preserved. Desktop/source review, secondary R/SAS tolerance,
+native/distribution gaps and all release gates stay open. No Render deployment,
+binary publication or clinical calculation is performed.

@@ -1,5 +1,12 @@
 # Main integration candidate — 29 October 2026
 
+**Current status, 15 November 2026:** Maksim selected full source integration
+(Option1). The nine predecessor PRs, the documentation follow-up and PR26 are
+merged into `main` with their original ancestry preserved. The dated candidate
+records below remain historical evidence. See [the executed integration record](#executed-main-integration-15-november-2026)
+and progress E87 for current status. Source integration is separate from the
+still-open desktop/source acceptance and release gates. Render is unchanged.
+
 This is a reviewed integration snapshot, not a second progress tracker.
 [progress.json](progress.json) remains authoritative. AI-assisted preparation and
 verification do not replace maintainer acceptance.
@@ -252,3 +259,49 @@ history or silently replace the integration with a direct main push.
 The core policy `clinical-numeric/1` and six additional hand references are now
 accepted (E85/E83); the secondary R/SAS tolerance and clinical calculations remain
 unimplemented/unverified as recorded. Merge permission is not release acceptance.
+
+## Executed main integration (15 November 2026)
+
+Maksim explicitly selected Option1: integrate the entire checked source stack,
+including the nine predecessors, UX/export and internal clinical source changes.
+This supersedes the earlier no-merge instructions for this source integration;
+it does not accept unperformed desktop/device/native/clinical checks.
+
+Merge commits preserve each original head in order: PR10,18,19,20,21,22,23,24,25;
+the integration branch's documentation follow-up (PR27); then PR26. Every merge
+has a fresh DST-aware Berlin time check, expected-head guard, successful exact
+source-head CI and a readback proving the complete merge tree equals that head.
+No squash/rebase, force push, branch deletion or source conflict repair occurs.
+The tested full candidate is `bf5c8ecb81f50af23be313945b9413fa3524596e`;
+the main merge identity and full per-PR ledger are retained in progress E87 and
+`outputs/main-integration-2026-11-15/`.
+
+The actual integrated main is checked in a fresh GitHub checkout: 130 unit tests,
+twelve clinical-reference requirements, dashboard freshness and whitespace. The
+130-test three-platform candidate CI is retained; actual main push
+CI43762039539 also passes130tests/dashboard/whitespace on Windows/macOS/Ubuntu.
+Documentation closeout CI is checked separately. Relevant runtime/UI/helper/lock bytes equal the checked
+candidate, so existing browser evidence keeps its exact original scope. No new
+browser/device run or clinical derivation is implied.
+
+README now starts from `main`; the demo link stays unchanged and explicitly
+identifies the older deployed runtime. E83/E85 hand-reference/numeric-core
+acceptance is preserved; secondary R/SAS tolerance, remaining desktop/source
+acceptance, unexplained Edge reset, native/distribution gaps and all release
+gates remain open. The documentation closeout adds no runtime change or deploy.
+
+Actual source main: `2466d9eeea9ca3317563179fdc7ea2af7a8db453`.
+
+| PR | Original checked head | Merge commit |
+| --- | --- | --- |
+| [#10](https://github.com/Maks1m-Se/ravel/pull/10) | `d9bcec2a752c382b17e8e90d40a7986e8bb2639f` | `7c85721f9ad241c7556e6c5d51b78f7ca96598aa` |
+| [#18](https://github.com/Maks1m-Se/ravel/pull/18) | `b6fae41a4ef72b22d2bbe9d48a97fa4f5d6d25bd` | `e8805a4ba917ddf8b417f2f60f2a37ba98f57a48` |
+| [#19](https://github.com/Maks1m-Se/ravel/pull/19) | `9e86648bde08f38d7cffd77f17f2fad251d8bd52` | `0cfbb82b8a720b315a0a35dae78f47ae3ae776d0` |
+| [#20](https://github.com/Maks1m-Se/ravel/pull/20) | `d0aec989c5f756b8b7c6c3f021784d1625348cd8` | `aa5a22f8388a845007ffe3018e59d3067a826398` |
+| [#21](https://github.com/Maks1m-Se/ravel/pull/21) | `6a50e5fa6c89683aade934260378434cd81b71d3` | `7800f277773ddb8f6046711649d03aea0c2f889d` |
+| [#22](https://github.com/Maks1m-Se/ravel/pull/22) | `f96a1def5c7b0a7412c6cd7faeb98a7f8b88dca8` | `047e717b2ce7afc655d0a71a43694a2f284304bb` |
+| [#23](https://github.com/Maks1m-Se/ravel/pull/23) | `2c235bb34512c6d76ee4bc143cbf0ddba5e6970c` | `ebfa1f5409b1a6be5eed51176bdd0767b8b182c4` |
+| [#24](https://github.com/Maks1m-Se/ravel/pull/24) | `db6571c1f69b60eef34cefcadf4c89f1e29ad042` | `6743485f848135281cb5e999916e5d98c98dad03` |
+| [#25](https://github.com/Maks1m-Se/ravel/pull/25) | `7c6042e532aef523cbd5f32700184e80649ee142` | `22e0ec6e554a55a0626747a9a1d3cec35db8f199` |
+| [#27](https://github.com/Maks1m-Se/ravel/pull/27) | `eed69c60371ebeea0fa0faa17c11117ff7e04d9a` | `fce0e8aeac6399431142b5105c0941332f03e934` |
+| [#26](https://github.com/Maks1m-Se/ravel/pull/26) | `bf5c8ecb81f50af23be313945b9413fa3524596e` | `2466d9eeea9ca3317563179fdc7ea2af7a8db453` |
