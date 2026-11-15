@@ -2797,3 +2797,29 @@ policy adoption. Dashboard/tracking, affected local links and whitespace checks
 pass; full 130 tests and all twelve clinical references pass. No R/SAS run,
 browser run, clinical implementation, merge or deployment is claimed. Evidence
 is retained under `outputs/numeric-policy-adoption-2026-11-15/`.
+
+### Published review candidate (15 November 2026)
+
+Maksim authorized pushing and offered merge permission. The exact merge scope
+is being clarified because the complete current branch contains all nine older
+PR dependencies plus UX/export, source-contract and overnight changes. This does
+not infer any additional desktop/source acceptance or release-gate completion.
+
+`batch/overnight-2026-11-14` at `72867b60340a8452edf24fac36b503fa1232f721`
+was pushed at 21:40 Berlin after a live time check. [Draft PR26](https://github.com/Maks1m-Se/ravel/pull/26)
+targets `integration/main-2026-10-29` at eed69c6. Its predecessor nine PR heads
+are unchanged; main is still d7d42f8. PR26 remains draft while merge scope and
+remaining review requirements are resolved. No existing branch is overwritten.
+
+A fresh clone directly from GitHub passes all 130 units, twelve clinical
+reference requirements, dashboard freshness and whitespace; status is clean,
+with no borrowed PYTHONPATH. The first test command incorrectly supplied a
+discovery top-level argument to the non-package tests directory; the documented
+repository-root command passes. Both logs remain under
+`outputs/publication-2026-11-15/`. [PR CI43759529647](https://github.com/Maks1m-Se/ravel/actions/runs/43759529647)
+passes on Windows/macOS/Ubuntu: all three full logs explicitly show 130 tests
+and OK, with successful dashboard and whitespace steps. These are core source
+checks, not native/clinical acceptance. All ten PRs have no inline review threads.
+
+The fixed local instances and existing Render deployment are preserved. No
+merge, deployment, binary publication or clinical calculation is performed.

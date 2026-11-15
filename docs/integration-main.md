@@ -232,3 +232,23 @@ publication is prepared separately from this local review. The existing
 nine-PR order above remains unchanged. Do not target main until the required
 integration ancestry is present there. All actual merges, visual/contract
 acceptance and deployment remain separate maintainer decisions.
+
+## Published follow-up (15 November 2026)
+
+The consolidated UX/export, source-contract and bounded overnight candidate is
+now published as [Draft PR26](https://github.com/Maks1m-Se/ravel/pull/26), from
+`batch/overnight-2026-11-14` at 72867b6 to `integration/main-2026-10-29` at eed69c6.
+The nine predecessor heads above and main d7d42f8 remain unchanged.
+
+Maksim authorized publication and offered merge permission; the exact scope is
+being clarified because integrating this head also requires the predecessor
+stack. Prior desktop/source review limitations remain recorded, not implicitly
+accepted. No merge or Render update has occurred. If the full source stack is
+selected, preserve its ancestry and the documented nine-PR order, integrate the
+integration branch's documentation follow-up, then retarget/merge PR26 only
+after its base is in main and actual CI passes. Do not squash the dependency
+history or silently replace the integration with a direct main push.
+
+The core policy `clinical-numeric/1` and six additional hand references are now
+accepted (E85/E83); the secondary R/SAS tolerance and clinical calculations remain
+unimplemented/unverified as recorded. Merge permission is not release acceptance.
