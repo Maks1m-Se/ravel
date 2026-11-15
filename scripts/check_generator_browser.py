@@ -7,6 +7,7 @@ from importlib.metadata import version
 from hashlib import sha256
 from io import StringIO
 import json
+import os
 from pathlib import Path
 import platform
 import sys
@@ -24,6 +25,11 @@ from scripts.check_workbook_browser import (  # noqa: E402
     activate, assert_branding, assert_error, assert_focus_style, check_help, contrast,
     keyboard_to, popup_ready, properties_width, set_theme, type_value,
 )
+
+
+def cli_command(*arguments):
+    executable=os.environ.get('RAVEL_BROWSER_EXECUTABLE')
+    return ([executable] if executable else [sys.executable,'-m','ravel'])+list(arguments)
 
 
 def download(page, label, path):
@@ -353,6 +359,7 @@ def main():
     results = dict(started_utc=datetime.now(timezone.utc).isoformat(), python=platform.python_version(),
                    platform=platform.platform(), playwright=version('playwright'), cases=[],
                    external_requests=[], external_websockets=[], page_errors=[])
+    results['cli_command']=cli_command()
     def runtime_hashes():
         return {p.relative_to(ROOT).as_posix():sha256(p.read_bytes()).hexdigest()
                 for p in (ROOT/'ravel').rglob('*') if p.is_file() and p.suffix in {'.py','.css','.js'} and '__pycache__' not in p.parts}

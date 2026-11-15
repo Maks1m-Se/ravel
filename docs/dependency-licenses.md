@@ -1,5 +1,13 @@
 # Prototype dependency and license inventory
 
+The18October current-app private preview adds a separate
+[artifact-specific review](windows-preview-notices.md) and
+[repeatable build/checklist](windows-preview.md). Actual manifests, component
+analysis, intact pinned source archives, tagged core npm provenance and decoded
+font records supersede historical folder counts for that candidate only.
+Public redistribution findings remain open; the historical inspection below
+and prior evidence are preserved.
+
 Inspected **11 October 2026**; scoped to the current Windows workbook experiment,
 not a completed release/legal review. Established runtime/build/review locks are unchanged; a separate build candidate is recorded below.
 Sources: actual installed `METADATA`, `RECORD`, license/NOTICE files from `.venv`,

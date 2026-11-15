@@ -15,7 +15,7 @@ from scripts.check_workbook_browser import activate,assert_error,keyboard_to,pro
 
 
 def exercise(page,base,out,viewport,theme):
-    from scripts.check_generator_browser import ROOT,apply,download,generate_table,layout_regressions,preview_cells,reload_recipe,state_snapshot
+    from scripts.check_generator_browser import ROOT,apply,cli_command,download,generate_table,layout_regressions,preview_cells,reload_recipe,state_snapshot
     prefix=f'{viewport["width"]}x{viewport["height"]}-{theme.lower()}-linked'
     if page.url.startswith(base) and page.evaluate('Boolean(window.ravelUnsaved)'):
         page.once('dialog',lambda dialog:dialog.accept())
@@ -91,7 +91,7 @@ def exercise(page,base,out,viewport,theme):
         actual={name:archive.read(name) for name in archive.namelist()}
     assert actual==payloads(generate(recipe))
     cli_folder=out/f'{prefix}-cli'
-    run=subprocess.run([sys.executable,'-m','ravel','generate',str(recipe_path),'--directory',str(cli_folder)],cwd=ROOT,capture_output=True,text=True)
+    run=subprocess.run(cli_command('generate',str(recipe_path),'--directory',str(cli_folder)),cwd=ROOT,capture_output=True,text=True)
     assert run.returncode==0,run.stderr
     assert {path.name:path.read_bytes() for path in cli_folder.iterdir()}==actual
     expect(page.locator('.preview-view .preview-table tbody tr')).to_have_count(9)

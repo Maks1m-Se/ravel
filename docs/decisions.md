@@ -507,3 +507,22 @@ internal adapter/interface before implementation. Only runnable templates appear
 in the shared app. The generic structural example remains generic despite its
 clinical-looking names. Policy review is the concrete dependency; continue private
 packaging independently.
+
+## Bounded private Windows build (18–19 October 2026)
+
+Select standard CPython3.14.8 x64 with the GIL, the existing48 runtime pins and
+the separate seven build pins for this private preview. Two fresh offline
+environments, exact installed-inventory checks and actual candidate execution
+support this binary-build selection. NiceGUI remains provisional; this is not
+all-platform/native-installation or public redistribution acceptance.
+
+Reproducible assembly means equal declared input hashes, exact pins, output
+paths, stable file bytes and decoded standard-library/corresponding-source ZIP
+contents. Report executable/ZIP-container differences explicitly. Preserve the
+actual dirty-source Git base/content ID rather than assigning a later commit to
+an earlier binary. Actual file manifests replace build-venv RECORD wrappers in
+the frozen folder; notice texts retain original paths/hashes through short
+content-addressed storage. No environment/source archive is altered by that
+selection. See [the verification record](windows-preview-validation.md) and
+[artifact notice findings](windows-preview-notices.md) for evidence and remaining
+public-distribution prerequisites. Keep the binary private and PRs draft.

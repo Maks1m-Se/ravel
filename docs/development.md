@@ -1800,3 +1800,44 @@ Its snapshot is never edited or targeted by automated browser checks. The older
 repair-only instance on8100 is preserved separately. Drafts10/18/19/20/21 stay
 unmerged for joint review; E46 acceptance remains attributed to its original
 tested version.
+
+### Private Windows verification (18–19 October 2026)
+
+The [exact candidate record](windows-preview-validation.md) contains full hashes,
+the published draft/CI chain, actual captures and the joint-test walkthrough.
+Both fresh55-pin builds pass the actual frozen CLI checks. The primary candidate
+passes all16 Chrome workflow/theme/laptop cases plus Edge; normal console stops
+for both final builds exit0, close their ports and produce zero tracebacks.
+All82 unit methods, dashboard freshness and whitespace pass. Rebuild comparison
+finds equal stable bytes/decoded ZIP contents; the executable and two container
+bytes differ and bit-identical output is not claimed.
+
+Use the pinned source interpreter for checks, a fresh output name each time,
+and an actual extracted bundle for the packaging commands:
+
+```powershell
+python -m unittest discover -s tests -v
+python scripts/build_dashboard.py --check
+git diff --check
+python scripts/check_windows_preview.py --bundle C:\path\to\Ravel --output outputs/preview-cli-review
+python scripts/check_windows_preview_server.py --bundle C:\path\to\Ravel --output outputs/preview-browser-review --port 8102
+python scripts/compare_windows_previews.py C:\path\to\first\Ravel C:\path\to\second\Ravel --output outputs/preview-comparison.json
+python scripts/check_windows_protections.py --bundle C:\path\to\Ravel --output outputs/preview-protections.json
+```
+
+The final native Defender scan passed on19October with zero detections and an
+unchanged manifest; protection status/settings are in the record. Native Windows
+keypress/file picker/default browser, physically disconnected cold start,
+download-origin SmartScreen and a clean machine without Python remain untested.
+Do not target the immutable manual8100/8101 instances with automated checks.
+No public binary, clinical or milestone acceptance follows from these passes.
+
+The private-preview implementation is published for review in
+[draft PR23](https://github.com/Maks1m-Se/ravel/pull/23), commit
+`5b5dbc2fc1a8e06d410c13b216d072d7b2f6c85f`. Published source/lock/capture blobs
+match the tested snapshot after explicit LF normalization. The three hosted
+Windows/macOS/Ubuntu job logs in
+[run39312807595](https://github.com/Maks1m-Se/ravel/actions/runs/39312807595)
+each record82 successful unit tests plus dashboard freshness and whitespace.
+These are core checks, not native installation or packaged-browser jobs.
+The candidate stays private and all feature PRs stay draft/unmerged.

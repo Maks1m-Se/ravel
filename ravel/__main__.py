@@ -37,7 +37,8 @@ def write_outputs(input_path, csv_path, result):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(prog="python -m ravel", description="Generate one table from explicit rules.")
+    parser = argparse.ArgumentParser(prog='Ravel.exe' if getattr(sys,'frozen',False) else 'python -m ravel',
+        description='Generate reproducible tables from explicit rules or a CSV sample.')
     commands = parser.add_subparsers(dest="command", required=True)
     check = commands.add_parser("validate", help="Validate a versioned recipe without generating.")
     check.add_argument("recipe", type=Path)
@@ -54,12 +55,18 @@ def main(argv=None):
     sample.add_argument("--rows", type=int, default=1000)
     sample.add_argument("--seed", type=int, default=17)
     sample.add_argument("--confirm-identifiers", action="store_true", help="Explicitly confirm the suggested sequential identifier policies.")
-    commands.add_parser("ui", help="Launch the local table builder (requires requirements-ui.lock).")
+    interface=commands.add_parser("ui", help="Launch the local workbench (requires requirements-ui.lock).")
+    interface.add_argument('--port',type=int,default=8090,help='Loopback port (default8090).')
     args = parser.parse_args(argv)
     try:
         if args.command == "ui":
-            from .ui import launch
-            launch()
+            if not 1<=args.port<=65535:
+                raise ValueError('Port must be from1 to65535.')
+            try:
+                from .ui import launch
+                launch(port=args.port)
+            except KeyboardInterrupt:
+                print('Ravel stopped.',flush=True)
             return 0
         if args.command == "sample":
             from .sample import profile
