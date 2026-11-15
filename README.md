@@ -9,6 +9,13 @@ CSV sample. The current preview supports editable sample assumptions, new-row or
 retain-and-extend generation, and small linked datasets. It is available for
 review and is not a supported application release.
 
+The reviewed source candidate for `main` is on
+[`integration/main-2026-10-29`](https://github.com/Maks1m-Se/ravel/tree/integration/main-2026-10-29).
+The nine draft PRs are still unmerged. See the
+[integration handoff](docs/integration-main.md) for their order, checks and the
+separate desktop acceptance. The actual Pixel 8/Gboard test was deferred by the
+maintainer: **not performed, not passed**.
+
 **Compose the data you need.**
 
 **[Try the public web demo](https://ravel-personal-test.onrender.com/)** — no login,
@@ -56,10 +63,12 @@ columns get new identities. Reproducibility is scoped to the recorded environmen
 
 ### Source quickstart
 
-Use standard **CPython 3.14.8 x64**, with the GIL enabled, on Windows. In PowerShell
-at the repository root, create a separate source environment:
+Use standard **CPython 3.14.8 x64**, with the GIL enabled, on Windows. For a new
+checkout in PowerShell:
 
 ```powershell
+git clone --branch integration/main-2026-10-29 https://github.com/Maks1m-Se/ravel.git
+Set-Location ravel
 py -3.14 -m venv .venv-source
 .\.venv-source\Scripts\python.exe --version
 .\.venv-source\Scripts\python.exe -m pip install -r requirements-ui.lock
@@ -103,9 +112,11 @@ for maintained checks and a short walkthrough. Historical
 [fixture experiment instructions](docs/development.md#workbook-experiment) and
 packaging evidence remain available, with their original scope.
 
-The [public Render demo](docs/public-demo.md) uses the separate deployment branch
-and a narrow-screen layout. Actual Pixel8 keyboard review remains separate from
-automated mobile emulation. The original [personal test record](docs/personal-render.md)
+The [public Render demo](docs/public-demo.md) runs implementation `79e44cb` on the
+existing Free service. The integration candidate has the same runtime; only its
+documentation differs. The real Pixel8/Gboard test is deferred and unperformed;
+automated mobile emulation does not establish device acceptance.
+The original [personal test record](docs/personal-render.md)
 is retained as history.
 
 ## Documentation and contributing
