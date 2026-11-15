@@ -197,6 +197,11 @@ further specification and review; application, clinical, and release-gate valida
 
 ## Implemented bounded generic linked increment
 
+The separate [clinical preparation](clinical-template-preparation.md) maps this
+core to the accepted fictional baseline slice and proposes the unresolved numeric
+policy for review. Clinical reference sheets are not loadable generator recipes;
+the runnable structural example remains generic. No clinical module is active.
+
 [linked-tables.md](linked-tables.md) specifies `ravel-dataset/1`, its stable
 identities, explicit keys/counts and bounded acyclic relationships. It reuses
 the generic scalar rules and keeps one dataset freshness state. The runnable

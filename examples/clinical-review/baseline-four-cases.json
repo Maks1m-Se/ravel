@@ -1,0 +1,327 @@
+{
+  "format": "ravel-clinical-review/1",
+  "status": "accepted-reference-transcription-awaiting-review",
+  "source": "docs/baseline-specification.md: Four invented, hand-worked cases (accepted8October2026)",
+  "purpose": "Hand expectations, not executable application recipe or generator output.",
+  "declarations": {
+    "treatment": "TX-1",
+    "dose_unit": "dx-unit",
+    "parameters": {
+      "BX-1": "bx-unit"
+    }
+  },
+  "cases": [
+    {
+      "id": "C1",
+      "declared_subjects": [
+        "S-C1"
+      ],
+      "declared_groups": [
+        [
+          "S-C1",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "C1-M1",
+          "kind": "measurement",
+          "subject": "S-C1",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C1-D1",
+          "kind": "actual-dose",
+          "subject": "S-C1",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "C1-M2",
+          "kind": "measurement",
+          "subject": "S-C1",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T11:00:00Z",
+          "value": 13,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "C1-G1",
+            "subject": "S-C1",
+            "parameter": "BX-1",
+            "dose_id": "C1-D1",
+            "baseline_id": "C1-M1",
+            "baseline_value": 10,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "C1-CH1",
+            "group_id": "C1-G1",
+            "dose_id": "C1-D1",
+            "baseline_id": "C1-M1",
+            "target_id": "C1-M2",
+            "change": 3,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      }
+    },
+    {
+      "id": "C2",
+      "declared_subjects": [
+        "S-C2"
+      ],
+      "declared_groups": [
+        [
+          "S-C2",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "C2-M1",
+          "kind": "measurement",
+          "subject": "S-C2",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 8,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C2-M2",
+          "kind": "measurement",
+          "subject": "S-C2",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:30:00Z",
+          "value": null,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C2-D1",
+          "kind": "actual-dose",
+          "subject": "S-C2",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "C2-M3",
+          "kind": "measurement",
+          "subject": "S-C2",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T11:00:00Z",
+          "value": 11,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "C2-G1",
+            "subject": "S-C2",
+            "parameter": "BX-1",
+            "dose_id": "C2-D1",
+            "baseline_id": "C2-M1",
+            "baseline_value": 8,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "C2-CH1",
+            "group_id": "C2-G1",
+            "dose_id": "C2-D1",
+            "baseline_id": "C2-M1",
+            "target_id": "C2-M3",
+            "change": 3,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      }
+    },
+    {
+      "id": "C3",
+      "declared_subjects": [
+        "S-C3"
+      ],
+      "declared_groups": [
+        [
+          "S-C3",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "C3-D1",
+          "kind": "actual-dose",
+          "subject": "S-C3",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "C3-M1",
+          "kind": "measurement",
+          "subject": "S-C3",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 12,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C3-M2",
+          "kind": "measurement",
+          "subject": "S-C3",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T11:00:00Z",
+          "value": 15,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "C3-G1",
+            "subject": "S-C3",
+            "parameter": "BX-1",
+            "dose_id": "C3-D1",
+            "baseline_id": null,
+            "baseline_value": null,
+            "unit": "bx-unit",
+            "reasons": [
+              "NO_ELIGIBLE_BASELINE"
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "id": "C3-CH1",
+            "group_id": "C3-G1",
+            "dose_id": "C3-D1",
+            "baseline_id": null,
+            "target_id": "C3-M2",
+            "change": null,
+            "unit": "bx-unit",
+            "reasons": [
+              "NO_ELIGIBLE_BASELINE"
+            ]
+          }
+        ],
+        "record_diagnostics": [
+          {
+            "source_id": "C3-M1",
+            "code": "AT_DOSE_BOUNDARY"
+          },
+          {
+            "source_id": "C3-M2",
+            "code": "NO_ELIGIBLE_BASELINE"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C4",
+      "declared_subjects": [
+        "S-C4"
+      ],
+      "declared_groups": [
+        [
+          "S-C4",
+          "BX-1"
+        ]
+      ],
+      "records": [
+        {
+          "id": "C4-M1",
+          "kind": "measurement",
+          "subject": "S-C4",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T09:00:00Z",
+          "value": 10,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C4-D1",
+          "kind": "actual-dose",
+          "subject": "S-C4",
+          "parameter": "TX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 1,
+          "unit": "dx-unit"
+        },
+        {
+          "id": "C4-M2",
+          "kind": "measurement",
+          "subject": "S-C4",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "value": 12,
+          "unit": "bx-unit"
+        },
+        {
+          "id": "C4-M3",
+          "kind": "measurement",
+          "subject": "S-C4",
+          "parameter": "BX-1",
+          "timestamp": "2026-01-01T11:00:00Z",
+          "value": 15,
+          "unit": "bx-unit"
+        }
+      ],
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "C4-G1",
+            "subject": "S-C4",
+            "parameter": "BX-1",
+            "dose_id": "C4-D1",
+            "baseline_id": "C4-M1",
+            "baseline_value": 10,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "C4-CH1",
+            "group_id": "C4-G1",
+            "dose_id": "C4-D1",
+            "baseline_id": "C4-M1",
+            "target_id": "C4-M3",
+            "change": 5,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": [
+          {
+            "source_id": "C4-M2",
+            "code": "AT_DOSE_BOUNDARY"
+          }
+        ]
+      }
+    }
+  ]
+}

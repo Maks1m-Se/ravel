@@ -264,7 +264,8 @@
         "E50",
         "E51",
         "E52",
-        "E53"
+        "E53",
+        "E54"
       ],
       "blockers": []
     },
@@ -308,7 +309,9 @@
       "release_gate_ids": [
         "R1"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E54"
+      ],
       "blockers": []
     },
     {
@@ -324,7 +327,9 @@
       "release_gate_ids": [
         "R1"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E54"
+      ],
       "blockers": []
     },
     {
@@ -825,10 +830,15 @@
       "id": "E53",
       "reference": "18 October 2026 issue #15; docs/linked-tables.md; examples/linked/; https://github.com/Maks1m-Se/ravel/issues/15",
       "scope": "Specified the separate ravel-dataset/1 recipe and hand three-devices/six-measurements fixture before implementation. Bounded acyclic one-to-many links, stable table/field IDs, declared primary/foreign keys and explicit counts share the generic scalar engine without name-based clinical activation. One global applied/current result supports table selection, per-table editors/preview/CSV, an explicit relationship/count review dialog, dictionary/run metadata and complete ZIP export. CLI directory output stages all files and never overwrites an existing destination; ordinary write failure removes only its own staging set. Eleven new test methods cover hand keys/slots, dangling keys, duplicate PKs, contradictory counts/cycles, unchanged independent streams, all payloads/checksums, failed staged writes, CLI agreement and session atomicity/count cascades/export warnings. Full76-test suite passed. Final source-attested Chrome matrix passes16 cases: rules/sample/extended/linked, Light/Dark at1366x657 and1280x800; focused Edge linked case passes. Actual generated/relationship captures inspected. Browser tests verify keyboard table switching, Properties preference, draft/count rejection and recovery, relationship Cancel/apply, independent-field stability, complete ZIP/CLI bytes, invalid-load atomicity and global stale export. Zero page errors or external HTTP/WebSocket attempts. An initial final-run assertion took its before snapshot before the pending draft acknowledgement; waiting for visible Unapplied edits and disabled CSV corrected that test race, then the full matrix and Edge passed. Failed runs remain retained. Python3.14.8/NiceGUI3.18.0/Playwright1.58.0, Chrome155.0.8059.82, Edge155.0.4283.62 on this development host. Dataset limits are eight tables/one parent per child,100000 rows per table/50 fields and two million total cells; no arbitrary joins, joined-sample fitting, power-loss transaction or clinical derivations. No native/clean-machine/platform or maintainer acceptance. Earlier E46 acceptance and M0/fullM1/release gates remain unchanged. Separate draft PRs18/19/20 publish the fixed #12/#13/#14 snapshots; their remote refs were read back and verified. PR10 remains draft at d9bcec2 with hosted43-test Windows/macOS/Ubuntu evidence separately attributed."
+    },
+    {
+      "id": "E54",
+      "reference": "18 October2026 issue #16; docs/clinical-template-preparation.md; examples/clinical-review/; https://github.com/Maks1m-Se/ravel/issues/16",
+      "scope": "Completed preparation only: explicit template/version selection, three-table subject/exposure/measurement mapping, clinical declarations and a small prepare/validate/derive/export boundary. Generic keys/counts remain separate from group membership, dose semantics and derivations; current fixed-count/one-parent limits and missing record-schedule adapter are explicit. No unavailable clinical option appears in the app. Proposed exact decimal input, six-place/range bounds, exact subtraction/overflow failure, output formatting/half-even boundary and exact primary/absolute-only secondary Python-R comparison are unreviewed decisions with hand arithmetic examples. Clinical numeric implementation remains blocked on maintainer review/adopted policy ID; no Python/R clinical comparison ran. Transcribed the accepted four independent cases (14records,4doses,10measurements,4groups,4changes) and diagnostic a/b/c/crossed-pair sheets without changing the accepted baseline specification. Required failure/source-ID sets remain separate from NOT_EVALUATED checks, with zero successful outputs on clinical failure. A runnable generic-only three-table recipe demonstrates clinical-looking names/literal baseline text without activation. Two new tests check nonactivation, atomic rejection of review sheets and their structural references; full78-test suite passes. The standalone review-sheet checker verifies counts/references, not clinical selection/arithmetic/validation. Dashboard freshness and whitespace pass. Runtime/UI unchanged from E53, so its final16Chrome+Edge evidence is reused. No clinical generator, clinical validation, standards conformity, milestone or release acceptance. DraftPR21 publishes generic linked implementation at6a50e5fa6c89683aade934260378434cd81b71d3. Frozen manual8101 serves linked-E53-323bae982692 at that commit, isolated from edits/browser automation; original repair8100 remains separate."
     }
   ],
   "blockers": [],
-  "next_action": "Continue authorized #11 with #16 clinical interface/recipe mapping, hand review fixtures and the unreviewed numeric-policy proposal, then #17 private Windows preview tooling/candidate/checklist. Clinical numeric implementation waits for policy review; clean Windows without Python is unavailable. Joint review: draft10 repair,18 sample,19 UX/skill,20 extended rules and the linked-tables draft; test explicit/sample workflows, keys/counts and all-table exports. Keep all drafts unmerged, no public binaries or final acceptance. Manual8100 remains immutable repair-E49. Publish each completed package only after a live eligible Berlin clock check; M0/fullM1 and broad release gates remain incomplete.",
+  "next_action": "Continue authorized #11 with #17: select/verify fresh Windows build environment, tracked repeatable private candidate tooling, actual artifact/notices inventory and development-host checks, then prepare the exact clean-Windows checklist. No separate clean Windows guest without Python is available; record that external prerequisite without claiming installation evidence. Required joint review: draft10/18/19/20/21 features and the #16 clinical numeric proposal/reference transcription before any clinical numeric implementation. Test frozen manual8101 (linked-E53-323bae982692, commit6a50e5fa6c89683aade934260378434cd81b71d3); preserve repair8100. Keep drafts unmerged, no public binaries/final acceptance; normal live Berlin publishing checks apply. M0/fullM1/release gates remain incomplete.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M1-02",

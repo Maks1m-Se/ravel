@@ -495,3 +495,15 @@ globally current or stale, with per-table previews and a complete ZIP. Directory
 export stages beside a fresh destination before rename; this is ordinary failure
 atomicity, not crash recovery. Hand reference and scope are in
 [linked-tables.md](linked-tables.md). No clinical meaning follows from names.
+
+## Clinical preparation boundary (18 October2026)
+
+[clinical-template-preparation.md](clinical-template-preparation.md) proposes
+the numeric representation, bounds/overflow, rounding/export and independent
+comparison choices required before clinical numeric implementation. No numeric
+policy is adopted by this preparation. Preserve the accepted8October fictional
+baseline rules and human acceptance; review fixture transcription and the small
+internal adapter/interface before implementation. Only runnable templates appear
+in the shared app. The generic structural example remains generic despite its
+clinical-looking names. Policy review is the concrete dependency; continue private
+packaging independently.
