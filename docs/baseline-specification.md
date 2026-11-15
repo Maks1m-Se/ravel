@@ -287,10 +287,11 @@ specification, not an implemented mode or a general defect-injection framework.
 
 ## Implementation ownership and unresolved numeric policy
 
-The unreviewed [clinical template preparation and numeric proposal](clinical-template-preparation.md)
-now supplies the requested decision sheet, interface mapping and machine-readable
-transcriptions of the accepted references. It adopts no numeric policy and
-implements no derivations. The review prerequisite below remains in force.
+The [clinical template preparation](clinical-template-preparation.md) supplies
+the interface mapping and machine-readable reference transcriptions. Maksim's
+15 November acceptance of the six additional hand references is recorded below;
+it does not accept the source implementation or adopt a numeric policy.
+The numeric decision sheet below remains **proposed, awaiting acceptance**.
 
 Before clinical numeric implementation in **M1-01, Implement linked clinical CLI
 slice** ([existing task record](progress.json)), specify and review arithmetic
@@ -308,6 +309,112 @@ expectations established before implementing their derivations. M2-02 requires
 documented Python/R comparison tolerances consistent with the reviewed numeric
 policy. These obligations are recorded in the existing [task criteria](progress.json);
 they do not move the full scenario contract into M1 or expand its bounded slice.
+
+### Numeric-policy decision sheet — proposed, awaiting acceptance
+
+Review date: 15 November 2026. This refines the earlier proposal in the clinical
+preparation document, not the accepted study rules. Suggested review label:
+`clinical-numeric/1-proposal`; **no adopted policy ID exists**. Nothing here is
+implemented clinical arithmetic or a new restriction on the token-preserving
+source loader. Limits are software bounds for invented data, not clinical ranges.
+
+Already accepted: finite numeric measurements; zero is eligible; only explicit
+measurement null is missing; missing fields/text/nonfinite values are invalid;
+actual doses are strictly positive; planned/not-administered amounts may be null;
+units must match; change means follow-up minus selected baseline; nulls never
+become zero; invalid clinical input fails the entire requested run. Existing
+selection, tie, timestamp and diagnostic rules remain unchanged. The source
+contract already preserves original number tokens, provenance and ordering.
+
+**Recommendation:** exact integer micro-units with rejection of unsupported
+precision/range. Equivalent exact-decimal storage is acceptable only if it
+delivers the same checked results without context-dependent rounding.
+
+| Decision for review | Proposed rule | Trade-off |
+| --- | --- | --- |
+| Numeric syntax | Unquoted JSON number, full-token ASCII grammar `-?(0\|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?`. Decimal point is `.`. Exponent notation is permitted; no leading `+`, leading integer zeros, comma, Boolean, numeric string, NaN or infinity. | Familiar JSON syntax; deliberately no locale or string coercion. JSON syntax is established by [RFC 8259 §6](https://www.rfc-editor.org/rfc/rfc8259#section-6); exponent acceptance for the future clinical calculation policy is proposed. |
+| Exact interpretation | Interpret sign × coefficient digits × 10^(exponent minus fractional digit count), directly from the token, without binary floating-point conversion. Preserve that original token separately. All signed-zero spellings have mathematical value zero; retain their source sign but normalize calculated/exported zero. | Numerically equivalent spellings compare equally while source evidence remains intact. |
+| Precision and source magnitude | A nonnull value must be an exact multiple of `0.000001` and have absolute value ≤ `1000000000`, inclusive. Check after exact exponent interpretation and removal of insignificant trailing zeros. The scaled integer `C = value × 1000000` must be integral and satisfy `abs(C) ≤ 1000000000000000`. Dose amounts additionally satisfy the already accepted positivity rule. | Six effective fractional places, not six significant digits or a six-character spelling limit. Broad invented-data range; finer-resolution or larger real-world data would need a separately reviewed policy version. |
+| Excess precision/range | Reject the whole clinical run, identifying the source ID/field and violated limit; never round, truncate, clip, resample, underflow to zero or silently drop a record. No arithmetic output on failure. | Extra zero digits remain valid, but a seventh meaningful fractional place is invalid even if rounding would produce an allowed value. No half-even quantization is authorized for this subtraction-only version. |
+| Subtraction and overflow | Subtract exact coefficients: `C_change = C_followup − C_baseline`. Baseline is the selected source coefficient. Result bound is ±`2000000000000000` micro-units, or ±`2000000000` in the declared unit. Check representation capacity; unexpected overflow is a whole-run error, never a floating-point fallback. | Exact subtraction needs no intermediate/output rounding. Binary64 direct decimal arithmetic is simpler but would sacrifice exact decimal semantics; arbitrary precision with no magnitude bound complicates independent cross-language checks. |
+| Missing and output | Keep explicit null as missing, never zero or NaN. Apply the already accepted missing-reason precedence. Canonical numeric CSV: fixed six fractional digits, `.` separator, no exponent/grouping/leading `+`, and zero `0.000000`. Missing numeric CSV cell is empty, with explicit reason(s) in the separate output fields/diagnostics. Logical JSON missing is `null`. | Stable comparison/export format; source files and tokens are never rewritten. Six-place padding is formatting, not rounding. |
+| Comparison | Require exact coefficients and canonical decimal strings; IDs, selected source IDs, row sets/cardinality, units, timestamps, nulls and reasons also compare exactly. Normalize zero for numeric results only. | A one-micro-unit wrong result always fails; tolerance cannot excuse wrong selection or formatting. |
+
+There is no separate significant-digit or exponent-spelling cap in this
+proposal beyond the existing 1 MiB source envelope. A long exponent must be
+classified against the value bounds without expanding an enormous power of ten.
+An exact zero remains zero for any valid exponent within that envelope; nonzero
+huge/tiny values fail range/precision. This is a future safe-implementation
+requirement, not permission to change the current lossless source parser.
+
+### Independently hand-worked numeric boundaries
+
+All **accept/reject labels below are proposed policy outcomes**, not executed
+clinical validation. Measurement context is assumed unless a dose is named.
+`C` denotes exact integer micro-units. These examples were worked from decimal
+place value and integer subtraction; no clinical derivation produced them.
+
+| Input or operation | Proposed accept/reject and exact result | Hand rationale / canonical CSV |
+| --- | --- | --- |
+| `0`, `-0`, `-0.0000000e+9` | Accept; each has `C=0` | Zero coefficient regardless of sign/exponent; each exports `0.000000`, original token retained. Zero actual dose is rejected by the already accepted positivity rule. |
+| Baseline `0`, follow-up `2` | Accept; change `2` | `2000000 − 0 = 2000000`; `2.000000`. Zero baseline is usable, not missing. |
+| Baseline `-1.25`, follow-up `-2.5` | Accept; change `-1.25` | `-2500000 − (-1250000) = -1250000`; `-1.250000`. Negative measurements are permitted; a negative dose is rejected. |
+| `0.3 − 0.2` | Accept; exact `0.1` | `300000 − 200000 = 100000`; `0.100000`, without binary64 residuals. |
+| `0.3`, `3e-1`, `30E-2`, `0.3000000` | Accept; identical `C=300000` | Exponent shifts and insignificant trailing zeros change spelling only; all export `0.300000`. Subtract any pair: exact zero, `0.000000`. |
+| `0.000001`, `1e-6`, `10e-7` | Accept; minimum positive step | Each is one micro-unit, `C=1`; `0.000001`. This is also the smallest supported positive dose amount. |
+| `-0.000001` | Accept measurement; `C=-1` | Symmetric precision bound; `-0.000001`; rejected as a dose. |
+| `1.2345670` | Accept; `C=1234567` | Removing only trailing zero gives six fractional places; `1.234567`. |
+| `0.0000001`, `1e-7`, `1.2345675` | Reject; no successful numeric output | Scaled values are `0.1`, `0.1`, `1234567.5`, not integers. Do not round to zero or `1.234568`. |
+| `1.000001 − 1.000000` | Accept; one micro-unit | `1000001 − 1000000 = 1`; `0.000001`. |
+| `999999999.999999` | Accept; `C=999999999999999` | One micro-unit below the positive source bound; `999999999.999999`. |
+| `1000000000`, `1e9`, `-1000000000` | Accept; `C=±1000000000000000` | Inclusive magnitude endpoint; `1000000000.000000` or `-1000000000.000000`. |
+| `1000000000.000001`, `-1000000000.000001` | Reject; no successful numeric output | Magnitude exceeds the source bound by one micro-unit, despite valid precision. |
+| `1000000000 − (-1000000000)` | Accept; maximum change `2000000000` | `1000000000000000 − (-1000000000000000) = 2000000000000000`; `2000000000.000000`. Reverse operands give minimum `-2000000000.000000`. |
+| Source measurement `2000000000` | Reject as source, although valid as a derived difference | Source and result ranges differ; no promotion of source bounds from the subtraction bound. |
+| Explicit measurement `null` | Accept missing; value/change is null when required by existing missing rules | No coefficient, no subtraction with null, empty numeric CSV cell. Null follow-up with a baseline gives `MISSING_FOLLOWUP_VALUE`; absent baseline gives `NO_ELIGIBLE_BASELINE` (plus the follow-up reason if also null). Actual-dose null is rejected; planned/not-administered null remains allowed. |
+| Absent `value`, `"0.3"`, `true`, `NaN`, `Infinity`, `+1`, `01`, `.3`, `1.` | Reject; no numeric result | Missing required field/type or JSON number syntax failure. These do not mean missing measurement. |
+| `1e99999999`, `1e-99999999`, `0e99999999` | Reject first two; accept zero | Respectively out of magnitude, below supported nonzero resolution, and exact zero. Never coerce overflow/underflow into a clinical value. |
+
+### Independent R/SAS comparison proposal
+
+Primary acceptance uses exact decimal coefficients/strings with **zero numeric
+tolerance**. Read source numeric lexemes as character first; independently
+parse bounded coefficients and independently determine dose/baseline IDs and
+reasons. Do not use Python-selected IDs or deltas as reference inputs. Do not
+multiply an already approximate binary64 decimal value by a million and round
+it to invent a coefficient. R's 32-bit integer type is insufficient; integer-valued
+binary64 doubles can represent these coefficients and differences exactly:
+`2 × 10^15 < 2^53 = 9007199254740992`. Use full 8-byte IEEE numeric storage if a
+SAS companion uses this method, with actual environment qualification first.
+[R arithmetic documentation](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Arithmetic.html)
+describes floating-point and integer limitations; [SAS UNIX numeric precision](https://support.sas.com/documentation/cdl/en/hostunx/61879/HTML/default/a000344718.htm)
+documents its 8-byte exact-integer bound. Neither source validates this template.
+
+Retain the earlier **optional secondary** absolute tolerance `5e-7`, relative
+tolerance `0`, only for a separately reported binary64 decimal-subtraction
+diagnostic. It can never override failure of the exact primary check. This is
+a bounded error argument, not an executed R/SAS result: assume correctly rounded
+binary64 input conversion and a single round-to-nearest, ties-to-even subtraction. At inputs
+of magnitude ≤`1e9`, half an ulp is at most `2^-24`; at differences ≤`2e9`, at
+most `2^-23`. Two input conversions plus subtraction contribute at most
+`2 × 2^-24 + 2^-23 = 2^-22` per calculation. Comparing two such calculations
+is bounded by `2^-21 ≈ 4.76837158203125e-7 < 5e-7`; comparison to an exactly
+specified decimal result rounded once to binary64 is bounded by
+`3 × 2^-23 ≈ 3.5762786865234375e-7`. Relative tolerance could conceal large
+fixed-scale errors and is excluded. Null/reason/identity mismatches have no
+tolerance. Other operations, reduced-length/non-IEEE SAS storage, different
+rounding modes or transformations invalidate this argument and need new review.
+
+M2-02 must independently exercise these boundaries in the actual R/SAS setup
+before this optional diagnostic tolerance can be accepted. No R/SAS execution,
+clinical calculations or policy adoption is claimed by these documents.
+
+**Decisions requiring review:** approve/amend (1) exact exponent interpretation,
+six effective decimal places and ±`1e9` source/±`2e9` result bounds;
+(2) strict rejection with no quantization, signed-zero normalization and canonical
+six-place output; (3) exact primary comparison and whether to permit the bounded
+secondary `5e-7` diagnostic at all. Only after explicit acceptance should an
+adopted version ID and implementation task be authorized.
 
 ## Four invented, hand-worked cases
 
@@ -400,8 +507,9 @@ not add a thirteenth scenario or change the release criteria.
 These expectations were established directly from the stated rules and hand
 arithmetic before any derivation implementation. AI drafting, structural checks
 and a second-agent document review are not independent clinical validation.
-The other planned reference cases, R comparisons and targeted wrong-derivation
-checks remain future work; no release gate is established by these examples.
+The six additional hand references are now accepted as recorded below; R
+comparisons and targeted wrong-derivation checks remain future work. No release
+gate is established by these examples.
 
 ## Maintainer acceptance and review record
 
@@ -438,3 +546,21 @@ behavior.
    representation/range, overflow, rounding, formatting and tolerances remain
    unresolved; reference expectations precede their derivations. These later
    prerequisites remain required after M0-05 acceptance.
+
+### Additional reference acceptance (15 November 2026)
+
+Maksim explicitly accepts the six additional invented hand reference cases in
+[additional-scenarios.json](../examples/clinical-review/additional-scenarios.json),
+as supplied at overnight candidate `1335be1c5185468c9e6d9a0395e89d1bcfd75faf`:
+`multiple-eligible`, `labelled-followup`, `out-of-order`, `undosed`,
+`empty-measurements` and `grouping`. This covers their supplied records and
+hand expected selections, output values/rows, missing reasons and diagnostics.
+Only acceptance metadata changes; no source records or expectations are amended.
+[scenario-coverage.json](../examples/clinical-review/scenario-coverage.json)
+continues to map all twelve requirements, preserving accepted C1–C4 and negative
+expectations. Progress evidence E83 attributes this acceptance to Maksim.
+
+This acceptance is separate from numeric-policy adoption, source/adapter
+implementation acceptance, executed derivation, independent R/SAS comparison
+and remaining UX acceptance. The numeric decision sheet remains **proposed,
+awaiting acceptance**. Clinical implementation and release gates remain pending.

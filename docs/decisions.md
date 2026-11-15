@@ -684,3 +684,17 @@ Prefer one combined Draft PR against integration/main-2026-10-29. The two
 unpublished input branches are archival inputs, not extra prerequisite PRs.
 The existing nine-PR integration stack remains unmerged and separately gated.
 No clinical arithmetic, numeric-policy adoption or hosting change is included.
+
+## Reference acceptance and numeric proposal (15 November 2026)
+
+Record Maksim's acceptance of the six additional hand reference cases supplied
+at 1335be1, without changing their source or expected-result data (E83). This
+does not accept the source implementation or complete clinical validation.
+
+Keep the expanded numeric policy **proposed, awaiting acceptance** (E84).
+[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
+is the canonical decision sheet; the preparation document links to it instead
+of maintaining another full numeric table. Recommend exact bounded micro-units,
+strict rejection and exact primary comparison. Any secondary R/SAS tolerance
+needs its stated assumptions and later independent boundary checks. No adopted
+policy ID, clinical arithmetic, merge or deployment is authorized by this record.

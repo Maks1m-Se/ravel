@@ -2762,3 +2762,23 @@ failing regression and final logs are retained in
 `outputs/clinical-adapter-recursion-2026-11-15/`. No UI or generic code changes;
 no new browser run, merge or deployment. Earlier evidence and acceptance limits
 remain unchanged.
+
+### Reference acceptance and numeric policy review (15 November 2026)
+
+Maksim accepted the six additional clinical hand references at 1335be1 (E83).
+Only their acceptance metadata changes: records, expected results, diagnostics
+and declarations remain identical. Clinical derivation and source-implementation
+acceptance are separate. The canonical proposed numeric decision sheet and
+independent hand boundaries now live in
+[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
+(E84); no clinical code or adopted policy ID is added.
+
+Run `python scripts/check_clinical_review.py`,
+`python scripts/check_clinical_scenarios.py`,
+`python -m unittest discover -s tests -v`,
+`python scripts/build_dashboard.py --check` and `git diff --check`.
+The reference checks retain policy `not_evaluated`, derivation `not_implemented`
+and all twelve requirements. Full 130 tests, dashboard/tracking, affected local
+Markdown links and whitespace pass. Raw results and acceptance-data hashes are
+under `outputs/numeric-policy-review-2026-11-15/`. No R/SAS or browser run is
+claimed for this documentation/metadata update; no merge or deployment.

@@ -296,7 +296,8 @@
         "E79",
         "E80",
         "E81",
-        "E82"
+        "E82",
+        "E84"
       ],
       "blockers": [
         "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
@@ -352,7 +353,8 @@
       "evidence_refs": [
         "E54",
         "E78",
-        "E81"
+        "E81",
+        "E83"
       ],
       "blockers": []
     },
@@ -370,7 +372,8 @@
         "R1"
       ],
       "evidence_refs": [
-        "E54"
+        "E54",
+        "E84"
       ],
       "blockers": []
     },
@@ -1110,15 +1113,25 @@
       "id": "E82",
       "reference": "15 November 2026 clinical review adapter recursion follow-up; docs/development.md#clinical-review-adapter-recursion-follow-up",
       "scope": "On overnight candidate 698005d, a valid review sheet with one value replaced by 700 nested arrays, serialized and parsed through the clinical source loader, reproduced uncontrolled RecursionError in deepcopy. Record container fields now fail with source-located ValidationError before any recursive record copying; no source-loader depth cap or numeric policy introduced. One focused regression covers deep value/timestamp/kind rejection, unchanged caller serialization, valid negative-zero exponent token, supplied record order and provenance, and output/input independence. Focused17 tests and full130 tests pass, with clinical structural/reference checks for all12 requirements, dashboard freshness and whitespace. Before/after and failed regression logs retained under outputs/clinical-adapter-recursion-2026-11-15. No arithmetic, policy adoption, new browser/clinical acceptance, merge or deployment; release gates unchanged."
+    },
+    {
+      "id": "E83",
+      "reference": "Maksim acceptance, 15 November 2026; docs/baseline-specification.md#additional-reference-acceptance-15-november-2026; examples/clinical-review/additional-scenarios.json",
+      "scope": "Maksim explicitly accepts the six additional clinical hand reference cases as supplied at 1335be1: multiple-eligible, labelled-followup, out-of-order, undosed, empty-measurements and grouping. Acceptance covers their invented source records and hand expected IDs/results/reasons/diagnostics; source and expected data remain unchanged, with only acceptance metadata updated. Existing C1-C4 and negative references are preserved. This is not numeric-policy adoption, source-implementation acceptance, executed clinical validation/derivation, R/SAS agreement, UX acceptance or release-gate completion."
+    },
+    {
+      "id": "E84",
+      "reference": "Numeric policy proposal for review, 15 November 2026; docs/baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance",
+      "scope": "Expanded the earlier clinical numeric proposal into one canonical decision sheet: exact JSON decimal/exponent interpretation and signed zero, six effective fractional places, inclusive source magnitude1e9/result magnitude2e9, rejection of excess precision/range, exact micro-unit subtraction without rounding, null/missing behavior and six-place CSV. Independently worked literal boundary examples distinguish accepted prior study rules from proposed numeric outcomes. Exact primary comparisons have zero tolerance; optional secondary5e-7 absolute/zero relative binary64 diagnostics have an explicit conditional error bound, not R/SAS execution or acceptance. Policy remains proposed, awaiting acceptance, with no adopted ID or clinical implementation. Full130 units, clinical/reference checks for12 requirements, dashboard/tracking, affected local links and whitespace pass. Release gates and all broader pending reviews remain unchanged."
     }
   ],
   "blockers": [
     "Combined UX/export and clinical-source candidate awaits separate maintainer UX/contract review (E75). Original Edge reset trigger remains unknown. Actual Pixel/Gboard remains deferred and unperformed.",
-    "Clinical numeric policy remains unadopted. Source-contract and reference-transcription checks are implemented (E74); clinical policy validation, derivation and Python/R comparison remain pending.",
+    "Clinical numeric policy remains proposed, awaiting acceptance (E84). Maksim accepted the six additional hand references (E83), but source implementation acceptance, clinical policy validation/derivation and independent R/SAS comparison remain pending.",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: (1) review source robustness including E82 controlled adapter rejection and six new hand scenario transcriptions with scripts/check_clinical_review.py; contract acceptance and numeric-policy adoption remain separate, with no arithmetic implemented. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance identified by the exact artifact audit before further redistribution work. The approved overnight queue is complete; stop rather than invent more work. Remote publication needs separate authorization, live Berlin timing checks and Draft status; no merges or deployment.",
+  "next_action": "Maintainer: (1) review the three numeric-policy decisions in baseline-specification.md (E84): exact exponent/scale/range bounds; strict rejection, zero/CSV formatting; exact primary and optional secondary comparison. Explicit acceptance and an adopted policy ID are required before clinical arithmetic. The six additional hand references are accepted by Maksim (E83); source/adapter implementation review including E82 remains separate. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance before redistribution work. No merge or deployment; remote publication still requires separate authorization and live Berlin timing checks.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M4-03",

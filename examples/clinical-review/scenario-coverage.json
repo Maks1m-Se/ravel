@@ -1,7 +1,7 @@
 {
   "format": "ravel-clinical-coverage/1",
   "authority": "docs/plan.md: twelve reference cases; docs/baseline-specification.md: accepted policies",
-  "acceptance": "Existing C1-C4 and negative expectations are unchanged; new hand transcriptions await maintainer review.",
+  "acceptance": "Maksim accepted the six additional hand references on 2026-11-15 (E83), as supplied at 1335be1; existing C1-C4 and negative expectations remain unchanged. Numeric policy and clinical implementation remain pending.",
   "scenarios": [
     {
       "requirement": 1,

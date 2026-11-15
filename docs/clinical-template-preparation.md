@@ -61,36 +61,22 @@ stability is promised by these illustrative function/field names.
 
 ## Numeric policy proposed for review
 
-These choices apply only to the future fictional clinical template. Existing
-generic version1/2/3 numeric behavior remains as documented. The proposed limits
-are software bounds, not medically meaningful ranges.
+**Proposed, awaiting acceptance; no adopted policy ID.** The canonical
+[numeric decision sheet and hand-worked boundaries](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
+now refine this document's earlier proposal. The recommendation retains exact
+decimal interpretation, six effective fractional places, source magnitude
+≤1,000,000,000 and exact subtraction bounded by ±2,000,000,000. Generic numeric
+behavior and the lossless clinical source loader are unchanged.
 
-| Decision | Proposed rule | Consequence |
-| --- | --- | --- |
-| Input representation | Decode JSON numeric tokens directly to exact decimal values, preserving the original token separately. Reject Boolean, numeric text, NaN/infinity and absent required fields. Only explicit measurement `null` means missing. | `0.3` is exact decimal three tenths; `"0.3"` is invalid. No binary64 round trip during decoding. |
-| Supported source scale/range | Nonmissing measurement absolute value at most1,000,000,000, at most six fractional decimal places after exact normalization. Nonnull dose amount has the same scale/upper bound and must be strictly positive. Reject excess precision/range rather than round input. | `1e-6` is valid; `1e-7` fails. Zero measurement is valid; zero actual dose fails. Planned/not-administered null amounts retain the accepted meaning. |
-| Arithmetic | Store exact decimal coefficients at a declared six-place scale, or an equivalent exact Decimal representation. Perform subtraction exactly with sufficient checked precision; no intermediate rounding, overflow fallback, clipping or resampling. | Source coefficients are bounded by10^15 micro-units; deltas by2×10^15, within the proposed ±2,000,000,000 result range. A future operation exceeding its declared range fails the whole clinical run. |
-| Output scale/rounding | Canonical clinical numeric CSV fields have six fractional digits, decimal point, no exponent/grouping, normalized positive zero. Baseline/change subtraction under these bounds is already exact at this scale. If a later reviewed operation needs quantization, round once at its declared output boundary, half to even. | `0.3−0.2` exports `0.100000`; missing exports an empty numeric cell with an explicit reason elsewhere. Source tokens remain in source/provenance; export never rewrites input. |
-| Time | Retain the accepted whole-second ISO timestamp and explicit-zone policy; compare UTC instants exactly, with no tolerance or time rounding. | Offset-equivalent instants tie. Date-only, fractions and leap seconds remain invalid. |
-| Python/R reference | Prefer exact comparison of exported six-place decimal coefficients/strings; parse CSV as character before independent reference conversion. IDs, selected references, row cardinality, null/reason sets, units and time order compare exactly. A secondary binary64 numeric comparison uses absolute tolerance5×10^-7 and relative tolerance0 over the bounded range. | At this range binary64 parse/subtraction error is below half a six-place unit. Relative tolerances could hide material fixed-scale errors on large values. A one-micro-unit wrong answer must fail the exact primary check. Missing values never participate in numeric tolerance. |
-
-For an independent R implementation, decimal-character coefficient parsing into
-integer-valued doubles is exact for these bounded coefficients (below2^53);
-do not use R's 32-bit integer storage for micro-units. Derive reference results
-independently from the source records, not from Python's selected IDs or deltas.
-The tolerance proposal must be checked with boundary fixtures in M2-02 before
-adoption; it is not evidence that Python/R comparison has run.
-
-Hand calculations to review:
-
-| Input / operation | Proposed result |
-| --- | --- |
-| `0.3−0.2` | Exact0.1; CSV `0.100000` |
-| `1.000001−1.000000` | Exact0.000001; CSV `0.000001` |
-| `1000000000−(-1000000000)` | Exact2000000000; CSV `2000000000.000000`, at the result bound |
-| Source `1000000000.000001` or `0.0000001` | Reject range or excess scale, no clipping/rounding |
-| Future half-even quantization to two places:1.245 /1.255 /−1.245 | 1.24 /1.26 /−1.24; illustrative only, not a current clinical derivation |
-| Baseline0, follow-up2 | Baseline remains eligible; change2, not a missing baseline |
+The expanded proposal specifies JSON exponent syntax, negative-zero handling,
+trailing-zero normalization, rejection rather than input rounding, nulls,
+fixed-six-place CSV and exact primary comparison. It removes any suggestion
+that a future half-even quantization rule is already authorized for this
+subtraction-only policy. The optional secondary absolute tolerance5×10^-7,
+relative tolerance0, is derived conditionally for binary64 diagnostics only;
+actual R/SAS checks and acceptance remain pending. It cannot override an exact
+comparison failure. See the canonical sheet for the independent integer boundary
+calculations, assumptions, trade-offs and three required review decisions.
 
 ## Hand-checkable review sheet and fixture mapping
 
@@ -123,8 +109,9 @@ Failure matching is exactly by code, scope and complete source-ID set.
 Future tests additionally map the accepted empty group, undosed group, null
 follow-up, zero baseline, positive/invalid dose, equal UTC instants with different
 offset spelling, earliest-dose tie, invalid ineligible record, unknown status,
-and exact-unit failure dependencies from the baseline specification. These do
-not establish the remaining twelve-case suite or selected standards mappings.
+and exact-unit failure dependencies from the baseline specification. The twelve
+hand references are now traceable below; executed clinical checks and selected
+standards mappings remain pending.
 
 [structure-only.recipe.json](../examples/clinical-review/structure-only.recipe.json)
 is a runnable **generic** three-table structural example. Its clinical-looking
@@ -134,9 +121,10 @@ sheets are deliberately rejected by the application recipe loader.
 
 Review required before clinical numeric implementation: approve or amend the
 range/scale, exact representation, overflow, six-place export and comparison
-rules above, then assign an adopted policy ID. Review the fixture transcription
-against the accepted source and the proposed adapter/interface boundary. This
-prerequisite is recorded in progress.json; no review has been assumed.
+rules in the canonical numeric decision sheet, then assign an adopted policy ID.
+The six added hand transcriptions are accepted (E83); the proposed adapter/interface
+boundary and source implementation remain separate reviews. This prerequisite
+is recorded in progress.json; no numeric-policy acceptance has been assumed.
 
 ## Internal source contract
 
@@ -236,8 +224,10 @@ maps all twelve plan requirements to explicit hand references. Existing C1–C4
 and negative illustrations a/b are reused unchanged. Six additional supplied
 source cases are in
 [additional-scenarios.json](../examples/clinical-review/additional-scenarios.json);
-their hand transcriptions await maintainer review. No new clinical policy is
-selected. Labels are retained as source provenance; output rows are compared
+Maksim accepted these six hand references on 15 November 2026 (E83),
+as supplied at candidate 1335be1; their records and expected results are unchanged.
+This accepts the references, not the source implementation or clinical execution.
+No numeric policy is adopted. Labels are retained as source provenance; output rows are compared
 by explicit IDs without adopting a new row-sort policy.
 
 | Requirement | Reference |

@@ -1,12 +1,12 @@
 {
   "format": "ravel-clinical-scenarios/1",
-  "status": "hand-reference-proposal-not-clinical-validation",
+  "status": "accepted-hand-references-not-clinical-validation",
   "output_comparison": "Compare expected rows by explicit IDs; no new output-sort policy is adopted.",
   "cases": [
     {
       "id": "multiple-eligible",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -153,7 +153,7 @@
     {
       "id": "labelled-followup",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -288,7 +288,7 @@
     {
       "id": "out-of-order",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -435,7 +435,7 @@
     {
       "id": "undosed",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -538,7 +538,7 @@
     {
       "id": "empty-measurements",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -638,7 +638,7 @@
     {
       "id": "grouping",
       "classification": "valid-unusual",
-      "reference_status": "proposed-hand-reference",
+      "reference_status": "accepted-hand-reference",
       "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
       "source": {
         "format": "ravel-clinical-source/1",
@@ -907,5 +907,20 @@
         "independent_R_SAS_comparison"
       ]
     }
-  ]
+  ],
+  "acceptance": {
+    "accepted_by": "Maksim",
+    "date": "2026-11-15",
+    "evidence_ref": "E83",
+    "reviewed_candidate": "1335be1c5185468c9e6d9a0395e89d1bcfd75faf",
+    "cases": [
+      "multiple-eligible",
+      "labelled-followup",
+      "out-of-order",
+      "undosed",
+      "empty-measurements",
+      "grouping"
+    ],
+    "scope": "Six additional invented source/expected-result hand references only; no numeric-policy adoption, source-implementation acceptance or clinical execution."
+  }
 }
