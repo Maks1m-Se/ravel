@@ -1,6 +1,7 @@
 """NiceGUI adapter for the shared single-table engine."""
 
 import json
+from decimal import Decimal
 from pathlib import Path
 
 from nicegui import app, run, ui
@@ -37,9 +38,12 @@ def help_note(title, text):
             root.on(event, js_handler="e => { e.currentTarget.dataset.dismissed = 'false'; }")
 
 
-def action(label, icon, handler, tip, primary=False):
-    button = ui.button(label, icon=icon, color=None, on_click=handler).props(
+def action(label, icon, handler, tip, primary=False, compact=False):
+    button = ui.button("" if compact else label, icon=icon, color=None, on_click=handler).props(
         f'flat no-caps aria-label="{label}" title="{tip}"')
+    if compact:
+        button.classes("icon-action")
+        button.tooltip(tip)
     if primary:
         button.classes("primary-action")
     return button
@@ -87,6 +91,11 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
     client = ui.context.client
     choice = chrome(theme)
     ui.add_head_html("<script>" + (STATIC / "layout.js").read_text(encoding="utf-8") + "</script>")
+    ui.add_head_html('''<script>
+        window.addEventListener('beforeunload', e => {
+            if (window.ravelUnsaved) { e.preventDefault(); e.returnValue = ''; }
+        });
+    </script>''')
     controls, table_controls, errors, marks = {}, {}, {}, {}
     view_buttons = {}
     active_view = "Fields"
@@ -124,6 +133,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                 sample_summary.set_text(f'{len(rows):,} source rows · {retained:,} retained + {generated:,} new = {retained+generated:,} output')
             else:
                 sample_summary.set_text("")
+        client.run_javascript(f"window.ravelUnsaved = {json.dumps(bool(state.has_unsaved))};")
 
     def wire_error(key, control):
         control.without_auto_validation()
@@ -277,6 +287,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             await show_error(exc)
             return
         ui.download.content(payload, filename="table.recipe.json", media_type="application/json")
+        state.mark_saved()
+        update_state()
         report("Recipe saved.")
 
     async def export():
@@ -286,6 +298,8 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             await show_error(exc)
             return
         ui.download.content(payload.encode("utf-8"), filename="table.csv", media_type="text/csv")
+        state.mark_exported()
+        update_state()
         report(f"Exported {len(state.result.rows):,} rows.")
 
     async def save_record():
@@ -324,6 +338,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             pending_sample = profile(await event.file.read(), sample_delimiter.value)
         except (ValidationError, ValueError) as exc:
             pending_sample = None
+            use_sample.disable()
             sample_error.set_text(str(exc) + " Current table preserved.")
             sample_uploader.reset()
             await sample_review.refresh()
@@ -342,7 +357,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
         if confirm_ids.value:
             candidate["sample"]["confirmed"] = candidate["sample"]["identifiers"][:]
         try:
-            state.replace(candidate)
+            state.replace(candidate, saved=False)
         except ValidationError as exc:
             sample_error.set_text(str(exc))
             return
@@ -380,7 +395,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             return
         _, headers, rows = parse_csv(pending_sample["sample"]["csv_utf8"], pending_sample["sample"]["delimiter"])
         ui.label(f'{len(rows):,} rows · {len(headers)} columns · only empty cells count as missing').classes("source-count")
-        with ui.element("div").classes("source-scroll"):
+        with ui.element("div").classes("source-scroll").props('tabindex=0 role=region aria-label="Sample source; scroll to review rows"'):
             with ui.element("table").classes("preview-table sample-source"):
                 with ui.element("thead"), ui.element("tr"):
                     for header in headers:
@@ -398,7 +413,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             elif field['kind'] in {'integer','decimal'}:
                 suggestion = f"uniform {field['minimum']}–{field['maximum']} · missing {field['missing_probability']}"
             elif field['kind'] == 'category':
-                suggestion = ', '.join(f'{v}: {p}' for v,p in zip(field['values'],field['probabilities']))
+                suggestion = ', '.join(f'{v}: {Decimal(p).normalize():f}' for v,p in zip(field['values'],field['probabilities']))
             else:
                 suggestion = f"{RULES[field['kind']]} · missing {field['missing_probability']}"
             ui.label(f"{field['name']} · {suggestion}").classes("sample-assumption")
@@ -433,18 +448,36 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
             action("Cancel removal", "close", remove_dialog.close, "Keep the column")
             action("Remove column", "delete_outline", remove, "Confirm removal")
 
+    async def leave_table():
+        await client.run_javascript("window.ravelUnsaved = false;")
+        ui.navigate.to(f"/?theme={choice.value.lower()}")
+
+    async def request_home():
+        if state.has_unsaved:
+            leave_dialog.open()
+        else:
+            await leave_table()
+
+    with ui.dialog() as leave_dialog, ui.card().classes("leave-dialog"):
+        ui.label("Leave this table?").classes("section-title")
+        ui.label("Unsaved settings, edits or output will be lost. Save your recipe and export current data to keep them.").classes("help")
+        with ui.row():
+            action("Keep editing", "edit", leave_dialog.close, "Stay with this table")
+            action("Leave table", "home", leave_table, "Discard unsaved work and return Home")
+
     with ui.element("nav").classes("action-toolbar").props('aria-label="Table actions"'):
         with ui.link(target=f"/?theme={choice.value.lower()}").classes("home-link") as home_link:
             ui.icon("home").props("aria-hidden=true")
             ui.label("Home")
+        home_link.on("click", request_home, js_handler="e => { e.preventDefault(); emit(); }")
         choice.on_value_change(lambda e: home_link.props(f"href=/?theme={e.value.lower()}"))
         generate_button = action("Generate table", "play_arrow", run_generation, "Generate using applied rules", True)
         export_button = action("Export CSV", "download", export, "Export the current generated result")
         action("Save recipe", "save", save, "Save applied rules as a versioned recipe")
-        action("Open recipe", "folder_open", open_load, "Replace the table with a saved recipe")
-        action("Import CSV", "upload_file", open_sample_dialog, "Review a sample before replacing the table")
-        record_button = action("Save run record", "description", save_record, "Save the exact recipe, environment and CSV checksum")
-        action("Reset layout", "restart_alt", None, "Restore the 312 px Properties preference").on(
+        action("Open recipe", "folder_open", open_load, "Open recipe · replaces the current table", compact=True)
+        action("Import CSV", "upload_file", open_sample_dialog, "Import CSV · review source and assumptions", compact=True)
+        record_button = action("Save run record", "description", save_record, "Save run record · recipe, environment and CSV checksum", compact=True)
+        action("Reset layout", "restart_alt", None, "Reset layout · restore the 312 px Properties preference", compact=True).on(
             "click", js_handler="() => window.ravelWorkspaceLayout.reset()")
         help_note("Session", "State is local to this page. Save your recipe and CSV before closing. Run records include the generating environment and checksums. Exact quotas and relationships are not supported yet.")
     status = ui.label("Ready. Configure columns, Apply changes, then Generate.").classes("status-line").props("role=status aria-live=polite")
@@ -583,7 +616,7 @@ def table(theme: str = "dark", open_recipe: bool = False, open_sample: bool = Fa
                     if "sample" in state.recipe:
                         _, headers, rows = parse_csv(state.recipe['sample']['csv_utf8'], state.recipe['sample']['delimiter'])
                         ui.label(f'Original sample · first {min(10,len(rows))} of {len(rows):,} rows').classes("muted")
-                        with ui.element("div").classes("source-scroll"), ui.element("table").classes("preview-table sample-source"):
+                        with ui.element("div").classes("source-scroll").props('tabindex=0 role=region aria-label="Original sample rows; use arrow keys to scroll"'), ui.element("table").classes("preview-table sample-source"):
                             with ui.element("thead"), ui.element("tr"):
                                 for header in headers:
                                     with ui.element("th"):

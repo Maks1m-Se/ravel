@@ -13,7 +13,16 @@ from scripts.check_workbook_browser import activate, assert_error, keyboard_to, 
 def exercise(page, base, out, viewport, theme):
     from scripts.check_generator_browser import ROOT, apply, download, generate_table, layout_regressions, preview_cells, reload_recipe, state_snapshot
     prefix = f'{viewport["width"]}x{viewport["height"]}-{theme.lower()}-sample'
+    previous_unsaved = page.url.startswith(base + '/table')
+    dialogs = []
+    if previous_unsaved:
+        def accept_navigation(dialog):
+            dialogs.append(dialog.type)
+            dialog.accept()
+        page.once('dialog', accept_navigation)
     page.goto(base + '/?theme=' + theme.lower())
+    if previous_unsaved:
+        assert dialogs == ['beforeunload'], dialogs
     activate(page, 'Start from sample')
     dialog = page.locator('.sample-dialog')
     expect(dialog).to_be_visible()
@@ -26,6 +35,10 @@ def exercise(page, base, out, viewport, theme):
     keyboard_to(page, checkbox)
     page.keyboard.press('Space')
     expect(checkbox).to_be_checked()
+    count_box = dialog.locator('.source-count').bounding_box()
+    source_box = dialog.locator('.source-scroll').bounding_box()
+    assert count_box['height'] >= 12 and count_box['y']+count_box['height'] <= source_box['y']
+    assert checkbox.evaluate('(root) => {const r=root.getBoundingClientRect(); return root.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}')
     page.screenshot(path=out / f'{prefix}-import.png')
     activate(page, 'Use sample')
     expect(dialog).not_to_be_visible()

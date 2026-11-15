@@ -4,6 +4,7 @@ import argparse
 import csv
 from datetime import datetime, timezone
 from importlib.metadata import version
+from hashlib import sha256
 from io import StringIO
 import json
 from pathlib import Path
@@ -11,6 +12,7 @@ import platform
 import sys
 import traceback
 from urllib.parse import urlparse
+from urllib.request import urlopen
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -315,6 +317,15 @@ def exercise(page, base, out, viewport, theme):
     expect(home_link).to_have_attribute('href', '/?theme=' + home_theme.lower())
     keyboard_to(page, home_link)
     page.keyboard.press('Enter')
+    expect(page.locator('.leave-dialog')).to_be_visible()
+    before = state_snapshot(page)
+    activate(page, 'Keep editing')
+    expect(page.locator('.leave-dialog')).not_to_be_visible()
+    assert state_snapshot(page) == before
+    keyboard_to(page, home_link)
+    page.keyboard.press('Enter')
+    expect(page.locator('.leave-dialog')).to_be_visible()
+    activate(page, 'Leave table')
     expect(page).to_have_url(base + '/?theme=' + home_theme.lower())
     assert_branding(page, home_theme)
     activate(page, 'Open recipe')
@@ -335,13 +346,24 @@ def main():
     parser.add_argument('--channel', default='chrome')
     parser.add_argument('--workflow', choices=['rules', 'sample', 'all'], default='rules')
     parser.add_argument('--smoke', action='store_true', help='One Light laptop case instead of the full theme/viewport matrix.')
+    parser.add_argument('--verify-source', action='store_true', help='Require a dedicated test server identity matching the current runtime files.')
     args = parser.parse_args()
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     results = dict(started_utc=datetime.now(timezone.utc).isoformat(), python=platform.python_version(),
                    platform=platform.platform(), playwright=version('playwright'), cases=[],
                    external_requests=[], external_websockets=[], page_errors=[])
+    def runtime_hashes():
+        return {p.relative_to(ROOT).as_posix():sha256(p.read_bytes()).hexdigest()
+                for p in (ROOT/'ravel').rglob('*') if p.is_file() and p.suffix in {'.py','.css','.js'} and '__pycache__' not in p.parts}
+    results['local_runtime_sha256'] = runtime_hashes()
     try:
+        if args.verify_source:
+            assert urlparse(args.base_url).hostname in {'127.0.0.1','localhost'}
+            with urlopen(args.base_url.rstrip('/')+'/__ravel_test/identity', timeout=3) as response:
+                running = json.load(response)
+            assert running['source_sha256'] == results['local_runtime_sha256'], 'Running app differs from the local runtime files.'
+            results['running_source'] = running
         with sync_playwright() as p:
             browser = p.chromium.launch(channel=args.channel, headless=True)
             results['browser'] = browser.version
@@ -379,6 +401,7 @@ def main():
                     print(f'PASS {width}x{height} {theme}', flush=True)
             browser.close()
         assert not results['external_requests'] and not results['external_websockets'] and not results['page_errors'], results
+        assert runtime_hashes() == results['local_runtime_sha256'], 'Runtime files changed during this browser run.'
         results['result'] = 'passed'
     except Exception:
         results['result'] = 'failed'

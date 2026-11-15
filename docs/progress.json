@@ -261,7 +261,8 @@
         "E47",
         "E48",
         "E49",
-        "E50"
+        "E50",
+        "E51"
       ],
       "blockers": []
     },
@@ -285,7 +286,8 @@
         "E47",
         "E48",
         "E49",
-        "E50"
+        "E50",
+        "E51"
       ],
       "blockers": []
     },
@@ -383,7 +385,9 @@
       "release_gate_ids": [
         "R9"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E51"
+      ],
       "blockers": []
     },
     {
@@ -398,7 +402,8 @@
         "R9"
       ],
       "evidence_refs": [
-        "E50"
+        "E50",
+        "E51"
       ],
       "blockers": []
     },
@@ -799,10 +804,15 @@
       "id": "E50",
       "reference": "17 October 2026 issue #12 local sample workflow; docs/sample-assisted.md; https://github.com/Maks1m-Se/ravel/issues/12",
       "scope": "Implemented bounded UTF-8/BOM comma/semicolon/tab CSV profiling, editable marginal assumptions with Sample/Edited/Explicit origins, excluded/explicitly confirmed identifiers, formatted identifiers and collision checks. Version-2 recipes embed exact source text/checksum/original suggestions; canonical saved size is bounded before state replacement. Both 1,000 new and 10 retained+990 modes preserve original decoded cells/order and record row origin. Equal-source total generates zero new rows; smaller totals fail atomically. Eleven new unit methods include the pre-established hand override CSVs, leading zeroes, literal NA/whitespace/Unicode/quoted newlines, probability remainders, malformed source/checksum rejection, independent-field stability, stale state and shared CLI output/no-overwrite. All 54 unit tests pass locally. One final Chrome run passes eight workflow/theme/laptop cases (rules and sample at Light/Dark 1366x657/1280x800), with zero page errors/external HTTP/WebSockets; exact preview/CSV, source retention, recipe/run-record reload, invalid count/import recovery and Properties layout/ARIA regressions pass. An initial new test accidentally included the hidden source table in its preview selector (110 vs100 rows); scoping to the actual preview fixed the test, with no changed expectations. Actual captures inspected; import source area is cramped and will be improved in the following UX package. Python 3.14.8, Playwright 1.58.0, Chrome 155.0.8059.82; NiceGUI3.18.0 on the existing Windows development host. Source only, uncommitted on feature/staged-generator-batch under the normal publishing restriction. E46 human acceptance applies to its earlier recorded version, not this addition. Joint review, native/clean-machine/platform checks and release gates remain pending."
+    },
+    {
+      "id": "E51",
+      "reference": "18 October 2026 issue #13 verified local UX/skill package; docs/development.md; .agents/skills/ravel-verify/SKILL.md; https://github.com/Maks1m-Se/ravel/issues/13",
+      "scope": "Inspected actual workflows before polish. Compact accessible secondary icon actions, explicit Home/close unsaved-work warnings, tracked saved recipe/export state and a bounded keyboard-scrollable source review preserve Fichte/Properties. Sample assumptions show readable frequency summaries; imports require explicit replacement/identifier confirmation. The small repository-scoped ravel-verify skill was created with Skill Creator, quick_validate passed, and invoked on the actual tracked/untracked diff: full unit suite (55 methods), dashboard freshness, whitespace, real UI/browser checks and captures. Optional interactive Playwright skill was unavailable and did not block maintained checks. Final common UI logic passes eight Chrome workflow/theme/laptop cases and two Edge Light cases. Actual capture inspection then removed a sticky footer that covered a focused checkbox and fixed flex shrink hiding the source count. Only sample-dialog CSS changed: four additional final Chrome Light/Dark 1366x657/1280x800 sample cases and one final Edge sample case pass, including visible count/nonoverlap and focused checkbox hit-testing. Existing four rule cases and Edge rule case are reused for unchanged rule UI. All final runs verify the dedicated running server source hashes against local runtime files and assert no edits during the run. One earlier run targeted a stale server and is excluded; attestation now prevents that. A subsequent real rule-switch failure exposed the new warning JavaScript using a deleted NiceGUI slot after Properties refresh; using the captured client fixes it, and focus assertions pass without sleeps. Failed experiments remain retained, not counted as success. Python3.14.8/NiceGUI3.18.0/Playwright1.58.0, Chrome155.0.8059.82, Edge155.0.4283.62 on this Windows development host. Zero browser page errors/external HTTP/WebSockets; one server-side Windows connection-reset callback on browser close is retained and is not a UI case failure. Actual captures inspected. PR10 repair published separately at d9bcec2a752c382b17e8e90d40a7986e8bb2639f on18October02:16 Berlin, ten changed GitHub blobs read back and matched the repair-ready tested snapshot. Hosted PR core run39082191160 reports success at that repair; detailed job test counts not rechecked here. PR10 stays draft/unmerged. Later feature packages remain local during restricted hours. Frozen manual review on8100 remains repair-E49-ea8f8fa682b2; E46 acceptance remains earlier sources. No broad accessibility, native installation, clinical or release acceptance."
     }
   ],
   "blockers": [],
-  "next_action": "Continue authorized sequential issue #11 after completed local #12 (E50): inspect and improve both workflows in #13, add/invoke the scoped verification skill, then #14 rules, #15 linked tables, #16 clinical numeric/interface preparation, #17 private Windows preview. Preserve the separate completed #10 repair snapshot and frozen manual-review instance repair-E49-ea8f8fa682b2 on port8100; never run automated browser checks there. Keep each local package reviewable, no completed generator reimplementation. Normal live Berlin commit/GitHub-write window applies; no merges/public binaries/final acceptance. Joint maintainer review follows the batch. M0/fullM1, clinical numeric review and native/platform/clean-machine/license/distribution/release gates remain incomplete.",
+  "next_action": "Continue authorized #11 at #14: establish extended-rule semantics/hand fixtures and five fixed R5 seeds before implementation; then #15 linked tables, #16 clinical numeric/interface preparation, #17 private Windows preview. #12 sample and #13 UX/skill implementation are complete locally (E50/E51), subject to joint review. Preserve frozen manual8100 repair-E49 snapshot and separate PR10/d9bcec2 repair; keep new packages draft/reviewable, publish only after a live eligible Berlin clock check. Normal restriction08:00–16:30 applies, no merges/public binaries/final acceptance. Clinical numeric review and clean-machine Windows access are external prerequisites; finish independent work and record exact limitations. M0/fullM1 and release gates remain incomplete.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M1-02",

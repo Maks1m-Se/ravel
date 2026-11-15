@@ -7,9 +7,10 @@ illustrative, not a stable schema or an implemented generator contract. Scope
 and release criteria remain in [the plan](plan.md).
 
 The bounded explicit-rule implementation now has its own concrete
-[single-table contract](single-table.md), format `ravel-single-table/1`. It does
-not implement the linked/clinical illustrative structure below, sample profiling,
-or the complete planned application recipe.
+[single-table contract](single-table.md), format `ravel-single-table/1`, and
+[sample-assisted contract](sample-assisted.md), format `ravel-single-table/2`.
+They do not implement the linked/clinical illustrative structure below or the
+complete planned application recipe.
 
 ## One saved recipe
 
