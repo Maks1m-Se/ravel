@@ -177,3 +177,21 @@ Raw final reports are retained under local `outputs/ravel-batch-2026-10-17`:
 `windows-final-protections.json`, `windows-ready`, `windows-publication-ready`,
 `windows-published-readback.json` and the three new CI job logs. Older unsuccessful evidence
 is preserved alongside them.
+
+## Independent access handoff, 20 October 2026
+
+The exact existing ZIP and prior verification files were copied without rebuilding
+to `C:\Git\ravel\outputs\private-review-b99a360a14c4eb8d\`.
+The original remains intact. The copied ZIP's full SHA256 matches the primary
+hash above. All252 handoff files are individually verified git-ignored by the
+existing /outputs/ rule. REVIEW-IDENTITY.txt explains extraction/start/stop and
+the original evidence; handoff-verification.json records each copied hash.
+
+This is the older b99a360a14c4eb8d artifact. It predates the separate
+[pending-action UX correction](development.md#pending-apply-discard-review-20-october-2026).
+New native results must identify this exact ZIP and cannot accept the later UX.
+Use the matching older source/harness when automating this package; the new
+pending-action browser workflow deliberately expects behavior absent from it.
+No clean-machine, physical-offline, download-reputation or redistribution finding
+is resolved merely by making the artifact accessible. Keep independent raw
+commands/logs/captures separate from the included earlier ChatGPT host evidence.

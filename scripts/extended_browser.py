@@ -78,7 +78,10 @@ def exercise(page,base,out,viewport,theme):
     activate(page,'Apply changes')
     assert_error(page,'Rows','3 available')
     type_value(page,'Rows','3')
-    apply(page)
+    expect(page.locator('.draft-summary')).to_have_text('All changes applied')
+    expect(page.get_by_role('button',name='Apply changes',exact=True)).to_be_disabled()
+    expect(page.locator('.output-panel [aria-invalid=true]')).to_have_count(0)
+    expect(page.get_by_role('button',name='Export CSV',exact=True)).to_be_enabled()
 
     source=ROOT/'examples/sample-assisted/ten-rows.csv'
     source_recipe=out/f'{prefix}-source.recipe.json'
@@ -107,7 +110,10 @@ def exercise(page,base,out,viewport,theme):
     assert page.locator('.definition-table').text_content()==applied
     assert preview_cells(page)==expected_preview
     type_value(page,'Categories and exact counts','A,7\nB,5')
-    apply(page)
+    expect(page.locator('.draft-summary')).to_have_text('All changes applied')
+    expect(page.get_by_role('button',name='Apply changes',exact=True)).to_be_disabled()
+    expect(page.locator('.properties [aria-invalid=true]')).to_have_count(0)
+    expect(page.get_by_role('button',name='Export CSV',exact=True)).to_be_enabled()
     generate_table(page)
     recipe_path=out/f'{prefix}.recipe.json'
     recipe=loads(download(page,'Save recipe',recipe_path))

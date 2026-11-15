@@ -526,3 +526,20 @@ content-addressed storage. No environment/source archive is altered by that
 selection. See [the verification record](windows-preview-validation.md) and
 [artifact notice findings](windows-preview-notices.md) for evidence and remaining
 public-distribution prerequisites. Keep the binary private and PRs draft.
+
+## Pending edit actions (20 October 2026)
+
+The maintainer's [#13 follow-up](https://github.com/Maks1m-Se/ravel/issues/13)
+requires a state-dependent indication beside Apply/Discard, beyond the existing
+summary and field Draft labels. Keep that group and Properties header outside
+the scrolling field list so the short laptop viewport retains both actions and
+focused fields remain unobscured. Use the existing Fichte tokens and text as
+well as color. A persistent live region announces only pending-state transitions;
+field refreshes do not recreate the action group or move focus for the indicator.
+Session help describes the already available quotas and linked tables.
+
+The corrected source is a separate review from the existing private Windows
+artifact `source-b99a360a14c4eb8d`. The authorized #17 handoff copies that exact
+ZIP and existing evidence without building again; native tests of it cannot
+accept the later source correction. Preserve manual8101 at its original linked
+snapshot and use another fixed source instance for this UX review.

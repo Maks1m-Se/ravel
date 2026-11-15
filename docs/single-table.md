@@ -78,6 +78,17 @@ result whose recipe matches the applied recipe and has no drafts. Loading a vali
 recipe replaces the table, clears previous results, and resets layout to 312 px.
 Invalid/old files preserve current applied state, drafts and results.
 
+The Properties action area shows a compact **Unapplied changes** label with a
+Fichte border/tint whenever either column or table drafts differ from applied
+settings. Apply and Discard stay in stable, reachable positions outside the
+scrolling field list. Both are disabled without drafts; exact reversion restores
+that state and clears obsolete validation errors. A separate polite live region
+announces only transitions, including table-only changes. Theme, view and
+Properties resizing preserve drafts and this indication. Invalid Apply retains
+the edits, pending treatment and specific error. Successful Apply clears the
+draft indication while a prior result remains out of date until regeneration.
+Recipe saving and output export remain separate from applying edits.
+
 ## Reference established by hand
 
 Before writing the engine, the three-row reference was fixed as:
