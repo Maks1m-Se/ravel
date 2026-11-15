@@ -1,0 +1,17 @@
+{
+  "format":"ravel-dataset/1",
+  "seed":17,
+  "tables":[
+    {"id":"devices","name":"Devices","row_count":3,"primary_key":"device_key","fields":[
+      {"id":"device_key","name":"device_id","kind":"text_id","prefix":"D","start":1,"width":2,"missing_probability":"0"},
+      {"id":"device_type","name":"type","kind":"constant","value":"invented","missing_probability":"0"}
+    ]},
+    {"id":"measurements","name":"Measurements","row_count":6,"primary_key":"measurement_key","fields":[
+      {"id":"measurement_key","name":"measurement_id","kind":"text_id","prefix":"M","start":1,"width":2,"missing_probability":"0"},
+      {"id":"device_ref","name":"device_id","kind":"foreign_key","missing_probability":"0"},
+      {"id":"slot","name":"slot","kind":"child_index","missing_probability":"0"},
+      {"id":"value","name":"value","kind":"integer","minimum":0,"maximum":100,"missing_probability":"0"}
+    ]}
+  ],
+  "relationships":[{"id":"device_measurements","parent":"devices","parent_key":"device_key","child":"measurements","foreign_key":"device_ref","children_per_parent":2}]
+}

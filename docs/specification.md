@@ -194,3 +194,13 @@ expectations before derivation implementation; M1's bounded slice is unchanged.
 Selected standards mappings and their exact
 versions and limitations remain M2 work. Schema details and stability require
 further specification and review; application, clinical, and release-gate validation have not occurred.
+
+## Implemented bounded generic linked increment
+
+[linked-tables.md](linked-tables.md) specifies `ravel-dataset/1`, its stable
+identities, explicit keys/counts and bounded acyclic relationships. It reuses
+the generic scalar rules and keeps one dataset freshness state. The runnable
+Devices/measurements template has no domain derivations. Multi-file output is
+staged; ordinary failures expose no complete success. Existing single-table
+formats and their streams remain supported. Clinical selection stays explicit
+and requires the separately reviewed policy/interface preparation.

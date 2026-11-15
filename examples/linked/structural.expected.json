@@ -1,0 +1,6 @@
+{
+  "device_keys":["D01","D02","D03"],
+  "measurement_keys":["M01","M02","M03","M04","M05","M06"],
+  "device_slot_pairs":[["D01",1],["D01",2],["D02",1],["D02",2],["D03",1],["D03",2]],
+  "row_counts":{"devices":3,"measurements":6}
+}

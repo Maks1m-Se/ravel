@@ -484,3 +484,14 @@ later work. The normal Berlin commit/push window applies to this queue.
 Unavailable clinical-policy review or clean-machine access must be recorded
 precisely without blocking independent authorized packages. No clinical numeric
 implementation before its policy review and no public binary publication.
+
+## Generic linked datasets (18 October 2026)
+
+Use a separate `ravel-dataset/1` format rather than changing single-table
+semantics. Start with one declared parent per child and exact children-per-parent;
+reject cycles, compound keys, unsupported forms and conflicting counts. UI count
+changes list every affected table before explicit Apply. Results/exports are
+globally current or stale, with per-table previews and a complete ZIP. Directory
+export stages beside a fresh destination before rename; this is ordinary failure
+atomicity, not crash recovery. Hand reference and scope are in
+[linked-tables.md](linked-tables.md). No clinical meaning follows from names.
