@@ -1,10 +1,11 @@
 # Optional clinical template: preparation for review
 
-Issue #16, 18 October 2026. **Proposal, not an adopted numeric policy or an
-implemented clinical generator.** The accepted fictional policies and their
+Issue #16, 18 October 2026, updated 15 November. **Pipeline proposal, not an
+implemented clinical generator; numeric core separately adopted as
+`clinical-numeric/1` (E85).** The accepted fictional policies and their
 8 October acceptance remain in [baseline-specification.md](baseline-specification.md).
 This preparation does not change them. Clinical numeric implementation waits
-for maintainer review of the choices below; generic work and private packaging
+for a separately authorized task; generic work and private packaging
 can continue. No clinical or standards validation is claimed.
 
 ## One app, explicit domain selection
@@ -59,16 +60,16 @@ The reviewed recipe, source checksum, module/policy version, selected dose,
 baseline and target source IDs must be recorded with results. No external API
 stability is promised by these illustrative function/field names.
 
-## Numeric policy proposed for review
+## Adopted numeric core and provisional comparison tolerance
 
-**Proposed, awaiting acceptance; no adopted policy ID.** The canonical
-[numeric decision sheet and hand-worked boundaries](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
-now refine this document's earlier proposal. The recommendation retains exact
+**Core adopted by Maksim, 15 November 2026: `clinical-numeric/1` (E85).** The canonical
+[numeric decision sheet and hand-worked boundaries](baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy)
+refine this document's earlier E84 proposal. The adopted core retains exact
 decimal interpretation, six effective fractional places, source magnitude
 ≤1,000,000,000 and exact subtraction bounded by ±2,000,000,000. Generic numeric
 behavior and the lossless clinical source loader are unchanged.
 
-The expanded proposal specifies JSON exponent syntax, negative-zero handling,
+The adopted core specifies JSON exponent syntax, negative-zero handling,
 trailing-zero normalization, rejection rather than input rounding, nulls,
 fixed-six-place CSV and exact primary comparison. It removes any suggestion
 that a future half-even quantization rule is already authorized for this
@@ -76,7 +77,8 @@ subtraction-only policy. The optional secondary absolute tolerance5×10^-7,
 relative tolerance0, is derived conditionally for binary64 diagnostics only;
 actual R/SAS checks and acceptance remain pending. It cannot override an exact
 comparison failure. See the canonical sheet for the independent integer boundary
-calculations, assumptions, trade-offs and three required review decisions.
+calculations, assumptions and trade-offs. The secondary tolerance is excluded
+from adoption until independent R/SAS verification and separate acceptance.
 
 ## Hand-checkable review sheet and fixture mapping
 
@@ -119,12 +121,12 @@ names and literal `baseline` text do not select clinical code. It is not a
 clinical template and does not exercise derivations. The separate JSON review
 sheets are deliberately rejected by the application recipe loader.
 
-Review required before clinical numeric implementation: approve or amend the
-range/scale, exact representation, overflow, six-place export and comparison
-rules in the canonical numeric decision sheet, then assign an adopted policy ID.
-The six added hand transcriptions are accepted (E83); the proposed adapter/interface
-boundary and source implementation remain separate reviews. This prerequisite
-is recorded in progress.json; no numeric-policy acceptance has been assumed.
+The range/scale, exact representation, overflow, six-place export and exact
+primary comparison rules are adopted as `clinical-numeric/1` (E85). The six added
+hand transcriptions are accepted (E83); the proposed adapter/interface boundary
+and source implementation remain separate reviews. Independent comparison and
+secondary tolerance verification remain pending in progress.json. This step
+does not implement clinical calculations or authorize their implementation.
 
 ## Internal source contract
 
@@ -132,7 +134,7 @@ The bounded foundation uses `ravel-clinical-source/1` through an explicit
 internal API in `ravel.clinical.source`. It is not a generation recipe or a
 clinical template request. The public recipe loader continues to reject it.
 No UI entry, arithmetic, dose selection, time comparison or clinical-policy
-validator is introduced. The numeric policy above remains unadopted.
+validator is introduced. The adopted numeric core above remains unimplemented.
 
 The document contains ordered `subjects`, `treatments`, `parameters`, `pairs`
 and `records` lists and a root `provenance` object. Subjects have `id` and
@@ -227,7 +229,7 @@ source cases are in
 Maksim accepted these six hand references on 15 November 2026 (E83),
 as supplied at candidate 1335be1; their records and expected results are unchanged.
 This accepts the references, not the source implementation or clinical execution.
-No numeric policy is adopted. Labels are retained as source provenance; output rows are compared
+Numeric-core adoption is recorded separately in E85. Labels are retained as source provenance; output rows are compared
 by explicit IDs without adopting a new row-sort policy.
 
 | Requirement | Reference |

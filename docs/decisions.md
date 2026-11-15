@@ -692,9 +692,23 @@ at 1335be1, without changing their source or expected-result data (E83). This
 does not accept the source implementation or complete clinical validation.
 
 Keep the expanded numeric policy **proposed, awaiting acceptance** (E84).
-[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
+[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy)
 is the canonical decision sheet; the preparation document links to it instead
 of maintaining another full numeric table. Recommend exact bounded micro-units,
 strict rejection and exact primary comparison. Any secondary R/SAS tolerance
 needs its stated assumptions and later independent boundary checks. No adopted
 policy ID, clinical arithmetic, merge or deployment is authorized by this record.
+
+## Numeric-core adoption (15 November 2026)
+
+Maksim explicitly confirms adopting the E84 core reviewed at 5177835 as
+`clinical-numeric/1` (E85). This supersedes the proposal status above for the
+core only: exact decimal/exponent interpretation, six effective fractional
+places and source/result bounds, strict rejection without rounding, zero/null
+semantics, exact subtraction, six-place output and exact primary comparison.
+No rules or worked outcomes change as part of recording acceptance.
+
+The optional secondary absolute `5e-7`, relative `0` R/SAS diagnostic tolerance
+remains provisional and excluded from adoption until independent verification
+and separate acceptance. Adoption is documentation only; no clinical calculation
+code, source-implementation acceptance, release completion, merge or deployment.

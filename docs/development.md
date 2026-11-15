@@ -2770,7 +2770,7 @@ Only their acceptance metadata changes: records, expected results, diagnostics
 and declarations remain identical. Clinical derivation and source-implementation
 acceptance are separate. The canonical proposed numeric decision sheet and
 independent hand boundaries now live in
-[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance)
+[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy)
 (E84); no clinical code or adopted policy ID is added.
 
 Run `python scripts/check_clinical_review.py`,
@@ -2782,3 +2782,18 @@ and all twelve requirements. Full 130 tests, dashboard/tracking, affected local
 Markdown links and whitespace pass. Raw results and acceptance-data hashes are
 under `outputs/numeric-policy-review-2026-11-15/`. No R/SAS or browser run is
 claimed for this documentation/metadata update; no merge or deployment.
+
+### Numeric-core adoption record (15 November 2026)
+
+Maksim explicitly confirms adopting the E84 core at 5177835 as
+`clinical-numeric/1` (E85), while keeping the secondary R/SAS tolerance provisional
+until verification and separate acceptance. Source/expected fixtures, policy
+limits and hand-worked outcomes remain unchanged. This step changes only the
+documentation/progress status, not clinical code or source-loader behavior.
+
+The clinical reference checks still report `clinical_policy: not_evaluated`
+and `derivation: not_implemented`: implementation capability is distinct from
+policy adoption. Dashboard/tracking, affected local links and whitespace checks
+pass; full 130 tests and all twelve clinical references pass. No R/SAS run,
+browser run, clinical implementation, merge or deployment is claimed. Evidence
+is retained under `outputs/numeric-policy-adoption-2026-11-15/`.

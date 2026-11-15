@@ -4,7 +4,8 @@ The maintainer accepted M0-05's policies, validation/output contracts and four
 hand-worked reference cases on 8 October 2026 as a fictional test-data
 specification, following the Hub's final document review. Acceptance establishes
 neither standards conformity, implemented functionality nor independent clinical
-validation. Numeric decisions remain subject to the recorded M1/M2 prerequisites;
+validation. The numeric core was separately adopted on 15 November 2026 (E85);
+implementation and independent verification remain subject to M1/M2 prerequisites;
 field notation and schema stability remain unresolved. This specification is
 separate from the accepted [recipe architecture and generic
 structural example](specification.md). Clinical meaning belongs in the bundled
@@ -285,22 +286,24 @@ on silent relaxation or successful partial output. Ordinary clinical generation
 does not export an invalid dataset as a successful result. This contract is a
 specification, not an implemented mode or a general defect-injection framework.
 
-## Implementation ownership and unresolved numeric policy
+<a id="implementation-ownership-and-unresolved-numeric-policy"></a>
+
+## Implementation ownership and numeric policy
 
 The [clinical template preparation](clinical-template-preparation.md) supplies
 the interface mapping and machine-readable reference transcriptions. Maksim's
 15 November acceptance of the six additional hand references is recorded below;
-it does not accept the source implementation or adopt a numeric policy.
-The numeric decision sheet below remains **proposed, awaiting acceptance**.
+it does not accept the source implementation. In a separate explicit confirmation
+on 15 November, Maksim adopts the core policy below as `clinical-numeric/1` (E85).
+The secondary R/SAS tolerance remains provisional and outside that adoption.
 
-Before clinical numeric implementation in **M1-01, Implement linked clinical CLI
-slice** ([existing task record](progress.json)), specify and review arithmetic
-representation and supported range/overflow handling, rounding (including when
-it occurs and tie behavior), export formatting/precision, and Python/R comparison
-tolerances. Align the tolerances with **M2-02, Verify derivations independently
-in R**, and the plan's R3 cross-platform qualification. These remain unresolved;
-the small exact-integer arithmetic below selects no floating-point/decimal
-implementation or mandatory decimal-scale recipe attribute.
+The reviewed numeric representation, bounds, rejection/rounding behavior,
+formatting and exact primary comparison are now recorded for **M1-01, Implement
+linked clinical CLI slice** ([existing task record](progress.json)). This step
+documents adoption only; no clinical implementation is performed or authorized
+by it. Independent comparisons remain work for **M2-02, Verify derivations
+independently in R**, aligned with the plan's R3 cross-platform qualification.
+No successful comparison or platform qualification is inferred from adoption.
 
 **M2-01, Establish twelve cases and selected mappings**, owns implementing the
 specified clinical derivation outputs and declared negative-fixture
@@ -310,15 +313,20 @@ documented Python/R comparison tolerances consistent with the reviewed numeric
 policy. These obligations are recorded in the existing [task criteria](progress.json);
 they do not move the full scenario contract into M1 or expand its bounded slice.
 
-### Numeric-policy decision sheet — proposed, awaiting acceptance
+<a id="numeric-policy-decision-sheet--proposed-awaiting-acceptance"></a>
 
-Review date: 15 November 2026. This refines the earlier proposal in the clinical
-preparation document, not the accepted study rules. Suggested review label:
-`clinical-numeric/1-proposal`; **no adopted policy ID exists**. Nothing here is
+### Numeric-policy decision sheet — adopted core policy
+
+**Adopted core: `clinical-numeric/1`, Maksim, 15 November 2026 (E85).** The
+accepted content is the E84 core decision sheet at commit
+`5177835f91860be076416cf12c108224114da64f`, including its worked boundaries,
+exact primary comparison and stated software/resource bounds. The optional
+secondary `5e-7` tolerance is explicitly excluded: it remains provisional until
+independent R/SAS verification and separate acceptance. Nothing here is
 implemented clinical arithmetic or a new restriction on the token-preserving
 source loader. Limits are software bounds for invented data, not clinical ranges.
 
-Already accepted: finite numeric measurements; zero is eligible; only explicit
+Study rules accepted before E85: finite numeric measurements; zero is eligible; only explicit
 measurement null is missing; missing fields/text/nonfinite values are invalid;
 actual doses are strictly positive; planned/not-administered amounts may be null;
 units must match; change means follow-up minus selected baseline; nulls never
@@ -326,13 +334,13 @@ become zero; invalid clinical input fails the entire requested run. Existing
 selection, tie, timestamp and diagnostic rules remain unchanged. The source
 contract already preserves original number tokens, provenance and ordering.
 
-**Recommendation:** exact integer micro-units with rejection of unsupported
+**Adopted representation:** exact integer micro-units with rejection of unsupported
 precision/range. Equivalent exact-decimal storage is acceptable only if it
 delivers the same checked results without context-dependent rounding.
 
-| Decision for review | Proposed rule | Trade-off |
+| Core decision | Adopted rule | Trade-off |
 | --- | --- | --- |
-| Numeric syntax | Unquoted JSON number, full-token ASCII grammar `-?(0\|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?`. Decimal point is `.`. Exponent notation is permitted; no leading `+`, leading integer zeros, comma, Boolean, numeric string, NaN or infinity. | Familiar JSON syntax; deliberately no locale or string coercion. JSON syntax is established by [RFC 8259 §6](https://www.rfc-editor.org/rfc/rfc8259#section-6); exponent acceptance for the future clinical calculation policy is proposed. |
+| Numeric syntax | Unquoted JSON number, full-token ASCII grammar `-?(0\|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?`. Decimal point is `.`. Exponent notation is permitted; no leading `+`, leading integer zeros, comma, Boolean, numeric string, NaN or infinity. | Familiar JSON syntax; deliberately no locale or string coercion. JSON syntax is established by [RFC 8259 §6](https://www.rfc-editor.org/rfc/rfc8259#section-6); exponent acceptance for the future clinical calculation policy is adopted in E85. |
 | Exact interpretation | Interpret sign × coefficient digits × 10^(exponent minus fractional digit count), directly from the token, without binary floating-point conversion. Preserve that original token separately. All signed-zero spellings have mathematical value zero; retain their source sign but normalize calculated/exported zero. | Numerically equivalent spellings compare equally while source evidence remains intact. |
 | Precision and source magnitude | A nonnull value must be an exact multiple of `0.000001` and have absolute value ≤ `1000000000`, inclusive. Check after exact exponent interpretation and removal of insignificant trailing zeros. The scaled integer `C = value × 1000000` must be integral and satisfy `abs(C) ≤ 1000000000000000`. Dose amounts additionally satisfy the already accepted positivity rule. | Six effective fractional places, not six significant digits or a six-character spelling limit. Broad invented-data range; finer-resolution or larger real-world data would need a separately reviewed policy version. |
 | Excess precision/range | Reject the whole clinical run, identifying the source ID/field and violated limit; never round, truncate, clip, resample, underflow to zero or silently drop a record. No arithmetic output on failure. | Extra zero digits remain valid, but a seventh meaningful fractional place is invalid even if rounding would produce an allowed value. No half-even quantization is authorized for this subtraction-only version. |
@@ -341,7 +349,7 @@ delivers the same checked results without context-dependent rounding.
 | Comparison | Require exact coefficients and canonical decimal strings; IDs, selected source IDs, row sets/cardinality, units, timestamps, nulls and reasons also compare exactly. Normalize zero for numeric results only. | A one-micro-unit wrong result always fails; tolerance cannot excuse wrong selection or formatting. |
 
 There is no separate significant-digit or exponent-spelling cap in this
-proposal beyond the existing 1 MiB source envelope. A long exponent must be
+policy beyond the existing 1 MiB source envelope. A long exponent must be
 classified against the value bounds without expanding an enormous power of ten.
 An exact zero remains zero for any valid exponent within that envelope; nonzero
 huge/tiny values fail range/precision. This is a future safe-implementation
@@ -349,12 +357,12 @@ requirement, not permission to change the current lossless source parser.
 
 ### Independently hand-worked numeric boundaries
 
-All **accept/reject labels below are proposed policy outcomes**, not executed
+All **accept/reject labels below are adopted policy expectations**, not executed
 clinical validation. Measurement context is assumed unless a dose is named.
 `C` denotes exact integer micro-units. These examples were worked from decimal
 place value and integer subtraction; no clinical derivation produced them.
 
-| Input or operation | Proposed accept/reject and exact result | Hand rationale / canonical CSV |
+| Input or operation | Adopted accept/reject expectation and exact result | Hand rationale / canonical CSV |
 | --- | --- | --- |
 | `0`, `-0`, `-0.0000000e+9` | Accept; each has `C=0` | Zero coefficient regardless of sign/exponent; each exports `0.000000`, original token retained. Zero actual dose is rejected by the already accepted positivity rule. |
 | Baseline `0`, follow-up `2` | Accept; change `2` | `2000000 − 0 = 2000000`; `2.000000`. Zero baseline is usable, not missing. |
@@ -375,7 +383,7 @@ place value and integer subtraction; no clinical derivation produced them.
 | Absent `value`, `"0.3"`, `true`, `NaN`, `Infinity`, `+1`, `01`, `.3`, `1.` | Reject; no numeric result | Missing required field/type or JSON number syntax failure. These do not mean missing measurement. |
 | `1e99999999`, `1e-99999999`, `0e99999999` | Reject first two; accept zero | Respectively out of magnitude, below supported nonzero resolution, and exact zero. Never coerce overflow/underflow into a clinical value. |
 
-### Independent R/SAS comparison proposal
+### Exact comparison and provisional R/SAS tolerance
 
 Primary acceptance uses exact decimal coefficients/strings with **zero numeric
 tolerance**. Read source numeric lexemes as character first; independently
@@ -406,15 +414,14 @@ tolerance. Other operations, reduced-length/non-IEEE SAS storage, different
 rounding modes or transformations invalidate this argument and need new review.
 
 M2-02 must independently exercise these boundaries in the actual R/SAS setup
-before this optional diagnostic tolerance can be accepted. No R/SAS execution,
-clinical calculations or policy adoption is claimed by these documents.
+before this optional diagnostic tolerance can be accepted. No R/SAS execution
+or clinical calculations are claimed. Exact primary comparison with zero numeric
+tolerance is part of the adopted core; the secondary allowance is not.
 
-**Decisions requiring review:** approve/amend (1) exact exponent interpretation,
-six effective decimal places and ±`1e9` source/±`2e9` result bounds;
-(2) strict rejection with no quantization, signed-zero normalization and canonical
-six-place output; (3) exact primary comparison and whether to permit the bounded
-secondary `5e-7` diagnostic at all. Only after explicit acceptance should an
-adopted version ID and implementation task be authorized.
+**Remaining review:** source/adapter implementation acceptance, independent
+verification of the core and a separate decision on the secondary diagnostic
+tolerance. Clinical implementation needs its own bounded authorization; this
+record performs documentation only and does not complete any release gate.
 
 ## Four invented, hand-worked cases
 
@@ -562,5 +569,6 @@ expectations. Progress evidence E83 attributes this acceptance to Maksim.
 
 This acceptance is separate from numeric-policy adoption, source/adapter
 implementation acceptance, executed derivation, independent R/SAS comparison
-and remaining UX acceptance. The numeric decision sheet remains **proposed,
-awaiting acceptance**. Clinical implementation and release gates remain pending.
+and remaining UX acceptance. The numeric core was subsequently adopted through
+the separate E85 confirmation above; its secondary tolerance remains provisional.
+Clinical implementation and release gates remain pending.

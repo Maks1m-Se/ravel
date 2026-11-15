@@ -297,10 +297,11 @@
         "E80",
         "E81",
         "E82",
-        "E84"
+        "E84",
+        "E85"
       ],
       "blockers": [
-        "Clinical numeric implementation still requires maintainer adoption of the range/scale/arithmetic/format/comparison policy. Source-foundation review is separate from adoption."
+        "Numeric core clinical-numeric/1 is adopted (E85); source/adapter implementation acceptance and separately authorized clinical implementation remain pending. Secondary R/SAS tolerance remains provisional until independent verification and separate acceptance."
       ]
     },
     {
@@ -373,7 +374,8 @@
       ],
       "evidence_refs": [
         "E54",
-        "E84"
+        "E84",
+        "E85"
       ],
       "blockers": []
     },
@@ -1123,15 +1125,20 @@
       "id": "E84",
       "reference": "Numeric policy proposal for review, 15 November 2026; docs/baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance",
       "scope": "Expanded the earlier clinical numeric proposal into one canonical decision sheet: exact JSON decimal/exponent interpretation and signed zero, six effective fractional places, inclusive source magnitude1e9/result magnitude2e9, rejection of excess precision/range, exact micro-unit subtraction without rounding, null/missing behavior and six-place CSV. Independently worked literal boundary examples distinguish accepted prior study rules from proposed numeric outcomes. Exact primary comparisons have zero tolerance; optional secondary5e-7 absolute/zero relative binary64 diagnostics have an explicit conditional error bound, not R/SAS execution or acceptance. Policy remains proposed, awaiting acceptance, with no adopted ID or clinical implementation. Full130 units, clinical/reference checks for12 requirements, dashboard/tracking, affected local links and whitespace pass. Release gates and all broader pending reviews remain unchanged."
+    },
+    {
+      "id": "E85",
+      "reference": "Maksim explicit numeric-core acceptance, 15 November 2026; docs/baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy",
+      "scope": "Maksim explicitly confirms adopting the E84 core reviewed at 5177835 as clinical-numeric/1: exact JSON decimal/exponent interpretation, token preservation and zero normalization, six effective fractional places, inclusive1e9 source/2e9 difference bounds, strict rejection rather than rounding, exact micro-unit subtraction, null/missing rules, fixed six-place CSV and exact primary comparison. The optional secondary absolute5e-7/relative0 R/SAS diagnostic tolerance is excluded, remaining provisional until independent verification and separate acceptance. This records policy adoption only, not clinical implementation or its authorization. Normative limits, worked numeric outcomes, six accepted source/expected cases and all clinical/generic code are unchanged. Full130 units, all12 clinical references, dashboard/tracking, affected local links and whitespace pass. Source checker correctly retains clinical_policy not_evaluated and derivation not_implemented because it does not implement the adopted policy. Source/adapter acceptance, independent R/SAS/platform checks and all release gates remain pending; no merge or deployment."
     }
   ],
   "blockers": [
     "Combined UX/export and clinical-source candidate awaits separate maintainer UX/contract review (E75). Original Edge reset trigger remains unknown. Actual Pixel/Gboard remains deferred and unperformed.",
-    "Clinical numeric policy remains proposed, awaiting acceptance (E84). Maksim accepted the six additional hand references (E83), but source implementation acceptance, clinical policy validation/derivation and independent R/SAS comparison remain pending.",
+    "Numeric core clinical-numeric/1 is adopted (E85), with exact primary comparison. Secondary R/SAS tolerance remains provisional pending independent verification and separate acceptance. Source implementation acceptance, clinical policy validation/derivation and independent R/SAS execution remain pending.",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: (1) review the three numeric-policy decisions in baseline-specification.md (E84): exact exponent/scale/range bounds; strict rejection, zero/CSV formatting; exact primary and optional secondary comparison. Explicit acceptance and an adopted policy ID are required before clinical arithmetic. The six additional hand references are accepted by Maksim (E83); source/adapter implementation review including E82 remains separate. (2) complete remaining UX acceptance on the preserved cababf38 instance; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review the missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance before redistribution work. No merge or deployment; remote publication still requires separate authorization and live Berlin timing checks.",
+  "next_action": "Maintainer: (1) review source/adapter implementation including E82 and agree the next bounded clinical implementation task separately. Numeric core clinical-numeric/1 is adopted (E85); this documentation step authorizes no clinical calculations. Plan independent exact R/SAS boundary checks; the secondary diagnostic tolerance remains provisional until verification and separate acceptance. Six hand references remain accepted (E83). (2) complete remaining UX acceptance on preserved cababf38; only whole-row selection and draft preservation across columns are accepted (E76). (3) provide/review missing transformed-asset, original-font, Rust-vendor and Microsoft-runtime provenance before redistribution work. No merge or deployment; remote publication requires separate authorization and live Berlin timing checks.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M4-03",
