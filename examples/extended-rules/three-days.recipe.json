@@ -1,0 +1,16 @@
+{
+  "format": "ravel-single-table/3",
+  "seed": 17,
+  "table": {
+    "id": "main",
+    "name": "Three days",
+    "row_count": 3,
+    "fields": [
+      {"id":"row_id","name":"id","kind":"id","start":1,"missing_probability":"0"},
+      {"id":"day","name":"day","kind":"date_sequence","start":"2024-02-28","step":1,"missing_probability":"0"},
+      {"id":"enabled","name":"enabled","kind":"boolean","probability":"1","missing_probability":"0"},
+      {"id":"code","name":"code","kind":"integer","minimum":7,"maximum":9,"unique":true,"missing_probability":"0"},
+      {"id":"group","name":"group","kind":"category_quota","values":["A","B"],"counts":[2,1],"missing_count":0,"scope":"generated","missing_probability":"0"}
+    ]
+  }
+}

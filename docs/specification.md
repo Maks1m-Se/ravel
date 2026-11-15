@@ -9,6 +9,7 @@ and release criteria remain in [the plan](plan.md).
 The bounded explicit-rule implementation now has its own concrete
 [single-table contract](single-table.md), format `ravel-single-table/1`, and
 [sample-assisted contract](sample-assisted.md), format `ravel-single-table/2`.
+The [extended-rule contract](extended-rules.md) defines version3 additions.
 They do not implement the linked/clinical illustrative structure below or the
 complete planned application recipe.
 

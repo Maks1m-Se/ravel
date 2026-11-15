@@ -1,0 +1,13 @@
+{
+  "format": "ravel-single-table/3",
+  "seed": 17,
+  "table": {
+    "id": "statistical_reference",
+    "name": "Statistical reference",
+    "row_count": 100000,
+    "fields": [
+      {"id":"standard_normal","name":"normal","kind":"normal","mean":"0","sd":"1","places":6,"missing_probability":"0"},
+      {"id":"bernoulli_030","name":"boolean","kind":"boolean","probability":"0.30","missing_probability":"0"}
+    ]
+  }
+}

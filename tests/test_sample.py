@@ -102,6 +102,8 @@ class SampleTests(unittest.TestCase):
         for text in ['id,x\n1,A\n1,B\n', 'id,x\n,A\n2,B\n']:
             with self.subTest(text=text), self.assertRaisesRegex(ValidationError, 'nonempty and unique'):
                 generate(profile(text, confirm_identifiers=True))
+            with self.subTest(zero_new=text), self.assertRaisesRegex(ValidationError, 'nonempty and unique'):
+                generate(profile(text, mode='extend', count=2))
 
     def test_bom_delimiters_quoted_unicode_na_space_and_leading_zeroes(self):
         raw = '\ufeffsample_id;code;note\r\n001;NA;" Grüße\nWelt "\r\n002; ;"a;\"\"b\"\""\r\n'

@@ -16,6 +16,9 @@ PARAMETERS = {
     "integer": {"minimum", "maximum"}, "decimal": {"minimum", "maximum", "places"},
     "category": {"values", "probabilities"},
     "text_id": {"start", "prefix", "width"},
+    "normal": {"mean", "sd", "places"}, "boolean": {"probability"},
+    "date": {"minimum", "maximum"}, "date_sequence": {"start", "step"},
+    "category_quota": {"values", "counts", "missing_count", "scope"},
 }
 
 
@@ -83,13 +86,13 @@ def _canonical_json(recipe):
 
 
 def validate(recipe):
-    if isinstance(recipe, dict) and recipe.get("format") == "ravel-single-table/2":
+    if isinstance(recipe, dict) and recipe.get("format") in ("ravel-single-table/2", "ravel-single-table/3"):
         from .sample import validate as validate_sample
         return validate_sample(recipe)
     if isinstance(recipe, dict) and recipe.get("format") == "ravel-workbook-experiment/1":
         fail("format", "Old workbook experiment JSON is not a generation recipe. Keep the original; recreate its rules explicitly in Ravel. No migration was performed.")
     if not isinstance(recipe, dict) or recipe.get("format") != FORMAT:
-        fail("format", f"Supported format is {FORMAT}; supplied {recipe.get('format') if isinstance(recipe, dict) else type(recipe).__name__!r}.")
+        fail("format", f"Supported formats are ravel-single-table/1, /2 and /3; supplied {recipe.get('format') if isinstance(recipe, dict) else type(recipe).__name__!r}.")
     keys(recipe, {"format", "seed", "table"}, "recipe")
     integer(recipe["seed"], "seed", 0, 2**63 - 1)
     table = recipe["table"]
@@ -190,6 +193,11 @@ def new_field(kind="integer", existing=()):
         "decimal": {"minimum": "0.00", "maximum": "100.00", "places": 2},
         "category": {"values": ["A", "B"], "probabilities": ["0.5", "0.5"]},
         "text_id": {"start": 1, "prefix": "", "width": 3},
+        "normal": {"mean": "0", "sd": "1", "places": 6},
+        "boolean": {"probability": "0.30"},
+        "date": {"minimum": "2024-02-28", "maximum": "2024-03-01"},
+        "date_sequence": {"start": "2024-02-28", "step": 1},
+        "category_quota": {"values": ["A", "B"], "counts": [500, 500], "missing_count": 0, "scope": "generated"},
     }
     used = {f["name"] for f in existing}
     stem, candidate, index = "column", "column", 2

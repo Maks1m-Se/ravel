@@ -7,6 +7,10 @@ remain required for the first usable release. Clinical derivations and binaries
 are outside this batch. Several sequential implementation stages precede joint
 maintainer review under the approved sequencing exception.
 
+This document specifies version1. The implemented [sample path](sample-assisted.md)
+uses version2; [bounded extended rules](extended-rules.md) use version3. These
+additions preserve version1 behavior and do not silently migrate saved files.
+
 ## Recipe version 1
 
 JSON format `ravel-single-table/1` contains `seed`, one `table` with stable `id`,

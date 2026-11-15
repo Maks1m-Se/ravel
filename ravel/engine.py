@@ -46,7 +46,7 @@ def environment():
             ("implementation", platform.python_implementation()), ("platform", platform.platform()))
 
 
-def _generate(recipe):
+def _generate(recipe, source_document=None):
     table = recipe["table"]
     columns = []
     for field in table["fields"]:
@@ -54,6 +54,8 @@ def _generate(recipe):
         missing = _stream(recipe["seed"], table["id"], field["id"], "missing")
         numerator, denominator = _ratio(field["missing_probability"])
         kind = field["kind"]
+        from .extended import column as extended_column
+        prepared = extended_column(recipe, field, table["row_count"], values, source_document)
         if kind == "category":
             weights = [Decimal(p) for p in field["probabilities"]]
             scale = max(-p.as_tuple().exponent for p in weights)
@@ -66,7 +68,9 @@ def _generate(recipe):
             low, high = (int(Decimal(field[k]) * 10**places) for k in ("minimum", "maximum"))
         column = []
         for row in range(table["row_count"]):
-            if kind == "id":
+            if prepared is not None:
+                value = prepared[row]
+            elif kind == "id":
                 value = field["start"] + row
             elif kind == "text_id":
                 value = field["prefix"] + str(field["start"] + row).zfill(field["width"])
@@ -90,6 +94,8 @@ def _generate(recipe):
 def cell_text(value):
     if value is None:
         return ""
+    if isinstance(value, bool):
+        return "true" if value else "false"
     return format(value, "f") if isinstance(value, Decimal) else str(value)
 
 

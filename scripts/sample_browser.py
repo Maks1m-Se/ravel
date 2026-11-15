@@ -111,5 +111,10 @@ def exercise(page, base, out, viewport, theme):
     record_path = out / f'{prefix}.run.json'
     download(page, 'Save run record', record_path)
     page.screenshot(path=out / f'{prefix}-override.png')
+    activate(page, 'Fields')
+    type_value(page, 'Rows', '10')
+    apply(page)
+    generate_table(page)
+    assert preview_cells(page) == [row + ['retained'] for row in original]
     return dict(viewport=viewport, theme=theme, result='passed', workflow='sample',
                 assertions='keyboard import/review; 1000 new and retained+990; exact source cells/origin; edited assumptions; hand override; invalid import/count recovery; layout/theme; preview/CSV/recipe reload/run record')
