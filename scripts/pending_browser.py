@@ -36,11 +36,9 @@ def exercise(page,base,out,viewport,theme):
     download(page,'Save recipe',out/f'{prefix}-original.recipe.json')
     download(page,'Export CSV',out/f'{prefix}-original.csv')
     page.wait_for_function('window.ravelUnsaved === false')
-    check=page.get_by_role('button',name='Session help',exact=True)
-    keyboard_to(page,check)
-    page.keyboard.press('Enter')
-    expect(page.locator('.action-toolbar .help-content')).to_contain_text('Exact quotas')
-    expect(page.locator('.action-toolbar .help-content')).not_to_contain_text('not supported yet')
+    activate(page,'Session help')
+    expect(page.locator('.session-dialog')).to_contain_text('Exact quotas')
+    expect(page.locator('.session-dialog')).not_to_contain_text('not supported yet')
     page.keyboard.press('Escape')
     page.evaluate('''() => {
         window.pendingAnnouncements=[];

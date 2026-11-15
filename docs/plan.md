@@ -1,6 +1,6 @@
 # Ravel — project plan
 
-Planning revision 4 · 9 October 2026 · Target release v0.1 · Display name: Ravel
+Planning revision 5 · 27 October 2026 · Target release v0.1 · Display name: Ravel
 
 **Compose the data you need.**
 
@@ -47,6 +47,31 @@ The clinical template generates underlying study records first and derives analy
 At kickoff, fix one supported Python minor version and lock the development/release environment. Choose the UI framework through a small offline launch, keyboard-use, and packaging experiment. Choose dependencies for demonstrated needs. The application itself must run without Codex, an AI account, or an internet connection. Development with cloud AI uses invented fixtures; confidential samples stay outside the repository and AI context.
 
 **Platform scope.** macOS, Linux, and Windows are intended desktop targets. Fix exact OS versions and architectures at M0, including at least one macOS version on Apple silicon. Add automated core checks on all three as the engine becomes runnable, then test native installation and the actual interface separately. Publish only tested combinations as supported. The alpha may identify platform gaps; v0.1 requires all three selected targets. A browser interface runs locally and does not imply a hosted service.
+
+**Personal weekend exception, 23 October 2026.** Prepare one password-protected
+Render Free web service from PR24 plus the saved, tested P1/P2 recovery patch,
+on a separate deployment branch. This personal test takes priority over the
+next planned increment and does not adopt hosted accounts or mobile support
+for v0.1. Acceptance requires a recorded source commit and patch hashes, HTTPS,
+hosting-only credentials, access checks covering HTTP/uploads/downloads/WebSockets,
+1,000-row generation, pending Apply/Discard, recipe/CSV downloads, invented CSV
+import and isolation of two browser contexts. Check narrow portrait/landscape
+and reduced height, then require an actual Pixel 8 keyboard try-out. Preserve
+desktop layout, local loopback launch and existing PRs without merges. Preparation
+can be complete while hosted verification and maintainer acceptance remain open;
+the normal Berlin publication restriction still applies.
+
+**Public demo follow-up, 27 October 2026.** The maintainer authorized removing
+the personal login requirement for a shareable demonstration and authorized
+publication during vacation. Retain one Free service, the separate deployment
+branch and unmerged PRs. Public mode must be explicit, bound generation/upload
+work, explain shared-server processing and preserve the local application.
+Verify anonymous HTTPS, same-origin WebSockets, file workflows, separate sessions
+and limit recovery. Simplify theme/general controls into an options menu, use
+smaller help icons, correct input spacing and compact the three column actions
+without losing names, keyboard access or removal confirmation. Require actual
+visual/device review; this exception does not adopt accounts, persistent hosting
+or mobile/platform support as release commitments.
 
 **Community add-ons.** Preserve a small boundary between core generation and domain rules now. Keep the clinical module in the same repository and distribution initially. Avoid a plugin loader, registry, or public API stability promise before real extension needs are understood.
 

@@ -1939,3 +1939,329 @@ Chrome155 source checks and the older private Windows b99 package. The latter
 remains at the separately documented ignored C:\Git\ravel\outputs handoff,
 unchanged, with no rebuild. Native/clean-machine/physical-offline/reputation and
 redistribution requirements remain open; human visual acceptance is pending.
+
+### Edit recovery review (21 October 2026)
+
+The bounded P1/P2 follow-up starts at reviewed PR24 commit
+`db6571c1f69b60eef34cefcadf4c89f1e29ad042` on `fix/pending-edit-actions`.
+Successful Apply/Discard returns to the last edited input by stable table/column/
+setting identity, including table-only Rows/Seed and refreshed Properties.
+Removed settings fall back to Column name, then Rows. A later user interaction
+cancels restoration; visible fields stay in place and clipped fields use nearest
+reveal. Failed Apply still focuses the invalid field.
+
+Historical field/ARIA/status errors clear only when an involved input changes.
+Either range endpoint invalidates an ordering error; an unrelated scalar error
+or independent status stays. Removing a message is not validation: drafts and
+export blocking persist, and Apply validates completely again. Quota parsing
+errors remain when Rows changes; a total mismatch clears when its missing count
+changes. Shared generation/recipe logic, fixtures, Fichte CSS/layout and the
+import footer are unchanged.
+
+Actual checks selected with `ravel-verify`:
+
+```powershell
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow recovery --verify-source --output outputs/recovery-review
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow pending --verify-source --output outputs/pending-regression
+python scripts/check_generator_browser.py --base-url http://127.0.0.1:8096 --workflow recovery --channel msedge --smoke --verify-source --output outputs/recovery-edge
+python -m unittest discover -s tests -v
+python scripts/build_dashboard.py --check
+git diff --check
+```
+
+Four recovery plus four pending Chrome cases pass Light/Dark at1366x657 and
+1280x800; one Edge recovery case passes. All82 units, dashboard and whitespace
+pass. Zero page errors/external browser HTTP/WebSockets. Post-action focus is
+asserted before any focus helper. A delayed-restore case verifies that a later
+real keyboard movement retains focus. Both sample and linked Apply replace the
+Properties input DOM identity while retaining logical focus. Existing E58/E59
+broader engine/import/CSV/recipe checks remain attributed to their source; they
+are reused for unchanged areas and not claimed as new executions.
+
+Runtime fingerprint: `72e1e6651e2977f16b5b20b57087ae4bd2e49ed53b35e229178ad0e99fa1a542`.
+Python3.14.8/NiceGUI3.18.0/Playwright1.58.0,
+Chrome155.0.8059.85, Edge155.0.4283.62 on the existing Windows host.
+Final raw records: local outputs/ravel-recovery-2026-10-21/recovery-ready,
+pending-complete and edge-ready; earlier failures remain alongside them.
+The inherited check_workbook_browser invalid-escape SyntaxWarning remains.
+
+| Actual1366×657 state | Light | Dark |
+| --- | --- | --- |
+| Focus after Discard/re-render | [Capture](images/edit-recovery-light-discard-focus.png) | [Capture](images/edit-recovery-dark-discard-focus.png) |
+| Edited range, not revalidated | [Capture](images/edit-recovery-light-edited-unvalidated.png) | [Capture](images/edit-recovery-dark-edited-unvalidated.png) |
+| Still invalid on next Apply | [Capture](images/edit-recovery-light-still-invalid.png) | [Capture](images/edit-recovery-dark-still-invalid.png) |
+| Table-only Seed focus | [Capture](images/edit-recovery-light-seed-focus.png) | [Capture](images/edit-recovery-dark-seed-focus.png) |
+
+Each capture waits for100 actual Preview rows. The pointer is outside help and
+finite UI animations finish for capture. No generated/edited UI images.
+
+Fixed review: http://127.0.0.1:8105/, `recovery-E60-72e1e6651e29`.
+This is `db6571c1f69b60eef34cefcadf4c89f1e29ad042` **plus saved uncommitted changes**;
+no new commit or CI result is claimed. Its immutable version manifest identifies
+the runtime hashes, source archive and saved patch. Commit/push and the PR24
+description update remain pending under the Berlin08:00–16:30 restriction.
+The older8101/8103/8104 snapshots were hash-verified and resumed unchanged;
+automated tests use8096 only. The private Windows ZIP remains unchanged at full
+SHA256 `eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91`;
+it contains none of these later source repairs. No rebuild, merge, public binary,
+native/clean-machine acceptance or milestone completion.
+
+For joint review, create a table and generate once. Change only Rows, Apply and
+check Rows retains focus; change only Seed, Discard and check Seed. Change a
+column value and repeat both actions. Set Minimum200/Maximum20 and Apply; then
+edit Maximum150: the old message/ARIA/status must clear while pending/export
+blocking remain. Apply must fail again and focus Minimum. Set Maximum250 and
+Apply to verify successful focus return. Editing unrelated Seed while the range
+error is shown must retain that error. Repeat in both themes at short laptop
+height. Human visual/function acceptance remains pending.
+
+### Personal Render preparation (23 October 2026)
+
+The [personal Render guide](personal-render.md) specifies the separate hosting
+entry, secrets, narrow layout, actual-device try-out and limitations. Current
+branch is `deploy/render-personal-weekend`, based on PR24
+`db6571c1f69b60eef34cefcadf4c89f1e29ad042` plus the saved E60 P1/P2 correction.
+The original recovery worktree was inspected before copying; its modified and
+untracked files were preserved, with copied input hashes recorded locally.
+No deployment commit, GitHub write, PR merge or hosted URL exists yet. The
+live Berlin09:53 clock was inside the08:00–16:30 restriction. Finish preparation
+locally and resume publication later without scheduling it.
+
+Actual configured interpreter on this host:
+`outputs/python314-trial-2026-10-11/runtime-env/Scripts/python.exe`, Python3.14.8
+and NiceGUI3.18.0. All48 installed runtime versions match `requirements-ui.lock`;
+`pip check` passes. Existing isolated review dependencies are made available
+to the same interpreter for browser checks:
+
+```powershell
+$runtimePython = '.\outputs\python314-trial-2026-10-11\runtime-env\Scripts\python.exe'
+$env:PYTHONPATH = Join-Path (Get-Location) 'outputs\python314-trial-2026-10-11\review-env\Lib\site-packages'
+& $runtimePython scripts/check_personal_web.py --output outputs/render-personal/new-protected-run
+& $runtimePython scripts/check_personal_web.py --desktop --output outputs/render-personal/new-desktop-run
+& $runtimePython -m unittest discover -s tests -v
+& $runtimePython scripts/build_dashboard.py --check
+git diff --check
+Remove-Item Env:PYTHONPATH
+```
+
+Both browser modes own and stop their child server. Protected mode generates
+random invented test credentials in memory, independent of any eventual hosting
+password. Desktop mode adds a loopback-only source identity route in the test
+launcher; the actual hosted app has no identity/debug endpoint. Source hashes
+are checked before/after the browser cases. No frozen manual-review port is used.
+
+Runtime fingerprint:
+`b6577e98d61ce6169ccb937240c9612990f444e636214525d845b9484e2df61f`
+(SHA256 of sorted-key JSON mapping all13 runtime Python/CSS/JS file hashes).
+The final protected local run `outputs/render-personal/browser-5` passes both
+themes at412x915 portrait,915x412 landscape and412x420 reduced height:
+1,000 generated rows, pending change/Apply/Discard, stale/current CSV,
+recipe/CSV downloads, invented ten-row CSV import, separately horizontal
+definition scrolling, reachable Properties/actions and stable import footer.
+Two independent contexts retain distinct column names, row counts and results.
+Direct HTTP/polling/WebSocket checks reject strangers, wrong credentials and
+foreign Origins; valid authenticated WebSocket and upload work. NiceGUI CSV/
+recipe bytes become local blob downloads through the protected Socket.IO channel.
+Zero browser page errors; one Windows Proactor `ConnectionResetError` is logged
+after intentional socket rejection. It is retained, not counted as a clean log.
+Chrome155.0.8059.85, Playwright1.58.0; actual responsive captures were inspected.
+One source-attested Edge155.0.4283.62 recovery smoke case also passes.
+
+A final repeat at `outputs/render-personal/protected-final` passes the same
+protected cases and additionally captures the real upload request URL, then
+verifies that anonymous POST to that exact endpoint receives401. Runtime hashes
+are identical to browser-5. The [personal guide](personal-render.md) links two
+unaltered captures from this final repeat.
+
+All89 unit tests pass after dashboard regeneration, as do dashboard freshness and
+whitespace. The initial unit run had88 passes and one stale-dashboard failure
+after copying E60 tracking sources. Initial mobile harness failures were test
+assumptions about blob URLs, the ID/value column position, an asynchronous custom
+checkbox, and a selector counting Source rows together with Preview; corrected
+assertions preserve the intended contract and the failed evidence remains.
+
+The first full Chrome matrix completed13 cases before a sample-harness race
+following Discard. It started the next Rows edit before the server's discarded
+state arrived; the sample check now awaits the visible completion status and
+restored 1000 Rows. Failed `desktop-1` and the subsequent server-not-running attempt
+remain retained. The complete rerun at `outputs/render-personal/desktop-final`
+passes all 24 source-attested Chrome cases: rules, sample, extended, linked,
+pending and recovery in Light/Dark at 1366×657 and 1280×800. Zero page errors,
+external browser HTTP attempts or external WebSockets. Runtime hashes match the
+protected checks; actual desktop captures were also inspected. The owned test
+server stopped after completion and its log has no traceback.
+
+Render YAML parses as Free/manual with both credentials prompted as secrets.
+The48 unchanged pins resolve to Linux x86_64/Python3.14 wheels in a PyPI
+`pip install --dry-run --ignore-installed --only-binary=:all:` check, using
+manylinux2_28/2_17/2014, CPython and ABIcp314; report retained at
+`outputs/render-personal/linux-resolution.json`. No packages were installed by
+that check. The first attempt was blocked by sandbox networking; the approved
+read-only retry succeeded. This establishes wheel resolution, not Linux execution.
+Actual Linux installation, Render Blueprint validation/build, HTTPS proxy/TLS,
+cold start/resource limits and the actual Pixel8/Gboard interaction remain unrun.
+The Render plugin was found but is unconnected, and no enabled browser surface
+was available. The required account connection and hosted/device acceptance are
+in `progress.json`'s next action. No milestone/release gate or human acceptance
+is inferred from local desktop emulation.
+
+
+## Compact controls and public demo (27 October 2026)
+
+Source starts at `d58e977ab2cac654c5012918e35b26fc899ab0f4`; this is the
+maintainer-authorized public/compact follow-up, with no PR merges. Operation,
+limits, commands and required device/visual try-out: [public demo](public-demo.md).
+Runtime fingerprint (sorted JSON runtime SHA256 mapping):
+`882f5d312924417fc15f08fae86f0365be750ac831302443d26d01e19c9706e5`.
+
+Actual review environment: Linux, CPython3.12.14, NiceGUI3.18.0, Playwright1.58.0,
+Chromium153.0.8010.0. This is not a new Windows/Edge or Python3.14 native run.
+The unchanged UI/review pins installed and `pip check` passed. Browser download
+from Playwright returned an empty/corrupt archive; the review instead used an
+explicit locally extracted Chromium binary from @sparticuz/chromium153.0.0.
+That test-only package stays in ignored outputs and is not an application pin.
+The managed sandbox forbids interface enumeration needed by a local0.0.0.0
+NiceGUI startup, so owned local checks bind loopback; hosted binding is checked
+separately. Server and browser must run in the same execution network namespace.
+
+Final `outputs/compact-desktop-final/desktop/results.json`: all24 maintained
+cases pass (rules/sample/extended/linked/pending/recovery, two themes, two laptop
+sizes), with zero page errors/external HTTP/WebSockets. Final
+`outputs/public-compact-final/results.json`: four compact desktop/mobile cases
+pass, plus real anonymous HTTP/WebSocket, rejected foreign Origins/oversized
+upload, downloads/import, limit recovery and two-context isolation. Both retain
+runtime hashes. Six measured input controls have42px height,22px line height,
+14px top and6px bottom padding, and no bottom overflow. Actual unaltered captures
+were inspected and selected files copied to docs/images. Emulated reduced height
+is not an actual Android keyboard test.
+
+Earlier full desktop run `outputs/compact-desktop-all` stopped after16 passing
+cases at a pending-state assertion after an unexpected same-page navigation.
+The cause is unproven; the failed capture/results remain retained. The complete
+final run passes. Earlier targeted four pending cases and public cases also
+passed; they are not added to the final24 count. An intermediate coarse-pointer
+rule increased all icon toolbar controls and clipped the footer; scope was
+corrected to the three column controls before the final runs. The menu capture
+now waits for the real popup transition. No images were redrawn or retouched.
+
+New unit checks cover explicit public opt-in, anonymous/same-origin access,
+chunked body framing/limits, aggregate dataset bounds without mutation and
+capacity/rate recovery after errors. All94 unit tests, dashboard freshness and whitespace pass. Actual hosted
+deployment is recorded after execution. Human visual acceptance,
+actual Pixel8/Gboard, clinical policy and existing release gates remain open.
+
+
+### Public deployment verification and local Codex handoff
+
+Published implementation `ac176403633e49c605f7295690c613c6db25afa4` on
+`deploy/render-personal-weekend`, [draft PR25](https://github.com/Maks1m-Se/ravel/pull/25)
+against `fix/pending-edit-actions`. No PR merge. Render environment update
+RAVEL_PUBLIC_DEMO=1 triggered deploy `dep-dbg84v0m7kps73bmfg2g`, live at
+11:53 Berlin on27 October. Free/Frankfurt/manual deployment preserved; original
+authentication secrets retained for personal-mode rollback, never copied here.
+The public source tree was checked blob-for-blob against the local tree before
+publication. Runtime remains fingerprint882f5d312924417fc15f08fae86f0365be750ac831302443d26d01e19c9706e5.
+
+Hosted HTTP/WebSocket/upload-boundary checks passed without credentials.
+A separate cloud Chrome session completed theme-with-draft, Apply,1,000-row
+generation, CSV/recipe downloads and Discard30→20. Downloaded CSV independently
+checked: header id,value, IDs1–1000, all values0–20. CSV SHA256
+7db126417bc23dcd9256bea73f09949c153eeeb47f4fc866915f3c641d4575f5; recipe SHA256
+ba2807f6bcf6d17402865be19f923ba7b2ff679720a962bd6708f4a5b29d525b.
+Actual capture is docs/images/public-demo-live.jpg. A new public page successfully
+uploaded examples/sample-assisted/ten-rows.csv, displayed10 source rows/3 columns,
+9.8–12.2 with missing0.2, material A0.6/B0.4 and IDs from11. No hosted import
+confirmation/generation, paired-session isolation or actual-phone test is claimed.
+Those broader workflows passed locally as recorded above. The connected Chrome
+version was not exposed by its control interface.
+
+Standalone remote attempts remain in outputs/public-demo-hosted and
+outputs/public-demo-hosted-proxy: both passed transport checks, but Chromium
+failed navigation (first ERR_EMPTY_RESPONSE, then proxy certificate trust).
+No certificate validation was disabled and no application fix is claimed. The
+experimental proxy launcher is retained only in ignored outputs; maintained
+checker/source unchanged. Both initial GitHub runs40491859566 and40491959122
+passed; PR jobs122147827011/122147827129/122147827169 ran core unit tests, dashboard
+freshness and whitespace on Ubuntu/Windows/macOS. These are not native app tests.
+
+Local Codex continuation: fetch current refs, inspect all existing worktrees and
+uncommitted changes, then use the PR25 deployment source in an isolated worktree.
+Do not overwrite the older local recovery work, recreate the Render service or
+restart the obsolete personal-deployment prompt. The deployed implementation
+remainsac176403; subsequent evidence-only commits do not need another deploy.
+Follow progress.json for the required visual/device review and unchanged gates.
+
+### Isolated PR25 technical review (27–28 October 2026)
+
+The [public-demo review](public-demo.md#pr25-technical-review-2728-october-2026)
+records two confirmed hosting-limit repairs, tested from PR25 head `fb800744`.
+New units reproduce both failures on the original code: the provenance column
+was omitted from cell arithmetic, and embedded recipe samples bypassed the
+CSV source-row limit. Guards stay in the hosting/UI adapters; generic engine,
+clinical rules and local CLI are unchanged. Invalid recipe load is atomic.
+
+Existing E63 desktop evidence is reused for unchanged styling. Windows source
+Python3.14.8/NiceGUI3.18.0 and Chrome156.0.8078.48 now pass the full hosted
+checker, including the previously uncompleted sample generation, independent
+contexts and mobile emulation. TLS validation remained enabled. Final local
+checker passes both compact/mobile themes plus one new boundary/recovery case;
+zero page errors. Runtime fingerprint:
+`a5b75e9951f4ab5cdf2a11e0c56402a2637ca03835273d93f4799179c8eace19`.
+
+Raw evidence outside the review worktree:
+`C:\Git\ravel\outputs\pr25-review\hosted-baseline` (four hosted cases),
+`public-fixed-1` (five local cases), `limits-before-fix.log` (two expected
+failures) and `public-local-baseline` (unreproduced menu-focus assertion failure).
+An input inventory preserves hashes of 17 dirty/untracked recovery files and
+76 staged-worktree files; none was edited by this review. The main checkout
+remains on its original commit. The isolated repair was initially saved
+uncommitted; its subsequent deployment is recorded below. No PR merge, binary
+rebuild or visual/clinical acceptance.
+Final 96 unit tests pass (`outputs/pr25-review/final-units.log`); dashboard
+freshness and `git diff --check` pass. The original dirty-file inventory was
+verified unchanged on 28 October. Actual final menu/import captures were inspected.
+
+
+### Full repeat verification (28 October 2026)
+
+The maintainer requested a complete recheck. `recheck-desktop/desktop/
+results.json` records all 24 passed cases; `recheck-public/results.json`
+records five passed cases and separate sessions; `recheck-units.log`
+records 96 passed unit tests. These are new executions on Windows/
+Python3.14.8/NiceGUI3.18.0/Chrome156.0.8078.48, with unchanged E65
+runtime hashes. Both owned local servers stopped. Desktop browser
+external HTTP/WebSockets and all browser page errors remain zero.
+The public server log retains two Proactor ConnectionResetError
+diagnostics; no clean-log or diagnostic repair claim. `pip check`,
+dashboard freshness and whitespace checks pass. Original recovery/
+staged worktree inventories remain unchanged. Actual HTTPS evidence
+from27October is preserved separately, not recounted as a new run.
+No publication or existing-service update occurs until the pending
+time/workspace requirements are resolved; nothing is scheduled.
+
+
+### Verified repair publication (28 October 2026)
+
+The explicitly authorized publication committed the checked repair as
+`79e44cb405033aa16e8459c59903c3120643656d` and fast-forward pushed PR25.
+Live Berlin checks immediately before commit/push:16:03:53/16:04:07.
+All13 runtime Git blobs matched tested bytes after LF normalization.
+A single manual deployment to the existing Free Frankfurt service became
+live at16:05:50 Berlin: `dep-dbh0u26i0phs73aeeh90`, exact commit79e44cb.
+No environment, secret, plan, instance count or automatic-deploy change.
+
+The final actual HTTPS checker (`outputs/pr25-review/hosted-79e44cb`)
+passes all five cases, both desktop/mobile themes, source/cell limit
+rejection and recovery, full invented import, CSV/recipe downloads and
+independent contexts. Chrome156.0.8078.73; zero page errors, TLS enabled.
+Independent raw-artifact inspection verifies hand-established row IDs,
+ranges/categories/origins and20000/19950 output cells; reports/checksums
+are retained beside results.json. Actual hosted pending/import captures
+were inspected and copied unchanged to docs/images/public-demo-repair-*.png.
+Render error-level log query15:04:40–15:09:33UTC returns no entries.
+
+PR CI40712206277 Ubuntu/Windows/macOS jobs pass unit/dashboard/whitespace;
+all three full logs explicitly record96 tests and OK. The macOS job completed
+after its initial queued readback. Local E66 evidence is preserved.
+A documentation-only follow-up does not require a deploy. PRs remain
+unmerged; no new service, binary build or subjective/device acceptance.

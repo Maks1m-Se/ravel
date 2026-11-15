@@ -113,6 +113,8 @@ def exercise(page, base, out, viewport, theme):
     assert state_snapshot(page) == before
     layout_regressions(page, viewport, theme)
     activate(page, 'Discard edits')
+    expect(page.locator('.status-line')).to_contain_text('Unapplied edits discarded.')
+    expect(page.get_by_label('Rows', exact=True)).to_have_value('1000')
     type_value(page, 'Rows', '12')
     apply(page)
     activate(page, 'Select column length_mm')
