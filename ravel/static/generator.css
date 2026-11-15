@@ -33,6 +33,14 @@
 .column-actions { padding: 4px 8px; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
 .column-actions .q-btn { font-size: 12px; padding-inline: 6px; }
 .column-actions .q-icon { font-size: 17px; }
+.view-tabs { gap: 4px; }
+.generator-definitions [role=option] { cursor: pointer; }
+.generator-definitions [role=option]:focus-visible { outline: 2px solid var(--focus); outline-offset: -3px; }
+.generator-definitions .field-name { display: inline-block; padding: 4px; }
+.draft-row .field-name, .has-draft .q-field__label, .has-draft .q-checkbox__label { font-weight: 650; }
+.draft-row .field-name::after, .has-draft .q-field__label::after, .has-draft .q-checkbox__label::after { content: ''; display: inline-block; width: 5px; height: 5px; margin-left: 5px; vertical-align: middle; border-radius: 50%; background: currentColor; }
+.has-draft .q-field__control { background: var(--selected) !important; }
+.has-draft input, .has-draft textarea, .has-draft .q-field__native { font-weight: 400; }
 .result-state { padding: 6px 10px; min-height: 31px; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); }
 .result-state.stale { color: var(--ink); background: var(--raised); border-left: 3px solid var(--accent); }
 .generator-definitions th:nth-child(1) { width: 26%; }
@@ -95,6 +103,15 @@
 .sample-summary:empty { display: none; }
 .sample-summary { padding: 5px 10px; font-size: 12px; border-bottom: 1px solid var(--line); }
 .sample-assumption { font-size: 12px; overflow-wrap: anywhere; }
+@media (min-width: 701px) and (min-height: 501px) {
+  .generator-grid .sheet { display: flex; flex-direction: column; overflow: hidden; }
+  .generator-grid .sheet > * { flex-shrink: 0; }
+  .generator-grid .sheet > .fields-view,
+  .generator-grid .sheet > .source-view,
+  .generator-grid .sheet > .relationships-view { flex: 1 1 auto; min-height: 0; overflow: auto; }
+  .generator-grid .sheet > .preview-view { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+  .generator-grid .preview-scroll { height: 100%; max-height: 100%; }
+}
 @media (max-width: 1100px) {
   .action-toolbar .q-btn { font-size: 12px; padding-inline: 5px; }
   .action-toolbar .q-icon { font-size: 17px; }

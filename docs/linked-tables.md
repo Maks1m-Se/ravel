@@ -44,6 +44,19 @@ This is not a power-loss transaction or a cross-filesystem operation. UI dataset
 export is one complete ZIP with the same files; selected-table CSV remains
 available. Recipe, dictionary and validation/run record describe the full dataset.
 
+Before a selected-table CSV, dataset ZIP or CLI directory export, Ravel checks
+the complete set of output names. Names such as `DATA.csv` and `data.csv`
+cannot coexist on a case-insensitive Windows volume. Reserved device names
+such as `CON.csv` are also refused. The error identifies the conflicting or
+reserved name; no CSV, ZIP or directory is produced by the failed export.
+The same filename rules apply to CLI single-table files and their sidecars.
+See [Windows naming conventions](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
+
+These checks apply at export. Existing recipes can still be opened, generated
+and saved for inspection. Ravel does not rewrite the stable IDs in a recipe:
+changing one can change the corresponding random stream. Valid export names,
+file contents and their table associations stay the same.
+
 ## Reference established by hand
 
 Three devices have keys D01,D02,D03. Exactly two measurements per device yield

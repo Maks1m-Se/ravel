@@ -104,12 +104,24 @@ class Workspace:
         return form
 
     def discard(self):
-        self.field_draft = field_form(self.field)
+        self.field_drafts = {field['id']: field_form(field) for field in self.table['fields']}
         self.table_draft = self.table_form()
 
     @property
+    def field_draft(self):
+        return self.field_drafts[self.selected]
+
+    @field_draft.setter
+    def field_draft(self, form):
+        self.field_drafts[self.selected] = form
+
+    def field_pending(self, identity):
+        field = next(field for field in self.table['fields'] if field['id'] == identity)
+        return self.field_drafts[identity] != field_form(field)
+
+    @property
     def has_drafts(self):
-        return self.field_draft != field_form(self.field) or self.table_draft != self.table_form()
+        return any(self.field_pending(field['id']) for field in self.table['fields']) or self.table_draft != self.table_form()
 
     @property
     def current(self):
@@ -145,18 +157,21 @@ class Workspace:
         table=self._table(candidate)
         table["name"] = self.table_draft["name"].strip()
         table["row_count"] = whole(self.table_draft["row_count"], "table.row_count")
-        index = next(i for i, f in enumerate(table["fields"]) if f["id"] == self.selected)
-        table["fields"][index] = form_field(self.field_draft, f"table.fields.{index}")
+        changed = []
+        for index, field in enumerate(self.table['fields']):
+            if self.field_pending(field['id']):
+                table['fields'][index] = form_field(self.field_drafts[field['id']], f'table.fields.{index}')
+                if table['fields'][index] != field:
+                    changed.append(field['id'])
         if self.is_dataset:
             table['primary_key']=self.table_draft['primary_key'] or None
-        elif self.field_draft["kind"] in {"normal","boolean","date","date_sequence","category_quota"} or "unique" in self.field_draft:
+        elif any(field['kind'] in {'normal','boolean','date','date_sequence','category_quota'} or 'unique' in field for field in table['fields']):
             candidate["format"] = "ravel-single-table/3"
-        elif self.field_draft["kind"] == "text_id" and candidate["format"]=="ravel-single-table/1":
+        elif any(field['kind'] == 'text_id' for field in table['fields']) and candidate["format"]=="ravel-single-table/1":
             candidate["format"] = "ravel-single-table/2"
         if "sample" in candidate:
             candidate["sample"]["mode"] = self.table_draft["mode"]
-            if table["fields"][index] != self.field and self.selected in candidate["sample"]["confirmed"]:
-                candidate["sample"]["confirmed"].remove(self.selected)
+            candidate['sample']['confirmed'] = [identity for identity in candidate['sample']['confirmed'] if identity not in changed]
         self.recipe = validate(candidate)
         self.discard()
 
@@ -167,11 +182,9 @@ class Workspace:
         self.field_draft = defaults
 
     def select(self, identity):
-        self.require_applied()
         if not any(f["id"] == identity for f in self.table["fields"]):
             raise ValidationError("column", "Column no longer exists.")
         self.selected = identity
-        self.discard()
 
     def add(self):
         self.require_applied()
@@ -228,6 +241,9 @@ class Workspace:
             raise ValidationError("result", "Generate a current result after applying or discarding edits before export.")
         if self.table_result is None:
             raise ValidationError('result','Generate the complete dataset before exporting this table.')
+        if self.is_dataset:
+            from .dataset import validate_export_names
+            validate_export_names(self.result)
         return csv_text(self.table_result)
 
     def select_table(self,identity):

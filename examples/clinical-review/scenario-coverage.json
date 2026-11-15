@@ -1,0 +1,223 @@
+{
+  "format": "ravel-clinical-coverage/1",
+  "authority": "docs/plan.md: twelve reference cases; docs/baseline-specification.md: accepted policies",
+  "acceptance": "Maksim accepted the six additional hand references on 2026-11-15 (E83), as supplied at 1335be1; existing C1-C4 and negative expectations remain unchanged. Numeric policy and clinical implementation remain pending.",
+  "scenarios": [
+    {
+      "requirement": 1,
+      "name": "ordinary baseline",
+      "file": "baseline-four-cases.json",
+      "case": "C1",
+      "classification": "valid-ordinary",
+      "hand_explanation": "C1-D1 / C1-M1;13 minus10 is3.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 2,
+      "name": "multiple eligible measurements",
+      "file": "additional-scenarios.json",
+      "case": "multiple-eligible",
+      "classification": "valid-unusual",
+      "hand_explanation": "Latest eligible ME-M2=8, not earlier ME-M1=5.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 3,
+      "name": "latest pre-dose value missing",
+      "file": "baseline-four-cases.json",
+      "case": "C2",
+      "classification": "valid-unusual",
+      "hand_explanation": "C2-M2 remains null; C2-M1 supplies8 and change3.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 4,
+      "name": "no eligible baseline",
+      "file": "baseline-four-cases.json",
+      "case": "C3",
+      "classification": "valid-unusual",
+      "hand_explanation": "Null baseline/change; NO_ELIGIBLE_BASELINE.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 5,
+      "name": "measurement exactly at first dose",
+      "file": "baseline-four-cases.json",
+      "case": "C4",
+      "classification": "valid-unusual",
+      "hand_explanation": "C4-M2 excluded; earlier C4-M1=10 supplies baseline and change5. C3 is the no-earlier-value companion.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 6,
+      "name": "post-dose measurement labelled baseline",
+      "file": "additional-scenarios.json",
+      "case": "labelled-followup",
+      "classification": "valid-unusual",
+      "hand_explanation": "L-M2 label cannot override its post-dose timestamp.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 7,
+      "name": "duplicate eligible timestamps",
+      "file": "negative-illustrations.json",
+      "case": "b",
+      "classification": "intentionally-invalid",
+      "hand_explanation": "D-D1 dose anchor; B-M1/B-M2 tie blocks baseline selection; no successful outputs.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 8,
+      "name": "out-of-order input",
+      "file": "additional-scenarios.json",
+      "case": "out-of-order",
+      "classification": "valid-unusual",
+      "hand_explanation": "Preserve original input order; O-M2 at09:00 remains latest eligible.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 9,
+      "name": "missing actual dose",
+      "file": "additional-scenarios.json",
+      "case": "undosed",
+      "classification": "valid-unusual",
+      "hand_explanation": "No dose/baseline IDs, zero changes, NO_ACTUAL_DOSE.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 10,
+      "name": "incompatible units",
+      "file": "negative-illustrations.json",
+      "case": "a",
+      "classification": "intentionally-invalid",
+      "hand_explanation": "D-D1 anchor exists, A-M2 unit failure blocks baseline selection; no fallback or successful outputs.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 11,
+      "name": "no usable measurements",
+      "file": "additional-scenarios.json",
+      "case": "empty-measurements",
+      "classification": "valid-unusual",
+      "hand_explanation": "Zero measurements in declared group; dose E-D1, null baseline, both independent absence reasons.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    },
+    {
+      "requirement": 12,
+      "name": "multiple subjects/parameters with correct grouping",
+      "file": "additional-scenarios.json",
+      "case": "grouping",
+      "classification": "valid-unusual",
+      "hand_explanation": "Exactly three declared groups; baseline IDs G-AX1/G-AY1/G-BX1; deltas3/4/5.",
+      "executable_now": [
+        "transcription",
+        "source_structure",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "R_SAS_comparison"
+      ]
+    }
+  ]
+}

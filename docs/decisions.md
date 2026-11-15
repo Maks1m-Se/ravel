@@ -623,3 +623,92 @@ policy, native/offline/platform and binary-redistribution gates are unchanged;
 integrating preparation documents/build scripts does not adopt those policies
 or publish a new binary. Preserve the existing Free/manual Render service and
 its tested runtime; documentation-only updates do not require redeployment.
+
+## Scoped workbench keyboard and draft model (29–30 October 2026)
+
+Use manual activation for field options and tabs because selection updates
+server-rendered Properties. Arrow navigation stays local and immediate; Tab
+enters/leaves a group. Keep Fields as a listbox with presentational table layout,
+not an editable data grid. Remove the nested field-name button so one row has
+one selection action, and exclude any independent interactive descendant from
+row delegation. Keep normal input/OS/browser keys; do not introduce additional
+Apply/Discard shortcuts for this package. Document available keys compactly.
+
+Preserve draft forms for every field in the current table. Apply validates all
+changed forms together before assigning the recipe; Discard restores them all.
+Navigation between tables and structural column actions retain their existing
+apply/discard requirement. Hidden drafts must never become silently exportable.
+Keep field-error identities/dependencies across selection and direct validation
+focus to the responsible field. Shape, label weight and pending descriptions
+supplement the existing Fichte tint; retain ordinary numeric weight.
+
+Name only single-table browser downloads from a bounded portable applied-name
+stem. Do not alter CSV/JSON serializers, linked filenames, generation streams
+or clinical policy. The new runtime stays off Render until review; a draft PR
+targets integration/main-2026-10-29 without merging the existing stack. The
+normal publishing window applies on30October:29October's daily exception expired.
+
+## Portable export names (30 October 2026)
+
+Validate the whole output namespace before serializing a dataset, opening a ZIP
+or staging CLI files. Refuse case-insensitive collisions and reserved Windows
+names even when the current filesystem allows them. Selected-table CSV uses the
+same dataset check as ZIP and CLI so the tables cannot be exported separately
+under colliding names. This keeps valid file names and bytes, recipe identities,
+relationships and random streams intact. Recipe saving remains available for
+inspection. See the [Windows reproduction and browser checks](development.md#export-review-follow-up).
+
+## Clinical supplied-record foundation (13 November 2026)
+
+Keep supplied clinical records separate from fixed children-per-parent
+generation. Use an explicitly selected internal, versioned source envelope with
+ordered collections, opaque IDs, explicit subject/parameter pairs and provenance.
+Capture JSON numeric tokens before any float or decimal conversion. A semantic
+round trip retains those token spellings and all source strings/order.
+
+Implement required shape, identity, declaration/reference and pair membership
+checks only. Keep diagnostics deterministic and scoped to source structure.
+The clinical numeric proposal, time/status/unit policies, baseline selection,
+derivation and independent R comparison remain unimplemented or unadopted as
+documented. The generic loader and UI do not import or expose the new module.
+
+## Combined review candidate (13 November 2026)
+
+Combine the two saved packages in a third worktree from eed69c6. Preserve the
+original branches, source snapshots, dirty files and review servers. Resolve
+tracking by task/evidence identity, retaining E70–E74 and both pending reviews;
+regenerate the dashboard from the combined record. Keep all implementation
+and original fixture bytes from their tested input packages.
+
+Prefer one combined Draft PR against integration/main-2026-10-29. The two
+unpublished input branches are archival inputs, not extra prerequisite PRs.
+The existing nine-PR integration stack remains unmerged and separately gated.
+No clinical arithmetic, numeric-policy adoption or hosting change is included.
+
+## Reference acceptance and numeric proposal (15 November 2026)
+
+Record Maksim's acceptance of the six additional hand reference cases supplied
+at 1335be1, without changing their source or expected-result data (E83). This
+does not accept the source implementation or complete clinical validation.
+
+Keep the expanded numeric policy **proposed, awaiting acceptance** (E84).
+[baseline-specification.md](baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy)
+is the canonical decision sheet; the preparation document links to it instead
+of maintaining another full numeric table. Recommend exact bounded micro-units,
+strict rejection and exact primary comparison. Any secondary R/SAS tolerance
+needs its stated assumptions and later independent boundary checks. No adopted
+policy ID, clinical arithmetic, merge or deployment is authorized by this record.
+
+## Numeric-core adoption (15 November 2026)
+
+Maksim explicitly confirms adopting the E84 core reviewed at 5177835 as
+`clinical-numeric/1` (E85). This supersedes the proposal status above for the
+core only: exact decimal/exponent interpretation, six effective fractional
+places and source/result bounds, strict rejection without rounding, zero/null
+semantics, exact subtraction, six-place output and exact primary comparison.
+No rules or worked outcomes change as part of recording acceptance.
+
+The optional secondary absolute `5e-7`, relative `0` R/SAS diagnostic tolerance
+remains provisional and excluded from adoption until independent verification
+and separate acceptance. Adoption is documentation only; no clinical calculation
+code, source-implementation acceptance, release completion, merge or deployment.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "planning_revision": 6,
+  "planning_revision": 11,
   "plan_ref": "docs/plan.md",
   "milestones": [
     {
@@ -263,7 +263,8 @@
       "acceptance_criteria": [
         "The first usable slice supports both generic explicit-rule generation and basic single-table sample-assisted generation/extension through one recipe. Basic profiling proposes editable types, categories, missingness and ranges with provenance, excludes identifiers by default, and reports unsupported inputs. Both paths save/load and export; ten source rows produce exactly 1,000 new rows or extend to 1,000 total with 990 generated rows, preserved source values and row origins. The clinical template is optional and generic screens use general terms.",
         "CLI generates the M1 subject, exposure, biomarker, and scheduled-visit slice with CSVs, recipe, dictionary, and validation output.",
-        "Reviewed numeric representation/range, overflow handling, rounding and export-format policies are required before clinical numeric implementation within the existing M1 slice."
+        "Reviewed numeric representation/range, overflow handling, rounding and export-format policies are required before clinical numeric implementation within the existing M1 slice.",
+        "An explicitly selected internal supplied-record contract preserves source tokens/IDs/provenance, validates identities/references and declared pairs, and keeps reference expectations separate from derivations and generic recipes."
       ],
       "release_gate_ids": [
         "R2"
@@ -287,9 +288,22 @@
         "E59",
         "E60",
         "E68",
-        "E69"
+        "E69",
+        "E74",
+        "E75",
+        "E77",
+        "E78",
+        "E79",
+        "E80",
+        "E81",
+        "E82",
+        "E84",
+        "E85",
+        "E86"
       ],
-      "blockers": []
+      "blockers": [
+        "Numeric core clinical-numeric/1 is adopted (E85); source/adapter implementation acceptance and separately authorized clinical implementation remain pending. Secondary R/SAS tolerance remains provisional until independent verification and separate acceptance."
+      ]
     },
     {
       "id": "M1-02",
@@ -329,7 +343,7 @@
       "id": "M2-01",
       "milestone_id": "M2",
       "title": "Establish twelve cases and selected mappings",
-      "status": "pending",
+      "status": "in_progress",
       "acceptance_criteria": [
         "All twelve specified cases have independently established expected results and valid/invalid classification.",
         "Selected source-to-analysis mappings record exact standard versions and limitations.",
@@ -339,7 +353,10 @@
         "R1"
       ],
       "evidence_refs": [
-        "E54"
+        "E54",
+        "E78",
+        "E81",
+        "E83"
       ],
       "blockers": []
     },
@@ -357,7 +374,9 @@
         "R1"
       ],
       "evidence_refs": [
-        "E54"
+        "E54",
+        "E84",
+        "E85"
       ],
       "blockers": []
     },
@@ -453,11 +472,16 @@
     {
       "id": "M4-03",
       "milestone_id": "M4",
-      "title": "Review compact workbench controls",
+      "title": "Review workbench interaction and compact controls",
       "status": "in_progress",
       "acceptance_criteria": [
         "Theme/general functions share a keyboard-accessible options menu; smaller help/icons and corrected input spacing retain names, draft/error state, removal confirmation and reachable mobile actions.",
-        "Actual Light/Dark desktop captures and a separate maintainer desktop try-out support visual acceptance. Actual Pixel8/Gboard testing is deferred: not performed, not passed; automated mobile emulation is scoped separately."
+        "Actual Light/Dark desktop captures and a separate maintainer desktop try-out support visual acceptance. Actual Pixel8/Gboard testing is deferred: not performed, not passed; automated mobile emulation is scoped separately.",
+        "Whole Fields rows select the column once and retain independent drafts; all pending fields/table settings Apply atomically or Discard together, with hidden drafts blocking generation/save/export.",
+        "Tab/Shift+Tab and scoped arrows/Enter/Space support complete keyboard workflows, visible predictable focus and normal editing/browser/OS keys; Escape never globally discards drafts.",
+        "Only actual pending settings carry label/dot/tint markers, including table name/Rows/Seed/Sample mode; exact revert/Apply/Discard clear them, with ordinary numeric weight and distinct errors/selection.",
+        "New edits clear obsolete success statuses while relevant errors and stale-result notices persist; single-table downloads use the applied table name without changing file contents.",
+        "Selected-table CSV, dataset ZIP and CLI export refuse case-insensitive name collisions and Windows device names before writing, preserving valid output bytes, stable IDs and generated values."
       ],
       "release_gate_ids": [
         "R9"
@@ -469,10 +493,17 @@
         "E66",
         "E67",
         "E68",
-        "E69"
+        "E69",
+        "E70",
+        "E71",
+        "E72",
+        "E73",
+        "E75",
+        "E76",
+        "E81"
       ],
       "blockers": [
-        "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
+        "Maintainer desktop acceptance remains open. The earlier Edge workspace reset is evidenced; its trigger remains unknown."
       ]
     },
     {
@@ -549,7 +580,9 @@
         "E66",
         "E67",
         "E68",
-        "E69"
+        "E69",
+        "E80",
+        "E81"
       ],
       "blockers": [
         "Maintainer desktop visual/function acceptance remains required for the integrated candidate; actual PR merges await explicit approval."
@@ -600,7 +633,9 @@
       "id": "R1",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E78"
+      ]
     },
     {
       "id": "R2",
@@ -614,20 +649,25 @@
       "status": "unverified",
       "evidence_refs": [
         "E55",
-        "E56"
+        "E56",
+        "E79"
       ]
     },
     {
       "id": "R4",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E79"
+      ]
     },
     {
       "id": "R5",
       "criterion_ref": "docs/plan.md",
       "status": "unverified",
-      "evidence_refs": []
+      "evidence_refs": [
+        "E79"
+      ]
     },
     {
       "id": "R6",
@@ -1011,18 +1051,103 @@
       "id": "E69",
       "reference": "29 October 2026 candidate publication and exact-commit fresh-checkout/CI readback; docs/integration-main.md#published-candidate-readback; https://github.com/Maks1m-Se/ravel/actions/runs/40861373393",
       "scope": "Committed the checked documentation-only integration follow-up as4aa2299278ef91548813e5c762b978832581e6e1 after live Berlin11:55:18 clock; explicitly pushed only integration/main-2026-10-29 after11:55:32 check under the current-day authorization. Remote ref matches; main remainsd7d42f8bd183fd4bb3e7b9005ac7324b7a3d0b90. The independent no-local fresh checkout was advanced to exactly4aa2299 and again passes96 units, dashboard freshness, clinical structural references, pip check and whitespace with clean porcelain status. Its runtime/scripts/tests/examples/locks/CI workflow have no differences from deployed79e44cb. Candidate push workflow40861373393 succeeds on Windows123405163437, macOS123405163737 and Ubuntu123405163746; all three full logs explicitly record96 tests and OK with dashboard/whitespace successful. All nine original PRs remain open/draft/unmerged and their dependency heads unchanged; original worktree HEAD/status/hash inventory is intact. This evidence follow-up only changes documentation/progress/dashboard; no new runtime deploy or binary rebuild. Desktop maintainer acceptance/actual merge approval remain required; actual Pixel8/Gboard remains deferred, not performed/not passed. E68/E67 checks retain their actual scope; no clinical/native/release gate acceptance."
+    },
+    {
+      "id": "E70",
+      "reference": "Maintainer report supplied with the agreed workbench UX request,29October2026; docs/development.md#workbench-ux-review-30-october-2026",
+      "scope": "Attributed bounded manual report:12 generated rows with seed42 and value range0-20; Apply/Discard and recipe reload worked. CSV extension to20 total retained all12 original rows cell-for-cell, added8 generated rows and correct row_origin. No device/browser/exact source attestation was supplied with the report. This is not a new automated execution, full desktop acceptance, acceptance of the later UX package, clinical validation or actual Pixel/Gboard evidence."
+    },
+    {
+      "id": "E71",
+      "reference": "29-30October2026 separate workbench UX package; docs/development.md#workbench-ux-review-30-october-2026; docs/single-table.md#workbench-interaction-candidate-2930-october-2026",
+      "scope": "Saved uncommitted feature/workbench-ux-2026-10-29 starts at eed69c6 in an isolated worktree. Implemented full-row/manual keyboard selection, per-field retained drafts with atomic multi-field Apply/Discard, scoped roving groups/focus, exact pending markers/status freshness and sanitized applied-table download names. Engine/serializers/clinical rules/locks and linked filenames unchanged. Final runtime fingerprint 9489f3314c95a12ea18e97444b74b47b1f792313b0b331ac2c1b3d577b58a246, snapshot ux-E71-9489f3314c95, http://127.0.0.1:51272/;15 runtime files are attested.102 units pass; final source-attested Chrome28 cases/Edge4 UX cases/public5/protected2 pass in both themes/sizes, with zero page errors or external desktop HTTP/WebSockets. Complete keyboard-only12-row seed42/range0-20 download/chooser/replay/import/12+8 extension passes after a separate four-target pointer stage. Native chooser paths are provided by Playwright. A24-download paired Edge-session probe preserves separate recipes/names. One earlier shared-server Edge smoke received an unexpected recipe filename, not reproduced by independent Edge/concurrent checks; cause unresolved, no speculative fix claimed. Initial draft regressions and tint regression failed before correction. Final labels/numbers retain contrast 6.23:1 Light/5.54:1 Dark; actual tint/normal numeric weight and stable pane heading asserted. Four unaltered final captures retained; failures/raw evidence and original worktree inventories preserved. Preparation spans29-30October; normal30October publishing restriction blocks commit/push/DraftPR, with body prepared locally against integration/main-2026-10-29. No merge/Render change/binary rebuild/hosted CI or full desktop/native/clinical acceptance. E70 is bounded prior maintainer evidence; Pixel/Gboard remains deferred/unperformed."
+    },
+    {
+      "id": "E72",
+      "reference": "30 October 2026 Edge filename investigation; docs/development.md#edge-investigation",
+      "scope": "Original failure screenshot shows the default workspace after a correctly named 12-row CSV; original recipe bytes and navigation trace are absent. In Edge and Chrome both themes pass sequential alpha/beta, Apply rename, unapplied refusal, Discard and matching names/JSON/client IDs. Holding a second upload reproduces a stale success-status wait, separate from the original incident. A controlled reload after correct CSV reproduces the default recipe name and content with a new client. Test waits and client guard are strengthened; no original reload trigger or product filename fix is claimed."
+    },
+    {
+      "id": "E73",
+      "reference": "30 October and 10 November 2026 Windows and desktop checks; docs/development.md#export-review-follow-up",
+      "scope": "Isolated eed69c6 on Windows 11 build 26300: DATA/data silently overwrites the first CSV in CLI and ZIP extraction; CON.csv writes on this host but is reserved. Candidate refuses the complete unsafe namespace in selected CSV, ZIP and CLI before writing. Both unsafe CLI cases exit 2 with no output/staging. Both fixture recipe/CSV hashes and normal five payloads/ZIP bytes remain exact. Runtime fingerprint 8b8545c2cb37156cd4b2215e5ec74816e6420c1b4730cc467703f6f1d7d48181. 108 units pass. 30 October Edge and Chrome each pass four targeted cases; Edge passes four complete UX cases. 10 November Chrome recheck passes all 28 desktop cases with no external HTTP/WebSockets or page errors; the interrupted October desktop run is not counted. Earlier UX sources and other worktree inventories preserved; E71 snapshot restored unchanged. No clinical/native/visual acceptance, merge or deployment. Pixel 8/Gboard remains deferred and unperformed."
+    },
+    {
+      "id": "E74",
+      "reference": "13 November 2026 internal clinical source foundation; docs/clinical-template-preparation.md#internal-source-contract; docs/development.md#clinical-source-foundation",
+      "scope": "Independent feature/clinical-source-contract-2026-11-13 at eed69c6, after completing local UX/export recovery on its separate branch. Explicit ravel-clinical-source/1 parser preserves original JSON numeric tokens before float/decimal conversion. Semantic round trip preserves token spellings, strings, source IDs, ordered unequal record collections, declarations and provenance. Structural checks cover required fields, duplicate IDs, references and explicit pairs with deterministic scoped failures and skipped membership checks. Four accepted source tables are checked against written Markdown; hand expected selections/results/reasons and four negative illustrations remain reference data. Adapter checks eight source cases; a/b/c retain pending clinical-policy failures while crossed pair fails current membership with X-M1 and S-A/BX-2. 13 focused tests and all109 repository tests pass on Python3.14.8, plus reference/dashboard/link/whitespace checks. Generic engine/loader/UI/fixtures unchanged; no new browser run warranted. Numeric proposal remains unadopted; no baseline/change arithmetic, clinical-policy validation, clinical template/UI, R/SAS comparison, imported clinical data, hosting/binary/merge action or milestone acceptance. Draft publication remains subject to live Berlin time checks; local review is prepared."
+    },
+    {
+      "id": "E75",
+      "reference": "13 November 2026 combined UX/export and clinical-source candidate; docs/development.md#combined-candidate-review",
+      "scope": "Separate integration/ux-clinical-2026-11-13 from eed69c6 combines exact saved input implementations, preserving original worktrees/dirty changes/servers and all E70-E74 evidence. Documentation overlaps resolved explicitly; progress records merged by task/evidence identity; dashboard regenerated. Runtime fingerprint99a3410894cf8d711e93323670c1893233db50f10e73079beb1b59a33f9a46d4 covers19 files.121 full units pass, including13 source-contract tests and6 targeted export tests;14 written source rows/eight reference cases verified without derivation. Four new Chrome157.0.8103.51 UX cases cover both themes/two laptop sizes and complete keyboard save/reload/import/extension. Four new Edge157.0.4341.46 export cases cover names/content/client identity, Apply/pending/Discard, deliberate reset and whole-namespace CSV/ZIP refusal. Zero page errors in both, zero external HTTP/WebSockets in Chrome. Other24 browser cases reused from the10November full run only after all16 relevant runtime hashes match; three added clinical files remain internal. Sources/fixtures match their input origins. Review URL http://127.0.0.1:51274/; exact commit, combined diff, source archive/manifest and publication plan in the local review bundle. Earlier Edge reset trigger remains unknown, not fixed. Visual acceptance and numeric policy remain pending; no clinical arithmetic/R-SAS, native/device acceptance, PR merge, deployment or binary publication."
+    },
+    {
+      "id": "E76",
+      "reference": "Maintainer report with approved overnight batch,14 November2026",
+      "scope": "Maintainer confirms only whole-row column selection and preservation of an unapplied edit while switching columns on the cababf38 review candidate. Other UX acceptance, clinical-contract acceptance and numeric-policy adoption remain pending. No complete desktop/device/clinical acceptance inferred."
+    },
+    {
+      "id": "E77",
+      "reference": "Clinical source-contract robustness; docs/clinical-template-preparation.md",
+      "scope": "Reproduced before repair: ambiguous parameter declaration still produced UNDECLARED_GROUP; supported exact-size/Unicode/deep inputs failed serialize/reload; malformed review adapter inputs raised raw TypeError/AttributeError/KeyError. Compact iterative serialization preserves tokens/Unicode and all accepted nesting; unavailable/ambiguous identity references now yield NOT_EVALUATED without dependent conclusions. Adapter validates shape and rejects silently dropped fields through ValidationError. Three regression methods added;16 focused source methods and124 full units pass. No numeric/time/unit/status policy adopted; explicit nesting cap remains unspecified."
+    },
+    {
+      "id": "E78",
+      "reference": "Twelve clinical scenario references; docs/clinical-template-preparation.md",
+      "scope": "All twelve plan requirements map to explicit source fixtures/hand expectations. Existing C1-C4 and negative a/b retained unchanged; six nonduplicated additional sources cover multiple eligible values, source label, out-of-order input, accepted undosed/empty-group illustrations and three-pair multi-subject grouping. New hand transcriptions await maintainer review, not new policy adoption. Checker verifies coverage, source structure, lossless round trip and reference membership without timestamps/selection/arithmetic. Three regression methods pass;127 full units pass. Clinical derivation, R/SAS and R1 remain unperformed/incomplete."
+    },
+    {
+      "id": "E79",
+      "reference": "Local reproducibility and sample evidence; docs/clinical-template-preparation.md",
+      "scope": "New repeatable check_reproducibility command passes20 cases: five fixed seeds x explicit/sample-new/sample-extend/linked, three repeats each =60 primary generations with equal canonical dataset/CSV hashes. Independent-field additions preserve all existing columns across tables. Both ten-to1000 modes preserve expected source cells/order/origins and source hashes; identifier confirmation/collision, supported numeric/category overrides, exact A400/B400/C200 quotas, infeasible retained quotas and unsupported101-category profiles checked. Initial evidence harness failed before expected rejection because it serialized an invalid request; corrected harness passes, no generator change. Unchanged R5 normal/Bernoulli command passes five n100000 seeds with unchanged thresholds; correlation remains unimplemented. Python3.14.8 Windows local source/environment maps and raw results retained.127 full units pass; R3/R4 are local partial evidence, all release gates remain unverified."
+    },
+    {
+      "id": "E80",
+      "reference": "Exact private Windows archive provenance audit; docs/clinical-template-preparation.md",
+      "scope": "Primary source-b99a360a14c4eb8d ZIP hash eedbb78764c6913e6685a474e1ce17ee31ae9ba6c057880641b6237138eaae91 verified read-only. New bounded archive tool verifies1226 manifest files,170 retained material hashes and55 Python inventory records; versioned analysis labels reconcile.85DLL/PYD hashes match build origins;16fonts match retained NiceGUI3.18.0 source paths;8directfrontend assets match actual retained npm members.42orjson3.13.0 vendor notice records collected with URL/archive/member/hash provenance;22unique texts absent from flat notice index, already present inside source archive. Two focused audit regression methods pass. Artifact unchanged, no native execution, binary redistribution or legal clearance. Further attribution blocked by missing transformed minifier/version mapping, originalfontvariant source/terms, pydantic-core/watchfiles vendored dependency material and Microsoft file/terms mapping; no older substitute or guessed license."
+    },
+    {
+      "id": "E81",
+      "reference": "14 November2026 completed bounded overnight batch; docs/development.md#overnight-handoff-and-limits",
+      "scope": "Sequential local checkpoints from cababf38:7704969 source robustness,2c41dcf twelve-scenario references,2d49641 reproducibility followed by45e4dbc explicit missing-evidence test precondition,ea42696 exact archive audit. Eight new unit methods plus an existing tracking fixture correction; final129 tests pass. The initial stage3 full run failed that tracking assumption and its provisional commit preceded evaluation; log/history retained, no gate marked passed. Browser evidence is reused by exact relevant generic/UI/helper hashes; no affected UI code changed or server replaced. Original cababf38, dirty worktrees and fixed instances preserved. Morning source-only bundle includes final diff, source manifest, raw evidence and collected notice/provenance material; private executable/archive excluded. Stage4 attribution beyond the completed audit is blocked by recorded missing minifier/font/vendor/runtime material. Numeric policy, clinical derivation/R-SAS, broader UX/device/native acceptance and all release gates remain pending. No remote push/PR, merge, deployment, binary publication, paid service, dependency/security change."
+    },
+    {
+      "id": "E82",
+      "reference": "15 November 2026 clinical review adapter recursion follow-up; docs/development.md#clinical-review-adapter-recursion-follow-up",
+      "scope": "On overnight candidate 698005d, a valid review sheet with one value replaced by 700 nested arrays, serialized and parsed through the clinical source loader, reproduced uncontrolled RecursionError in deepcopy. Record container fields now fail with source-located ValidationError before any recursive record copying; no source-loader depth cap or numeric policy introduced. One focused regression covers deep value/timestamp/kind rejection, unchanged caller serialization, valid negative-zero exponent token, supplied record order and provenance, and output/input independence. Focused17 tests and full130 tests pass, with clinical structural/reference checks for all12 requirements, dashboard freshness and whitespace. Before/after and failed regression logs retained under outputs/clinical-adapter-recursion-2026-11-15. No arithmetic, policy adoption, new browser/clinical acceptance, merge or deployment; release gates unchanged."
+    },
+    {
+      "id": "E83",
+      "reference": "Maksim acceptance, 15 November 2026; docs/baseline-specification.md#additional-reference-acceptance-15-november-2026; examples/clinical-review/additional-scenarios.json",
+      "scope": "Maksim explicitly accepts the six additional clinical hand reference cases as supplied at 1335be1: multiple-eligible, labelled-followup, out-of-order, undosed, empty-measurements and grouping. Acceptance covers their invented source records and hand expected IDs/results/reasons/diagnostics; source and expected data remain unchanged, with only acceptance metadata updated. Existing C1-C4 and negative references are preserved. This is not numeric-policy adoption, source-implementation acceptance, executed clinical validation/derivation, R/SAS agreement, UX acceptance or release-gate completion."
+    },
+    {
+      "id": "E84",
+      "reference": "Numeric policy proposal for review, 15 November 2026; docs/baseline-specification.md#numeric-policy-decision-sheet--proposed-awaiting-acceptance",
+      "scope": "Expanded the earlier clinical numeric proposal into one canonical decision sheet: exact JSON decimal/exponent interpretation and signed zero, six effective fractional places, inclusive source magnitude1e9/result magnitude2e9, rejection of excess precision/range, exact micro-unit subtraction without rounding, null/missing behavior and six-place CSV. Independently worked literal boundary examples distinguish accepted prior study rules from proposed numeric outcomes. Exact primary comparisons have zero tolerance; optional secondary5e-7 absolute/zero relative binary64 diagnostics have an explicit conditional error bound, not R/SAS execution or acceptance. Policy remains proposed, awaiting acceptance, with no adopted ID or clinical implementation. Full130 units, clinical/reference checks for12 requirements, dashboard/tracking, affected local links and whitespace pass. Release gates and all broader pending reviews remain unchanged."
+    },
+    {
+      "id": "E85",
+      "reference": "Maksim explicit numeric-core acceptance, 15 November 2026; docs/baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy",
+      "scope": "Maksim explicitly confirms adopting the E84 core reviewed at 5177835 as clinical-numeric/1: exact JSON decimal/exponent interpretation, token preservation and zero normalization, six effective fractional places, inclusive1e9 source/2e9 difference bounds, strict rejection rather than rounding, exact micro-unit subtraction, null/missing rules, fixed six-place CSV and exact primary comparison. The optional secondary absolute5e-7/relative0 R/SAS diagnostic tolerance is excluded, remaining provisional until independent verification and separate acceptance. This records policy adoption only, not clinical implementation or its authorization. Normative limits, worked numeric outcomes, six accepted source/expected cases and all clinical/generic code are unchanged. Full130 units, all12 clinical references, dashboard/tracking, affected local links and whitespace pass. Source checker correctly retains clinical_policy not_evaluated and derivation not_implemented because it does not implement the adopted policy. Source/adapter acceptance, independent R/SAS/platform checks and all release gates remain pending; no merge or deployment."
+    },
+    {
+      "id": "E86",
+      "reference": "Published review candidate, 15 November 2026; https://github.com/Maks1m-Se/ravel/pull/26; docs/development.md#published-review-candidate-15-november-2026",
+      "scope": "Maksim authorizes publication and offers merge permission. Exact merge scope is being clarified because the current branch includes the nine predecessor PRs, UX/export and clinical source foundations; no acceptance beyond E76/E83/E85 is inferred. Tested72867b6 is pushed without force on batch/overnight-2026-11-14; DraftPR26 targets published integration/main-2026-10-29 at eed69c6. All nine remote predecessor heads match the documented snapshot; main remains d7d42f8. A fresh clone directly from GitHub repeats130 units, clinical references for12 requirements, dashboard and whitespace with clean status and no borrowed PYTHONPATH. An initial incorrect unittest discovery top-level argument failed before discovery; corrected documented root command passes, failed log retained. All ten PRs have no inline review threads. PRCI43759529647 passes on Windows, macOS and Ubuntu; all three full job logs explicitly confirm130 tests/OK, dashboard freshness and whitespace. These are core source checks, not native or clinical acceptance. Existing local instances and Render remain unchanged. Desktop/source implementation reviews, Pixel/Gboard unperformed, Edge reset cause, native/distribution gaps and all release gates retain their scope. No merge or deployment performed."
     }
   ],
   "blockers": [
-    "Integrated generic source awaits maintainer desktop acceptance and explicit merge approval; no confirmed unresolved technical integration defect. Actual Pixel8/Gboard is deferred, not performed/not passed, and does not block this source integration (E68).",
-    "Clinical arithmetic awaits review/adoption of the proposed numeric policy and independent reference transcription; no clinical numeric implementation or Python/R comparison yet (E54).",
+    "Combined UX/export and clinical-source candidate awaits separate maintainer UX/contract review (E75). Original Edge reset trigger remains unknown. Actual Pixel/Gboard remains deferred and unperformed.",
+    "Numeric core clinical-numeric/1 is adopted (E85), with exact primary comparison. Secondary R/SAS tolerance remains provisional pending independent verification and separate acceptance. Source implementation acceptance, clinical policy validation/derivation and independent R/SAS execution remain pending.",
     "No clean Windows guest/second machine without Python; native files/default browser, disconnected cold start and downloaded-file protection review remain unrun (E55).",
     "Private Windows artifact cannot be publicly distributed until transformed frontend/font/native/vendor/Microsoft-runtime findings are resolved (E55)."
   ],
-  "next_action": "Maintainer: perform the short desktop acceptance in docs/integration-main.md on the exact candidate or runtime-identical live demo, in Light/Dark at1366x657/1280x800; record OS/browser and accept/reject observations separately from automated checks. Then explicitly approve the prepared merge sequence #10 -> #18 -> #19 -> #20 -> #21 -> #22 -> #23 -> #24 -> #25 and the candidate documentation follow-up. Keep PRs draft/unmerged until approval. Actual Pixel8/Gboard is deferred, not performed and not passed; do not count reduced-height emulation as device acceptance. Existing Free/manual Render runtime needs no documentation-only redeploy; preserve original worktrees and clinical/native/binary/release gates.",
-  "current_task_id": "M4-03",
+  "next_action": "Resolve the requested merge scope for published DraftPR26: the full tested source stack versus separate numeric documentation or publication only. Publication is authorized and done (E86); do not infer broader desktop/source acceptance from merge permission. If the full stack is selected, follow the verified predecessor ancestry/order and require passing actual CI before each merge; keep all release gates and unperformed reviews honest. Numeric core clinical-numeric/1 and six hand references remain accepted (E85/E83); no clinical calculations or Render update is part of source integration. Missing native/redistribution provenance remains pending. Check live Berlin time immediately before each GitHub write.",
+  "current_task_id": "M1-01",
   "next_task_ids": [
-    "M5-04",
-    "M1-01"
+    "M4-03",
+    "M5-04"
   ]
 }

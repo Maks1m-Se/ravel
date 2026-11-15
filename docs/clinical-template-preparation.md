@@ -1,10 +1,11 @@
 # Optional clinical template: preparation for review
 
-Issue #16, 18 October 2026. **Proposal, not an adopted numeric policy or an
-implemented clinical generator.** The accepted fictional policies and their
+Issue #16, 18 October 2026, updated 15 November. **Pipeline proposal, not an
+implemented clinical generator; numeric core separately adopted as
+`clinical-numeric/1` (E85).** The accepted fictional policies and their
 8 October acceptance remain in [baseline-specification.md](baseline-specification.md).
 This preparation does not change them. Clinical numeric implementation waits
-for maintainer review of the choices below; generic work and private packaging
+for a separately authorized task; generic work and private packaging
 can continue. No clinical or standards validation is claimed.
 
 ## One app, explicit domain selection
@@ -31,12 +32,14 @@ The generic core currently supports one parent per child, scalar keys, fixed
 children-per-parent and literal text columns. It does not enforce compound
 subject/parameter membership or understand treatment time. The clinical planner
 will construct the supported structural requests and explicit record schedules;
-subject-specific schedules and supplied record collections need a deliberately
-specified adapter before implementation. They are not features of the current
+subject-specific schedules still need a planner. Supplied record collections
+now have the bounded internal contract below. They are not features of the current
 linked generator. A template must not silently relax a structural constraint to
 make a clinical scenario possible.
 
-Small internal boundary, proposed rather than implemented:
+The complete clinical pipeline below remains proposed. Only the explicit
+source adapter and structural contract described later in this document are
+implemented:
 
 1. `prepare(explicit_template_request, adopted_policy)` returns a generic engine
    request plus immutable clinical declarations/mapping, or actionable errors.
@@ -57,38 +60,25 @@ The reviewed recipe, source checksum, module/policy version, selected dose,
 baseline and target source IDs must be recorded with results. No external API
 stability is promised by these illustrative function/field names.
 
-## Numeric policy proposed for review
+## Adopted numeric core and provisional comparison tolerance
 
-These choices apply only to the future fictional clinical template. Existing
-generic version1/2/3 numeric behavior remains as documented. The proposed limits
-are software bounds, not medically meaningful ranges.
+**Core adopted by Maksim, 15 November 2026: `clinical-numeric/1` (E85).** The canonical
+[numeric decision sheet and hand-worked boundaries](baseline-specification.md#numeric-policy-decision-sheet--adopted-core-policy)
+refine this document's earlier E84 proposal. The adopted core retains exact
+decimal interpretation, six effective fractional places, source magnitude
+≤1,000,000,000 and exact subtraction bounded by ±2,000,000,000. Generic numeric
+behavior and the lossless clinical source loader are unchanged.
 
-| Decision | Proposed rule | Consequence |
-| --- | --- | --- |
-| Input representation | Decode JSON numeric tokens directly to exact decimal values, preserving the original token separately. Reject Boolean, numeric text, NaN/infinity and absent required fields. Only explicit measurement `null` means missing. | `0.3` is exact decimal three tenths; `"0.3"` is invalid. No binary64 round trip during decoding. |
-| Supported source scale/range | Nonmissing measurement absolute value at most1,000,000,000, at most six fractional decimal places after exact normalization. Nonnull dose amount has the same scale/upper bound and must be strictly positive. Reject excess precision/range rather than round input. | `1e-6` is valid; `1e-7` fails. Zero measurement is valid; zero actual dose fails. Planned/not-administered null amounts retain the accepted meaning. |
-| Arithmetic | Store exact decimal coefficients at a declared six-place scale, or an equivalent exact Decimal representation. Perform subtraction exactly with sufficient checked precision; no intermediate rounding, overflow fallback, clipping or resampling. | Source coefficients are bounded by10^15 micro-units; deltas by2×10^15, within the proposed ±2,000,000,000 result range. A future operation exceeding its declared range fails the whole clinical run. |
-| Output scale/rounding | Canonical clinical numeric CSV fields have six fractional digits, decimal point, no exponent/grouping, normalized positive zero. Baseline/change subtraction under these bounds is already exact at this scale. If a later reviewed operation needs quantization, round once at its declared output boundary, half to even. | `0.3−0.2` exports `0.100000`; missing exports an empty numeric cell with an explicit reason elsewhere. Source tokens remain in source/provenance; export never rewrites input. |
-| Time | Retain the accepted whole-second ISO timestamp and explicit-zone policy; compare UTC instants exactly, with no tolerance or time rounding. | Offset-equivalent instants tie. Date-only, fractions and leap seconds remain invalid. |
-| Python/R reference | Prefer exact comparison of exported six-place decimal coefficients/strings; parse CSV as character before independent reference conversion. IDs, selected references, row cardinality, null/reason sets, units and time order compare exactly. A secondary binary64 numeric comparison uses absolute tolerance5×10^-7 and relative tolerance0 over the bounded range. | At this range binary64 parse/subtraction error is below half a six-place unit. Relative tolerances could hide material fixed-scale errors on large values. A one-micro-unit wrong answer must fail the exact primary check. Missing values never participate in numeric tolerance. |
-
-For an independent R implementation, decimal-character coefficient parsing into
-integer-valued doubles is exact for these bounded coefficients (below2^53);
-do not use R's 32-bit integer storage for micro-units. Derive reference results
-independently from the source records, not from Python's selected IDs or deltas.
-The tolerance proposal must be checked with boundary fixtures in M2-02 before
-adoption; it is not evidence that Python/R comparison has run.
-
-Hand calculations to review:
-
-| Input / operation | Proposed result |
-| --- | --- |
-| `0.3−0.2` | Exact0.1; CSV `0.100000` |
-| `1.000001−1.000000` | Exact0.000001; CSV `0.000001` |
-| `1000000000−(-1000000000)` | Exact2000000000; CSV `2000000000.000000`, at the result bound |
-| Source `1000000000.000001` or `0.0000001` | Reject range or excess scale, no clipping/rounding |
-| Future half-even quantization to two places:1.245 /1.255 /−1.245 | 1.24 /1.26 /−1.24; illustrative only, not a current clinical derivation |
-| Baseline0, follow-up2 | Baseline remains eligible; change2, not a missing baseline |
+The adopted core specifies JSON exponent syntax, negative-zero handling,
+trailing-zero normalization, rejection rather than input rounding, nulls,
+fixed-six-place CSV and exact primary comparison. It removes any suggestion
+that a future half-even quantization rule is already authorized for this
+subtraction-only policy. The optional secondary absolute tolerance5×10^-7,
+relative tolerance0, is derived conditionally for binary64 diagnostics only;
+actual R/SAS checks and acceptance remain pending. It cannot override an exact
+comparison failure. See the canonical sheet for the independent integer boundary
+calculations, assumptions and trade-offs. The secondary tolerance is excluded
+from adoption until independent R/SAS verification and separate acceptance.
 
 ## Hand-checkable review sheet and fixture mapping
 
@@ -121,8 +111,9 @@ Failure matching is exactly by code, scope and complete source-ID set.
 Future tests additionally map the accepted empty group, undosed group, null
 follow-up, zero baseline, positive/invalid dose, equal UTC instants with different
 offset spelling, earliest-dose tie, invalid ineligible record, unknown status,
-and exact-unit failure dependencies from the baseline specification. These do
-not establish the remaining twelve-case suite or selected standards mappings.
+and exact-unit failure dependencies from the baseline specification. The twelve
+hand references are now traceable below; executed clinical checks and selected
+standards mappings remain pending.
 
 [structure-only.recipe.json](../examples/clinical-review/structure-only.recipe.json)
 is a runnable **generic** three-table structural example. Its clinical-looking
@@ -130,8 +121,137 @@ names and literal `baseline` text do not select clinical code. It is not a
 clinical template and does not exercise derivations. The separate JSON review
 sheets are deliberately rejected by the application recipe loader.
 
-Review required before clinical numeric implementation: approve or amend the
-range/scale, exact representation, overflow, six-place export and comparison
-rules above, then assign an adopted policy ID. Review the fixture transcription
-against the accepted source and the proposed adapter/interface boundary. This
-prerequisite is recorded in progress.json; no review has been assumed.
+The range/scale, exact representation, overflow, six-place export and exact
+primary comparison rules are adopted as `clinical-numeric/1` (E85). The six added
+hand transcriptions are accepted (E83); the proposed adapter/interface boundary
+and source implementation remain separate reviews. Independent comparison and
+secondary tolerance verification remain pending in progress.json. This step
+does not implement clinical calculations or authorize their implementation.
+
+## Internal source contract
+
+The bounded foundation uses `ravel-clinical-source/1` through an explicit
+internal API in `ravel.clinical.source`. It is not a generation recipe or a
+clinical template request. The public recipe loader continues to reject it.
+No UI entry, arithmetic, dose selection, time comparison or clinical-policy
+validator is introduced. The adopted numeric core above remains unimplemented.
+
+The document contains ordered `subjects`, `treatments`, `parameters`, `pairs`
+and `records` lists and a root `provenance` object. Subjects have `id` and
+`treatment`; treatments/parameters have `id` and `unit`. Each explicit pair
+contains `subject` and `parameter`, with no Cartesian expansion. These rows
+also carry provenance. IDs are opaque nonempty strings; IDs are unique within
+each declaration collection and across all source records. A pair's identity
+is its two references. Empty record collections and unequal per-subject
+counts are allowed.
+
+A source record has `id`, `kind`, `subject`, `timestamp`, `value`, `unit`
+and `provenance`. A `measurement` additionally has `parameter`; an
+`exposure` has `treatment` and `status`. Status is supplied explicitly:
+the review adapter maps the original `actual-dose`, `planned-dose` or
+`not-administered` kind to that exposure status. Unknown statuses and
+unparseable timestamp strings stay available for later clinical checks.
+This structural validator does not interpret them or compare units.
+
+Each provenance object requires nonempty `source` and `pointer` strings.
+The explicit review adapter records the original file and JSON pointer for
+each declaration, pair and source record. It retains source record ordering
+and does not copy expected derived rows into the source contract. A supplied
+contract can reference another explicitly named source without using that
+review adapter.
+
+`loads` parses JSON without binary floating-point conversion: integer and
+fraction/exponent tokens become immutable `NumberToken` objects containing
+their original spelling. `null`, strings and Booleans remain different.
+Duplicate JSON keys and non-JSON NaN/Infinity tokens fail parsing. Parsing is
+separate from `validate`, so a parsed malformed value is still inspectable.
+`validate` requires the value field and permits a number token or explicit
+null; text/Boolean/container values produce structural type diagnostics.
+No scale, range, normalization, positivity, formatting or arithmetic policy is
+selected. The shared 1 MiB input limit is a resource bound.
+
+`dumps` followed by `loads` preserves the parsed document semantically,
+including exact number-token spelling, timestamps, IDs, provenance and list
+order. Whitespace and string-escape spelling are not preserved byte for byte.
+Native Python floats/integers must not be substituted for source number
+tokens. The original input file remains the byte-level authority.
+
+`validate` returns a report explicitly scoped to `source_structure`, with
+`passed`/`failed`, ordered `failures`, separate `not_evaluated` entries,
+and `clinical_policy: not_evaluated`. Failures use the accepted code,
+scope and source-ID conventions, with a check name and path. Ordering follows
+declarations, subjects, pairs, then source records, in supplied order;
+field checks use the contract's fixed order, not object-key order.
+Unknown subject/parameter references are generic structural failures and
+suppress only dependent pair-membership checks. Known references to an
+undeclared pair yield `UNDECLARED_GROUP`, never a new group.
+
+The reference sheets remain hand expectations. Illustrations a–c pass source
+structure while their unit/tie/timestamp policy expectations remain unexecuted.
+The crossed pair fails the now implemented membership check. No structural
+success is a claim of clinical validation, derivation or R/SAS comparison.
+
+### Source robustness follow-up
+
+The 14 November batch reproduces round-trip failures at the exact 1 MiB
+boundary, with large non-ASCII strings and with parser-supported nesting.
+Serialization now uses an iterative compact encoder, retaining original number
+tokens and escaping unpaired surrogates without expanding ordinary UTF-8 text.
+It adds no trailing byte that would make an accepted maximum-size input fail
+reload. Cyclic/native non-JSON objects fail with TypeError.
+
+Duplicate declaration IDs make the corresponding reference ambiguous. An
+unavailable identity collection or ambiguous referenced identity produces a
+separate NOT_EVALUATED reference check, then suppresses dependent membership
+conclusions. Independent field checks continue. Malformed review-sheet shapes
+and unexpected record fields fail through ValidationError before mapping;
+the adapter cannot silently replace supplied provenance.
+
+The 15 November adapter follow-up rejects container-valued review record fields
+with a source-located ValidationError before recursively copying any records.
+A loader-supported value containing 700 nested arrays previously raised an
+uncontrolled RecursionError in the adapter. Record fields in this review format
+are scalar; no new numeric restriction or nesting limit is applied to the source
+loader. Numeric tokens, explicit nulls and other scalar values remain available
+for structural validation, with supplied ordering and adapter provenance intact.
+
+No fixed nesting cap is adopted: the pinned JSON parser's supported inputs must
+round-trip, and parser failures remain SourceParseError. A portable explicit
+depth budget is a future resource-policy decision, not a clinical rule.
+
+## Twelve-scenario reference coverage
+
+[scenario-coverage.json](../examples/clinical-review/scenario-coverage.json)
+maps all twelve plan requirements to explicit hand references. Existing C1–C4
+and negative illustrations a/b are reused unchanged. Six additional supplied
+source cases are in
+[additional-scenarios.json](../examples/clinical-review/additional-scenarios.json);
+Maksim accepted these six hand references on 15 November 2026 (E83),
+as supplied at candidate 1335be1; their records and expected results are unchanged.
+This accepts the references, not the source implementation or clinical execution.
+Numeric-core adoption is recorded separately in E85. Labels are retained as source provenance; output rows are compared
+by explicit IDs without adopting a new row-sort policy.
+
+| Requirement | Reference |
+| --- | --- |
+| Ordinary baseline | C1 |
+| Multiple eligible measurements | multiple-eligible |
+| Latest pre-dose value missing | C2 |
+| No eligible baseline | C3 |
+| Exactly at dose | C4; C3 preserves the no-earlier-value companion |
+| Post-dose labelled baseline | labelled-followup |
+| Duplicate eligible timestamps | negative b |
+| Out-of-order input | out-of-order |
+| Missing actual dose | undosed, transcribed from the accepted auxiliary illustration |
+| Incompatible units | negative a |
+| No usable measurements | empty-measurements, the accepted empty-group illustration |
+| Multiple subjects/parameters | grouping: three explicit pairs, no fourth Cartesian group |
+
+Each requirement identifies classification, explanation, executable source/
+reference checks and future clinical checks. Cases carry selected source IDs,
+expected groups/changes/reasons/diagnostics; intentionally invalid cases retain
+zero successful outputs and the separate NOT_EVALUATED expectations.
+`python scripts/check_clinical_scenarios.py` checks coverage, source structure,
+round trip and reference membership. It performs no timestamp ordering,
+baseline selection, arithmetic or independent R/SAS derivation. R1 remains
+incomplete until the actual clinical implementation and independent comparisons.

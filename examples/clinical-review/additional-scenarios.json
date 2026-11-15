@@ -1,0 +1,926 @@
+{
+  "format": "ravel-clinical-scenarios/1",
+  "status": "accepted-hand-references-not-clinical-validation",
+  "output_comparison": "Compare expected rows by explicit IDs; no new output-sort policy is adopted.",
+  "cases": [
+    {
+      "id": "multiple-eligible",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/0/source"
+        },
+        "subjects": [
+          {
+            "id": "S-MULT",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/subjects/0"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/parameters/0"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-MULT",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/pairs/0"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "ME-M1",
+            "kind": "measurement",
+            "subject": "S-MULT",
+            "timestamp": "2026-01-01T08:00:00Z",
+            "value": 5,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/records/0"
+            }
+          },
+          {
+            "id": "ME-M2",
+            "kind": "measurement",
+            "subject": "S-MULT",
+            "timestamp": "2026-01-01T09:00:00Z",
+            "value": 8,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/records/1"
+            }
+          },
+          {
+            "id": "ME-D1",
+            "kind": "exposure",
+            "subject": "S-MULT",
+            "timestamp": "2026-01-01T10:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/records/2"
+            }
+          },
+          {
+            "id": "ME-M3",
+            "kind": "measurement",
+            "subject": "S-MULT",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 11,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/0/source/records/3"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "ME-G1",
+            "subject": "S-MULT",
+            "parameter": "BX-1",
+            "dose_id": "ME-D1",
+            "baseline_id": "ME-M2",
+            "baseline_value": 8,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "ME-CH1",
+            "group_id": "ME-G1",
+            "dose_id": "ME-D1",
+            "baseline_id": "ME-M2",
+            "target_id": "ME-M3",
+            "change": 3,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      },
+      "explanation": "09:00 is later than08:00 and both precede10:00. ME-M2 supplies8; the hand subtraction11 minus8 is3.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    },
+    {
+      "id": "labelled-followup",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/1/source"
+        },
+        "subjects": [
+          {
+            "id": "S-LABEL",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/subjects/0"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/parameters/0"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-LABEL",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/pairs/0"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "L-M1",
+            "kind": "measurement",
+            "subject": "S-LABEL",
+            "timestamp": "2026-01-01T09:00:00Z",
+            "value": 10,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/records/0"
+            }
+          },
+          {
+            "id": "L-D1",
+            "kind": "exposure",
+            "subject": "S-LABEL",
+            "timestamp": "2026-01-01T10:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/records/1"
+            }
+          },
+          {
+            "id": "L-M2",
+            "kind": "measurement",
+            "subject": "S-LABEL",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 13,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/1/source/records/2",
+              "visit_label": "baseline"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "L-G1",
+            "subject": "S-LABEL",
+            "parameter": "BX-1",
+            "dose_id": "L-D1",
+            "baseline_id": "L-M1",
+            "baseline_value": 10,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "L-CH1",
+            "group_id": "L-G1",
+            "dose_id": "L-D1",
+            "baseline_id": "L-M1",
+            "target_id": "L-M2",
+            "change": 3,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      },
+      "explanation": "The source label baseline on L-M2 is preserved in provenance.11:00 is post-dose; only L-M1 at09:00 supplies baseline10.13 minus10 is3.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    },
+    {
+      "id": "out-of-order",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/2/source"
+        },
+        "subjects": [
+          {
+            "id": "S-ORDER",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/subjects/0"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/parameters/0"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-ORDER",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/pairs/0"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "O-M3",
+            "kind": "measurement",
+            "subject": "S-ORDER",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 15,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/records/0"
+            }
+          },
+          {
+            "id": "O-M2",
+            "kind": "measurement",
+            "subject": "S-ORDER",
+            "timestamp": "2026-01-01T09:00:00Z",
+            "value": 10,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/records/1"
+            }
+          },
+          {
+            "id": "O-D1",
+            "kind": "exposure",
+            "subject": "S-ORDER",
+            "timestamp": "2026-01-01T10:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/records/2"
+            }
+          },
+          {
+            "id": "O-M1",
+            "kind": "measurement",
+            "subject": "S-ORDER",
+            "timestamp": "2026-01-01T08:00:00Z",
+            "value": 8,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/2/source/records/3"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "O-G1",
+            "subject": "S-ORDER",
+            "parameter": "BX-1",
+            "dose_id": "O-D1",
+            "baseline_id": "O-M2",
+            "baseline_value": 10,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "O-CH1",
+            "group_id": "O-G1",
+            "dose_id": "O-D1",
+            "baseline_id": "O-M2",
+            "target_id": "O-M3",
+            "change": 5,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      },
+      "explanation": "Input order is deliberately11:00,09:00,10:00,08:00. The latest eligible time remains09:00, source O-M2=10;15 minus10 is5.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    },
+    {
+      "id": "undosed",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/3/source"
+        },
+        "subjects": [
+          {
+            "id": "S-UNDOSED",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/3/source/subjects/0"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/3/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/3/source/parameters/0"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-UNDOSED",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/3/source/pairs/0"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "U-M1",
+            "kind": "measurement",
+            "subject": "S-UNDOSED",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 10,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/3/source/records/0"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "U-G1",
+            "subject": "S-UNDOSED",
+            "parameter": "BX-1",
+            "dose_id": null,
+            "baseline_id": null,
+            "baseline_value": null,
+            "unit": "bx-unit",
+            "reasons": [
+              "NO_ACTUAL_DOSE"
+            ]
+          }
+        ],
+        "changes": [],
+        "record_diagnostics": [
+          {
+            "source_id": "U-M1",
+            "code": "NO_ACTUAL_DOSE"
+          }
+        ]
+      },
+      "explanation": "Transcribes the accepted undosed auxiliary illustration: no exposure exists, so no dose/baseline or change row is invented.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    },
+    {
+      "id": "empty-measurements",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/4/source"
+        },
+        "subjects": [
+          {
+            "id": "S-EMPTY",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/4/source/subjects/0"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/4/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/4/source/parameters/0"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-EMPTY",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/4/source/pairs/0"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "E-D1",
+            "kind": "exposure",
+            "subject": "S-EMPTY",
+            "timestamp": "2026-01-01T10:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/4/source/records/0"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "E-G1",
+            "subject": "S-EMPTY",
+            "parameter": "BX-1",
+            "dose_id": "E-D1",
+            "baseline_id": null,
+            "baseline_value": null,
+            "unit": "bx-unit",
+            "reasons": [
+              "NO_ELIGIBLE_BASELINE",
+              "NO_FOLLOWUP_MEASUREMENT"
+            ]
+          }
+        ],
+        "changes": [],
+        "record_diagnostics": []
+      },
+      "explanation": "Transcribes the accepted empty-group illustration: the declared pair has a dose but zero measurements; both missing reasons apply independently.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    },
+    {
+      "id": "grouping",
+      "classification": "valid-unusual",
+      "reference_status": "accepted-hand-reference",
+      "authority": "docs/baseline-specification.md: accepted policies and logical output contract",
+      "source": {
+        "format": "ravel-clinical-source/1",
+        "provenance": {
+          "source": "examples/clinical-review/additional-scenarios.json",
+          "pointer": "/cases/5/source"
+        },
+        "subjects": [
+          {
+            "id": "S-A",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/subjects/0"
+            }
+          },
+          {
+            "id": "S-B",
+            "treatment": "TX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/subjects/1"
+            }
+          }
+        ],
+        "treatments": [
+          {
+            "id": "TX-1",
+            "unit": "dx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/treatments/0"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "id": "BX-1",
+            "unit": "bx-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/parameters/0"
+            }
+          },
+          {
+            "id": "BX-2",
+            "unit": "by-unit",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/parameters/1"
+            }
+          }
+        ],
+        "pairs": [
+          {
+            "subject": "S-A",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/pairs/0"
+            }
+          },
+          {
+            "subject": "S-A",
+            "parameter": "BX-2",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/pairs/1"
+            }
+          },
+          {
+            "subject": "S-B",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/pairs/2"
+            }
+          }
+        ],
+        "records": [
+          {
+            "id": "G-AD1",
+            "kind": "exposure",
+            "subject": "S-A",
+            "timestamp": "2026-01-01T10:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/0"
+            }
+          },
+          {
+            "id": "G-BD1",
+            "kind": "exposure",
+            "subject": "S-B",
+            "timestamp": "2026-01-01T12:00:00Z",
+            "value": 1,
+            "unit": "dx-unit",
+            "treatment": "TX-1",
+            "status": "actual-dose",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/1"
+            }
+          },
+          {
+            "id": "G-AX1",
+            "kind": "measurement",
+            "subject": "S-A",
+            "timestamp": "2026-01-01T09:00:00Z",
+            "value": 10,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/2"
+            }
+          },
+          {
+            "id": "G-AX2",
+            "kind": "measurement",
+            "subject": "S-A",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 13,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/3"
+            }
+          },
+          {
+            "id": "G-AY1",
+            "kind": "measurement",
+            "subject": "S-A",
+            "timestamp": "2026-01-01T09:00:00Z",
+            "value": 100,
+            "unit": "by-unit",
+            "parameter": "BX-2",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/4"
+            }
+          },
+          {
+            "id": "G-AY2",
+            "kind": "measurement",
+            "subject": "S-A",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 104,
+            "unit": "by-unit",
+            "parameter": "BX-2",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/5"
+            }
+          },
+          {
+            "id": "G-BX1",
+            "kind": "measurement",
+            "subject": "S-B",
+            "timestamp": "2026-01-01T11:00:00Z",
+            "value": 20,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/6"
+            }
+          },
+          {
+            "id": "G-BX2",
+            "kind": "measurement",
+            "subject": "S-B",
+            "timestamp": "2026-01-01T13:00:00Z",
+            "value": 25,
+            "unit": "bx-unit",
+            "parameter": "BX-1",
+            "provenance": {
+              "source": "examples/clinical-review/additional-scenarios.json",
+              "pointer": "/cases/5/source/records/7"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "status": "passed",
+        "groups": [
+          {
+            "id": "G-AX",
+            "subject": "S-A",
+            "parameter": "BX-1",
+            "dose_id": "G-AD1",
+            "baseline_id": "G-AX1",
+            "baseline_value": 10,
+            "unit": "bx-unit",
+            "reasons": []
+          },
+          {
+            "id": "G-AY",
+            "subject": "S-A",
+            "parameter": "BX-2",
+            "dose_id": "G-AD1",
+            "baseline_id": "G-AY1",
+            "baseline_value": 100,
+            "unit": "by-unit",
+            "reasons": []
+          },
+          {
+            "id": "G-BX",
+            "subject": "S-B",
+            "parameter": "BX-1",
+            "dose_id": "G-BD1",
+            "baseline_id": "G-BX1",
+            "baseline_value": 20,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "changes": [
+          {
+            "id": "G-CAX",
+            "group_id": "G-AX",
+            "dose_id": "G-AD1",
+            "baseline_id": "G-AX1",
+            "target_id": "G-AX2",
+            "change": 3,
+            "unit": "bx-unit",
+            "reasons": []
+          },
+          {
+            "id": "G-CAY",
+            "group_id": "G-AY",
+            "dose_id": "G-AD1",
+            "baseline_id": "G-AY1",
+            "target_id": "G-AY2",
+            "change": 4,
+            "unit": "by-unit",
+            "reasons": []
+          },
+          {
+            "id": "G-CBX",
+            "group_id": "G-BX",
+            "dose_id": "G-BD1",
+            "baseline_id": "G-BX1",
+            "target_id": "G-BX2",
+            "change": 5,
+            "unit": "bx-unit",
+            "reasons": []
+          }
+        ],
+        "record_diagnostics": []
+      },
+      "explanation": "Three explicitly declared pairs, not four Cartesian groups. S-A shares its10:00 dose across parameters; S-B uses12:00. Separate hand subtractions are13-10=3,104-100=4,25-20=5.",
+      "executable_now": [
+        "source_structure",
+        "round_trip",
+        "reference_integrity"
+      ],
+      "pending": [
+        "clinical_policy_validation",
+        "derivation",
+        "independent_R_SAS_comparison"
+      ]
+    }
+  ],
+  "acceptance": {
+    "accepted_by": "Maksim",
+    "date": "2026-11-15",
+    "evidence_ref": "E83",
+    "reviewed_candidate": "1335be1c5185468c9e6d9a0395e89d1bcfd75faf",
+    "cases": [
+      "multiple-eligible",
+      "labelled-followup",
+      "out-of-order",
+      "undosed",
+      "empty-measurements",
+      "grouping"
+    ],
+    "scope": "Six additional invented source/expected-result hand references only; no numeric-policy adoption, source-implementation acceptance or clinical execution."
+  }
+}

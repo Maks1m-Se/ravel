@@ -183,8 +183,14 @@ def run_metadata(result):
         relationships=document['relationships'])
 
 
+def validate_export_names(result):
+    from .exports import validate_names
+    validate_names([identity+'.csv' for identity,_ in result.tables]+['recipe.json','dictionary.json','run.json'])
+
+
 def payloads(result):
     from .engine import csv_text
+    validate_export_names(result)
     document=json.loads(result.recipe_json)
     dictionary=dict(format='ravel-dictionary/1',tables=[dict(id=table['id'],name=table['name'],primary_key=table['primary_key'],columns=table['fields']) for table in document['tables']])
     files={identity+'.csv':csv_text(table).encode('utf-8') for identity,table in result.tables}
@@ -195,9 +201,10 @@ def payloads(result):
 
 
 def zip_bytes(result):
+    files=payloads(result)
     output=BytesIO()
     with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_DEFLATED) as archive:
-        for name,content in payloads(result).items():
+        for name,content in files.items():
             entry=zipfile.ZipInfo(name,date_time=(1980,1,1,0,0,0))
             entry.compress_type=zipfile.ZIP_DEFLATED
             archive.writestr(entry,content)
@@ -205,6 +212,8 @@ def zip_bytes(result):
 
 
 def write_outputs(destination,result):
+    from .exports import validate_names
+    validate_names([Path(destination).name])
     destination=Path(destination).resolve()
     if destination.exists():
         raise FileExistsError(f'Output already exists: {destination}. Choose a new dataset directory.')

@@ -216,3 +216,39 @@ or clinical validation. Raw final unit log and all three CI logs remain under
 `outputs/integration-2026-10-29/`. Later evidence/dashboard updates do not require
 another Render deployment. Desktop maintainer acceptance and explicit merge
 approval are still outstanding; Pixel/Gboard is deferred and not performed.
+
+## Combined follow-up candidate
+
+`integration/ux-clinical-2026-11-13` now prepares the UX/export and internal
+clinical-source changes together from eed69c6. See the
+[combined review](development.md#combined-candidate-review) for its fixed local
+URL, checks, limitations and manual script. Original input branches remain
+uncommitted and preserved. Their E70–E74 evidence is retained alongside E75.
+
+Recommend one Draft PR with base `integration/main-2026-10-29`, rather than
+publishing overlapping UX and clinical PRs as well. Publish the combined branch
+after verifying its local commit and the live permitted Berlin time; remote
+publication is prepared separately from this local review. The existing
+nine-PR order above remains unchanged. Do not target main until the required
+integration ancestry is present there. All actual merges, visual/contract
+acceptance and deployment remain separate maintainer decisions.
+
+## Published follow-up (15 November 2026)
+
+The consolidated UX/export, source-contract and bounded overnight candidate is
+now published as [Draft PR26](https://github.com/Maks1m-Se/ravel/pull/26), from
+`batch/overnight-2026-11-14` at 72867b6 to `integration/main-2026-10-29` at eed69c6.
+The nine predecessor heads above and main d7d42f8 remain unchanged.
+
+Maksim authorized publication and offered merge permission; the exact scope is
+being clarified because integrating this head also requires the predecessor
+stack. Prior desktop/source review limitations remain recorded, not implicitly
+accepted. No merge or Render update has occurred. If the full source stack is
+selected, preserve its ancestry and the documented nine-PR order, integrate the
+integration branch's documentation follow-up, then retarget/merge PR26 only
+after its base is in main and actual CI passes. Do not squash the dependency
+history or silently replace the integration with a direct main push.
+
+The core policy `clinical-numeric/1` and six additional hand references are now
+accepted (E85/E83); the secondary R/SAS tolerance and clinical calculations remain
+unimplemented/unverified as recorded. Merge permission is not release acceptance.

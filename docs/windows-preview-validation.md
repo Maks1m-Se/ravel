@@ -98,7 +98,7 @@ the tagged NiceGUI core extraction script/lock, and 107 npm lock entries with
 verified archive integrity and retained supplied notices/source. All 16 actual
 font files were separately decoded and their hashes match the retained metadata.
 Eight retained direct-copy core JavaScript assets match their exact upstream
-bytes. The artifact inventory records 118 JavaScript files, 86 DLL/PYD files and
+bytes. The artifact inventory records 118 JavaScript files, 85 DLL/PYD files plus Ravel.exe and
 75 loose Docutils files, with no Docutils editor/emacs helper.
 
 Eleven unused lazy element asset families and unused nonproduction Vue/Quasar
@@ -188,7 +188,7 @@ existing /outputs/ rule. REVIEW-IDENTITY.txt explains extraction/start/stop and
 the original evidence; handoff-verification.json records each copied hash.
 
 This is the older b99a360a14c4eb8d artifact. It predates the separate
-[pending-action UX correction](development.md#pending-apply-discard-review-20-october-2026).
+[pending-action UX correction](development.md#pending-applydiscard-review-20-october-2026).
 New native results must identify this exact ZIP and cannot accept the later UX.
 Use the matching older source/harness when automating this package; the new
 pending-action browser workflow deliberately expects behavior absent from it.

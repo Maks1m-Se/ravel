@@ -19,12 +19,24 @@ sys.path.insert(0, str(ROOT))
 from experiments.workbook.config import new_config  # noqa: E402
 
 
+def require_client(page, expected):
+    actual = page.evaluate('window.clientId')
+    if actual != expected:
+        raise AssertionError(f'Workspace changed: client {expected} -> {actual}; stop before attributing a download-name failure.')
+    return actual
+
+
 def keyboard_to(page, target):
     """Navigate only; never use this helper to assert post-action focus."""
-    for _ in range(65):
+    for _ in range(130):
         if target.evaluate('(e) => e === document.activeElement || e.contains(document.activeElement)'):
             return
-        page.keyboard.press('Tab')
+        direction = target.evaluate('''e => {
+            const g=e.closest('[data-ravel-roving]'), a=document.activeElement;
+            if (!g || !g.contains(a)) return null;
+            return ['fields','vertical'].includes(g.dataset.ravelRoving) ? 'ArrowDown' : 'ArrowRight';
+        }''')
+        page.keyboard.press(direction or 'Tab')
     raise AssertionError(f'Cannot reach {target} with Tab')
 
 
@@ -41,8 +53,15 @@ def activate(page, name):
         if not page.get_by_role('button', name=name, exact=True).is_visible():
             activate(page, 'More options')
             expect(page.locator('.workbench-options')).to_be_visible()
-    keyboard_to(page, page.get_by_role('button', name=name, exact=True))
+    target = page.get_by_role('button', name=name, exact=True)
+    if not target.count():
+        target = page.get_by_role('tab', name=name, exact=True)
+    if not target.count():
+        target = page.get_by_role('option', name=name, exact=True)
+    keyboard_to(page, target)
     page.keyboard.press('Enter')
+    if name.startswith('Select column ') and target.get_attribute('role') == 'option':
+        expect(target).to_have_attribute('aria-selected', 'true')
 
 
 def assert_error(page, label, message, *, focused=True):

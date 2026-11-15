@@ -76,7 +76,8 @@ def mobile_case(browser, base, credentials, out, theme, errors, *, public_demo=F
     expect(page.get_by_label('Rows', exact=True)).to_have_value('1000')
 
     def button(name):
-        return page.get_by_role('button', name=name, exact=True)
+        tab = page.get_by_role('tab', name=name, exact=True)
+        return tab if tab.count() else page.get_by_role('button', name=name, exact=True)
 
     def generate():
         button('Generate table').click()

@@ -40,10 +40,13 @@ def download(page, label, path):
     return path.read_bytes()
 
 
-def reload_recipe(page, path):
+def reload_recipe(page, path, expected_name=None):
     activate(page, 'Open recipe')
     expect(page.locator('.load-dialog')).to_be_visible()
     page.locator('.load-dialog input[type=file]').set_input_files(path)
+    if expected_name is not None:
+        expect(page.locator('.load-dialog')).not_to_be_visible()
+        expect(page.locator('.table-name-label')).to_have_text(expected_name)
 
 
 def choose_rule(page, label):
@@ -66,7 +69,7 @@ def apply(page):
 def generate_table(page):
     activate(page, 'Generate table')
     expect(page.locator('.result-state')).to_contain_text('Current', timeout=30000)
-    expect(page.get_by_role('button', name='Preview', exact=True)).to_have_attribute('aria-pressed', 'true')
+    expect(page.get_by_role('tab', name='Preview', exact=True)).to_have_attribute('aria-selected', 'true')
     expect(page.get_by_role('button', name='Export CSV', exact=True)).to_be_enabled()
 
 
@@ -171,8 +174,12 @@ def exercise(page, base, out, viewport, theme):
     expect(page.locator('.status-line')).to_contain_text('Apply or discard')
     expect(page.get_by_role('button', name='Export CSV', exact=True)).to_be_disabled()
     activate(page, 'Select column id')
+    expect(page.get_by_label('Column name', exact=True)).to_have_value('id')
+    expect(page.locator('.draft-summary')).to_have_text('Unapplied edits')
+    activate(page, 'Select column value')
     expect(page.get_by_label('Column name', exact=True)).to_have_value('value')
-    assert state_snapshot(page) == before
+    expect(page.get_by_label('Minimum', exact=True)).to_have_value('200')
+    assert state_snapshot(page)['applied'] == before['applied']
     focus = layout_regressions(page, viewport, theme)
     assert not blocked_downloads
     page.remove_listener('download', recorder)
@@ -217,7 +224,7 @@ def exercise(page, base, out, viewport, theme):
     type_value(page, 'Missing probability', '0.1')
     apply(page)
     activate(page, 'Select column value')
-    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
+    expect(page.get_by_role('option', name='Select column value', exact=True)).to_be_focused()
     type_value(page, 'Column name', 'score')
     apply(page)
     activate(page, 'Duplicate column')
@@ -248,7 +255,7 @@ def exercise(page, base, out, viewport, theme):
     page.screenshot(path=out / f'{prefix}-fields.png')
     readings = contrast(page, '.properties input, .q-field__label, .setting-origin, .result-state, .action-toolbar button:not(:disabled)')
     activate(page, 'Preview')
-    expect(page.get_by_role('button', name='Preview', exact=True)).to_have_attribute('aria-pressed', 'true')
+    expect(page.get_by_role('tab', name='Preview', exact=True)).to_have_attribute('aria-selected', 'true')
     expect(page.locator('.preview-table')).to_be_visible()
     expect(page.locator('.preview-table tbody tr')).to_have_count(100)
     page.screenshot(path=out / f'{prefix}-generated.png')
@@ -288,7 +295,7 @@ def exercise(page, base, out, viewport, theme):
         expect(page.locator('.load-dialog')).to_be_hidden()
         after = state_snapshot(page)
         assert after == before, {key: [before[key], after[key]] for key in before if before[key] != after[key]}
-    reload_recipe(page, out / f'{prefix}-built.recipe.json')
+    reload_recipe(page, out / f'{prefix}-built.recipe.json', json.loads(saved)['table']['name'])
     expect(page.locator('.status-line')).to_contain_text('Recipe loaded')
     expect(page.locator('.load-dialog')).to_be_hidden()
     properties_width(page, 312)
@@ -297,14 +304,14 @@ def exercise(page, base, out, viewport, theme):
     assert download(page, 'Save recipe', out / f'{prefix}-reloaded.recipe.json') == saved
     generate_table(page)
     assert download(page, 'Export CSV', out / f'{prefix}-reloaded.csv') == built
-    reload_recipe(page, ROOT / 'examples/three-rows.recipe.json')
+    reload_recipe(page, ROOT / 'examples/three-rows.recipe.json', 'Hand-worked reference')
     expect(page.locator('.status-line')).to_contain_text('Recipe loaded')
     generate_table(page)
     assert preview_cells(page) == [['1','demo','10'], ['2','demo','12'], ['3','demo','14']]
     page.screenshot(path=out / f'{prefix}-reference.png')
     activate(page, 'Fields')
     activate(page, 'Select column id')
-    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
+    expect(page.get_by_role('option', name='Select column id', exact=True)).to_be_focused()
     expect(page.get_by_label('Start', exact=True)).to_have_value('1')
     type_value(page, 'Start', '10')
     apply(page)
@@ -312,7 +319,7 @@ def exercise(page, base, out, viewport, theme):
     assert preview_cells(page) == [['10','demo','10'], ['11','demo','12'], ['12','demo','14']]
     activate(page, 'Fields')
     activate(page, 'Select column value')
-    expect(page.get_by_label('Column name', exact=True)).to_be_focused()
+    expect(page.get_by_role('option', name='Select column value', exact=True)).to_be_focused()
     type_value(page, 'Step', '-2')
     apply(page)
     generate_table(page)
@@ -351,7 +358,7 @@ def main():
     parser.add_argument('--output', type=Path, default=ROOT / 'outputs/generator-browser')
     parser.add_argument('--channel', default='chrome')
     parser.add_argument('--executable-path', help='Explicit installed review browser; record its actual version.')
-    parser.add_argument('--workflow', choices=['rules', 'sample', 'extended', 'linked', 'pending', 'recovery', 'all'], default='rules')
+    parser.add_argument('--workflow', choices=['rules', 'sample', 'extended', 'linked', 'pending', 'recovery', 'ux', 'all'], default='rules')
     parser.add_argument('--smoke', action='store_true', help='One Light laptop case instead of the full theme/viewport matrix.')
     parser.add_argument('--verify-source', action='store_true', help='Require a dedicated test server identity matching the current runtime files.')
     args = parser.parse_args()
@@ -359,7 +366,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     results = dict(started_utc=datetime.now(timezone.utc).isoformat(), python=platform.python_version(),
                    platform=platform.platform(), playwright=version('playwright'), cases=[],
-                   external_requests=[], external_websockets=[], page_errors=[])
+                   external_requests=[], external_websockets=[], page_errors=[], navigations=[], lifecycle_console=[])
     results['cli_command']=cli_command()
     def runtime_hashes():
         return {p.relative_to(ROOT).as_posix():sha256(p.read_bytes()).hexdigest()
@@ -395,6 +402,11 @@ def main():
                     context.route_web_socket('**/*', websocket)
                     page = context.new_page()
                     page.on('pageerror', lambda e: results['page_errors'].append(str(e)))
+                    page.on('framenavigated', lambda f: results['navigations'].append(dict(
+                        url=f.url, utc=datetime.now(timezone.utc).isoformat(), viewport=viewport, theme=theme)) if f==page.main_frame else None)
+                    page.on('console', lambda m: results['lifecycle_console'].append(dict(
+                        text=m.text, utc=datetime.now(timezone.utc).isoformat()))
+                        if any(s in m.text.lower() for s in ['reloading because','reconnect','connection timed out']) else None)
                     try:
                         if args.workflow in {'rules','all'}:
                             results['cases'].append(exercise(page, args.base_url, out, viewport, theme))
@@ -413,8 +425,18 @@ def main():
                         if args.workflow in {'recovery','all'}:
                             from scripts.edit_recovery_browser import exercise as recovery_exercise
                             results['cases'].append(recovery_exercise(page, args.base_url, out, viewport, theme))
+                        if args.workflow in {'ux','all'}:
+                            from scripts.workbench_ux_browser import exercise as ux_exercise
+                            results['cases'].append(ux_exercise(page, args.base_url, out, viewport, theme))
                     except Exception:
                         page.screenshot(path=out / 'failure.png')
+                        (out / 'failure-state.json').write_text(json.dumps(page.evaluate('''() => ({
+                            client:window.clientId,url:location.href,
+                            table:document.querySelector('.table-name-label')?.textContent,
+                            status:document.querySelector('.status-line')?.textContent,
+                            result:document.querySelector('.result-state')?.textContent,
+                            inputs:[...document.querySelectorAll('.output-panel input')].map(e=>[e.getAttribute('aria-label'),e.value])
+                        })'''),indent=2),encoding='utf-8')
                         raise
                     finally:
                         context.close()

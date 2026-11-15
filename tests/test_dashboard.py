@@ -89,7 +89,7 @@ class DashboardTests(unittest.TestCase):
             lambda d: d["tasks"][0].update(evidence_refs=["E999"]),
             lambda d: d["tasks"][0].update(release_gate_ids=["R99"]),
             lambda d: d["release_gates"].pop(),
-            lambda d: d["release_gates"][0].update(status="passed"),
+            lambda d: d["release_gates"][0].update(status="passed", evidence_refs=[]),
             lambda d: d.update(plan_ref="other.md"),
             lambda d: d["tasks"][0].update(acceptance_criteria="wrong shape"),
         ]
