@@ -4,10 +4,12 @@
 
 The maintainer authorized public access and publication during the vacation
 period. This is a small, session-only demonstration of the generic workbench,
-not an accepted release or a public Windows download. The existing draft PRs
-remain unmerged. The source is on `deploy/render-personal-weekend`.
+not an accepted release or a public Windows download. The checked source stack
+is now integrated on `main`; the running demo remains on its earlier deployed
+runtime `79e44cb405033aa16e8459c59903c3120643656d` from
+`deploy/render-personal-weekend`. Source integration does not deploy the service.
 
-For the 29 October source integration candidate and exact merge order, see
+For the integration record and preserved merge order, see
 [integration-main.md](integration-main.md). The real Pixel 8/Gboard test is
 **deferred by the maintainer, not performed and not passed**. It does not block
 this source integration. Desktop maintainer acceptance remains separate. Earlier

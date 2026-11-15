@@ -9,20 +9,22 @@ CSV sample. The current preview supports editable sample assumptions, new-row or
 retain-and-extend generation, and small linked datasets. It is available for
 review and is not a supported application release.
 
-The published integration baseline is on
-[`integration/main-2026-10-29`](https://github.com/Maks1m-Se/ravel/tree/integration/main-2026-10-29).
-The nine draft PRs are still unmerged. See the
-[integration handoff](docs/integration-main.md) for their order, checks and the
+The checked source stack is integrated on
+[`main`](https://github.com/Maks1m-Se/ravel/tree/main). See the
+[integration handoff](docs/integration-main.md) for the preserved merge order, checks and the
 separate desktop acceptance. The actual Pixel 8/Gboard test was deferred by the
 maintainer: **not performed, not passed**.
 
-This branch combines the [workbench and clinical source reviews](docs/development.md#combined-candidate-review)
-on that integration base: full-row field selection with retained drafts,
+The integrated [workbench and clinical source changes](docs/development.md#combined-candidate-review)
+include full-row field selection with retained drafts,
 keyboard groups, per-setting pending markers and table-named downloads. It also
 [refuses nonportable export names](docs/linked-tables.md) before writing. The
 public demo keeps the earlier runtime until review; it does not show these new
 interactions yet. The internal clinical source foundation adds structural
-checks without exposing a clinical template. Use the combined local review.
+checks without exposing a clinical template. The numeric core `clinical-numeric/1`
+and six additional hand references are accepted; calculations remain unimplemented,
+and the secondary R/SAS tolerance remains provisional. Desktop/source acceptance
+is separate from source integration; use the preserved local review.
 
 **Compose the data you need.**
 
@@ -69,16 +71,16 @@ serializer as the UI. Stable field identities and separate random streams mean
 adding an independent column preserves existing generated columns. Duplicated
 columns get new identities. Reproducibility is scoped to the recorded environment.
 
-### Published integration quickstart
+### Source quickstart
 
-These commands install the published integration baseline. For the separate UX
-candidate on this branch, use the [local review instructions](docs/development.md#workbench-ux-review-30-october-2026).
+These commands install the integrated source from `main`. The preserved fixed
+review instance remains available through the [local review instructions](docs/development.md#combined-candidate-review).
 
 Use standard **CPython 3.14.8 x64**, with the GIL enabled, on Windows. For a new
 checkout in PowerShell:
 
 ```powershell
-git clone --branch integration/main-2026-10-29 https://github.com/Maks1m-Se/ravel.git
+git clone --branch main https://github.com/Maks1m-Se/ravel.git
 Set-Location ravel
 py -3.14 -m venv .venv-source
 .\.venv-source\Scripts\python.exe --version
@@ -111,7 +113,7 @@ probability semantics, CSV and limits. The app explicitly rejects the old
 workbook experiment JSON; it never silently migrates or overwrites the original.
 Arbitrary joins, joined-sample fitting and clinical derivations remain outside
 this generic increment. The [clinical preparation](docs/clinical-template-preparation.md)
-requires numeric-policy review before clinical implementation. A
+records the adopted numeric core and remaining implementation/reference checks. A
 [private Windows preview build/checklist](docs/windows-preview.md) is available
 for development review; clean-machine, native/offline and artifact-specific
 redistribution checks remain open. M0/full M1 and release gates are incomplete.
