@@ -1,0 +1,14 @@
+{
+  "format": "ravel-single-table/1",
+  "seed": 17,
+  "table": {
+    "id": "reference",
+    "name": "Hand-worked reference",
+    "row_count": 3,
+    "fields": [
+      {"id": "row_id", "name": "id", "kind": "id", "start": 1, "missing_probability": "0"},
+      {"id": "group", "name": "group", "kind": "constant", "value": "demo", "missing_probability": "0"},
+      {"id": "value", "name": "value", "kind": "sequence", "start": 10, "step": 2, "missing_probability": "0"}
+    ]
+  }
+}

@@ -433,3 +433,54 @@ after 16:30 Europe/Berlin on 15 October 2026, respecting branch protection. The 
 bounded task will select and record the Windows preview build environment; no
 environment adoption occurs in this acceptance. M0-06 remains partial, NiceGUI
 provisional and distribution/release gates unchanged. No binary publication.
+
+## Staged single-table source increment (15 October 2026)
+
+The maintainer explicitly authorizes a substantial staged M1-01/M1-02 batch
+before joint review, starting generic generation while unfinished M0 packaging
+and platform work stays open. Explicit rules come first, sample profiling next,
+then linked tables; both generic entry paths remain first-release requirements.
+The supported rules, fixed hand-worked reference and CSV/JSON/missingness policy
+were written in [single-table.md](single-table.md) before engine implementation.
+Numeric arithmetic here does not select clinical arithmetic or derivation rules.
+
+Select **standard CPython 3.14.8 x64 with the GIL enabled** for this source
+increment, pinned in `.python-version`. The core uses only the standard library.
+`requirements-ui.lock` preserves all 48 established runtime pins (NiceGUI 3.18.0);
+`requirements-review.lock` preserves the four browser-tool pins separately. A new
+isolated venv was created from the previously verified interpreter, installed
+from prepared cp314 wheels without an index, and passed `pip check`, direct
+imports and core/CLI/session tests. This applies the recorded 3.14 candidate
+evidence to source development, without adopting a binary build environment.
+
+Current official information checked on 15 October: the
+[Python 3.14.8 release](https://www.python.org/downloads/release/python-3148/)
+is a maintenance/security release with Windows x64 installers;
+[NiceGUI 3.18.0's published metadata](https://pypi.org/project/nicegui/3.18.0/)
+supports Python 3.14. These facts plus the isolated local checks support this
+bounded selection. Prior source Python 3.11 and experiment locks remain available
+unchanged. The setuptools 80.9.0 candidate solved the recorded 3.14 build-import
+issue; it is not needed by the source generator and is not adopted for binary
+distribution here. Broader platform, installer, native/clean-machine and license
+reviews stay open; NiceGUI remains provisional and M0/M1 and release gates are
+not complete.
+
+The new core workflow uses the official
+[checkout](https://github.com/actions/checkout) and
+[setup-python](https://github.com/actions/setup-python) v7 examples with read-only
+permissions. Hosted core results must be recorded separately from local Windows
+browser and native installation evidence. There is no packaging/release job.
+
+## Authorized sequential feature batch (17 October 2026)
+
+The maintainer authorizes [batch #11](https://github.com/Maks1m-Se/ravel/issues/11)
+in order: finish the saved #9/#10 repair, then sample workflow #12, workflow UX
+and repository verification skill #13, bounded rules/constraints #14, linked
+tables #15, clinical numeric/interface preparation #16 and private Windows
+preview preparation #17. Keep one active implementation stream on the repaired
+feature baseline; reuse existing source environment, fixtures and valid evidence.
+Routine implementation choices are delegated; joint acceptance and merges remain
+later work. The normal Berlin commit/push window applies to this queue.
+Unavailable clinical-policy review or clean-machine access must be recorded
+precisely without blocking independent authorized packages. No clinical numeric
+implementation before its policy review and no public binary publication.

@@ -1,9 +1,183 @@
 # Development guide
 
-Runnable tooling includes a read-only progress dashboard using Python's standard
-library and a bounded NiceGUI workbook interaction experiment. Production
-generation and the application CLI/UI are not implemented. The experiment's
-dependencies and provisional configuration do not establish an application API.
+Runnable source now includes an explicit-rule single-table engine, CLI and
+NiceGUI table builder, alongside the tracking dashboard and historical workbook
+experiment. Sample profiling, linked/clinical generation and binary distribution
+remain outside this increment. The provisional source recipe is specified in
+[single-table.md](single-table.md); it is not the old experiment configuration.
+
+## Single-table source development
+
+Use **standard CPython 3.14.8 x64 with the GIL enabled** for this source preview.
+The [selection rationale](decisions.md#staged-single-table-source-increment-15-october-2026)
+uses the recorded candidate evidence, current official information and a newly
+isolated source environment. The headless core has no third-party dependencies.
+The UI retains the established 48 runtime pins in `requirements-ui.lock`, and
+browser tools remain separate in `requirements-review.lock`. Binary build locks,
+including the setuptools 80.9.0 candidate, are not selected or invoked here.
+
+From the checkout root in PowerShell:
+
+```powershell
+py -3.14 -m venv .venv-source
+.\.venv-source\Scripts\python.exe --version
+.\.venv-source\Scripts\python.exe -m pip install -r requirements-ui.lock
+.\.venv-source\Scripts\python.exe -m pip check
+.\.venv-source\Scripts\python.exe -m ravel ui
+```
+
+The version must be **3.14.8**. Open **http://127.0.0.1:8090/**; stop with Ctrl+C.
+The source server binds loopback, serves assets locally and does not open a
+browser automatically. Port 8090 must be free. The separate `.venv-source`
+preserves earlier experiment environments. Installation needs network access;
+subsequent source use requires no AI service. Page state is session-only.
+
+Core/CLI use from the same checkout, without installing UI dependencies:
+
+```powershell
+New-Item -ItemType Directory -Force outputs/tryout
+.\.venv-source\Scripts\python.exe -m ravel validate examples/three-rows.recipe.json
+.\.venv-source\Scripts\python.exe -m ravel generate examples/three-rows.recipe.json --csv outputs/tryout/reference.csv
+```
+
+The three expected rows were established before coding: `(1, demo, 10)`,
+`(2, demo, 12)`, `(3, demo, 14)`. The CLI writes all-quoted UTF-8/LF CSV, a
+canonical recipe sidecar and a run sidecar with environment and checksums.
+It rejects colliding/existing output paths and does not overwrite the input.
+Use a new CSV filename on repeat runs. On validation or ordinary I/O failure it
+reports an error and removes only files it created during that failed write.
+This is not a crash-atomic multi-file filesystem transaction.
+
+The builder separates applied recipe, explicit drafts and immutable generated
+result. Apply commits table and selected-column edits atomically; selecting,
+adding, duplicating, generating or saving requires applied/discarded drafts.
+Changes mark previous data **Out of date**; CSV/run export requires a current
+matching result without drafts. Preview and CSV use the same cell serializer.
+Loading a valid recipe resets the layout and clears results; invalid and old
+experiment JSON preserves the current table/drafts/result. Old JSON is rejected
+with an explicit explanation rather than migrated; the uploaded original is read
+only. Native chooser interaction remains a separate manual check.
+
+### Maintained single-table checks
+
+```powershell
+.\.venv-source\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv-source\Scripts\python.exe scripts/build_dashboard.py
+.\.venv-source\Scripts\python.exe scripts/build_dashboard.py --check
+git diff --check
+.\.venv-source\Scripts\python.exe -m pip install -r requirements-review.lock
+.\.venv-source\Scripts\python.exe scripts/check_generator_browser.py --output outputs/generator-browser-review
+```
+
+Start the source server in another terminal before running the browser command.
+Use a fresh output directory for each run. Installed Chrome is used by default;
+no browser download is required. Browser HTTP/WebSocket non-loopback destinations
+are blocked by the harness. This is distinct from server socket guards, OS-level
+disconnection, native installation and clean-machine evidence.
+
+The read-only [core workflow](../.github/workflows/core.yml) runs standard-library
+tests, dashboard freshness and whitespace on hosted Windows/Linux/macOS Python
+3.14.8 jobs. Its remote results remain pending until publication and execution;
+the workflow is not native UI/installation testing or support certification.
+
+### Short maintainer walkthrough
+
+The walkthrough is retained for reproducibility; E46 records the maintainer's
+current-app acceptance, and joint code review remains required. At 1366×657 and
+1280×800 in Light/Dark:
+
+1. Launch the source UI, choose **Create table**, then **Generate table**. Expect
+   1,000 actual rows, a first-100-row preview, current status and enabled CSV
+   export. Export CSV, save recipe and save run record. The run record includes
+   the exact recipe, environment and CSV checksum.
+2. In Fields, select `value`, enter Maximum `20` and Minimum `200`, then Apply.
+   Expect a focused inline range error, retained drafts and blocked generation/
+   save until Apply or Discard. The previous preview stays visible as out of
+   date and CSV export is disabled. Correct Minimum to `5`, Apply, then Generate.
+3. Add a column, rename it, choose a rule and configure it. Category input uses
+   CSV lines `A,0.25` and `B,0.75`; missingness is a probability 0–1, not a quota.
+   Duplicate a random column and inspect its separately saved identity. Remove
+   it once with Cancel and once with confirmation. Expect clear draft/stale state.
+4. With an unfinished edit, widen Properties to 560 using End, narrow to 900 px,
+   then restore: expect 560 → 446 → 560 and unchanged edits. Try Escape during
+   drag, constrained Reset, themes and Fields/Preview. Save a valid recipe,
+   change the table/layout and reload via the native chooser: expect the saved
+   rules, default 312 px preference and no result until Generate. The regenerated
+   CSV must agree with the earlier saved recipe's output.
+5. Open `examples/three-rows.recipe.json`, Generate and compare the three rows
+   above. Try old workbook JSON: expect an explicit rejection and preserved state.
+   Run the headless example and compare UI/CLI output for the same saved recipe.
+
+These steps review new user-facing behaviour; they do not accept clinical rules,
+NiceGUI adoption, native distribution or the full M1 milestone. Sample import/
+profiling follows next, then linked tables; both entry paths remain required
+before the first usable release. M0 packaging/platform work stays open.
+
+Actual captures from the source app (invented data):
+[Dark fields](images/m1-single-table-fields-dark.png),
+[Light generated preview](images/m1-single-table-generated-light.png),
+[Light validation](images/m1-single-table-error-light.png), and
+[Dark start screen](images/m1-single-table-start-dark.png).
+
+The historical sections below retain their original evidence and limits.
+
+### Single-table verification record (16 October 2026)
+
+The selected source environment was recreated in an isolated venv from prepared
+cp314 wheels without contacting an index. Standard CPython **3.14.8 x64**, GIL
+enabled, all **48 UI + four review pins**, imports and `pip check` passed. No build
+lock or binary build was used. The recorded source command from the feature
+worktree used the original checkout's
+`outputs/single-table-2026-10-15/source-env/Scripts/python.exe`.
+
+- **41 unit tests passed:** 13 engine/CLI, six session-state, nine existing
+  configuration, nine tracking and four mocked packaging-recipe tests. The core
+  checks hand arithmetic and independently derived types/bounds/categories and
+  probability properties; it does not use its own random output as the reference.
+  Local decimal context isolation and literal CR/LF/quotes/Unicode CSV round trips
+  are covered. Mocked build tests do not create a new bundle.
+- **Final maintained browser run: four cases passed** at 1366×657 / 1280×800 in
+  Light/Dark on Windows 11 build 26300, NiceGUI 3.18.0, Playwright 1.58.0 and
+  Chrome **155.0.8059.82**. It checks 1,000 rows, all rule editors including ID
+  starts/negative sequence steps, add/duplicate/rename/remove, actual preview/CSV/
+  core agreement, recipe repeatability and run records, invalid/stale protection,
+  start-screen recipe opening, contextual help, Home theme preservation and the
+  accepted Properties/viewport/ARIA/cancellation/reset/theme/view regressions.
+  Browser non-loopback HTTP/WebSocket attempts and page errors were **zero**.
+- Measured text minima: Light **6.14:1**, Dark **6.99:1**; divider focus
+  **5.52:1 / 6.83:1**. Unchanged accepted Fichte token/control-boundary evidence is
+  reused within its original scope. Four unaltered actual captures are retained
+  above; both laptop sizes/themes were inspected. The owned source server was
+  stopped after verification.
+- **102** affected local documentation links/anchors and evidence references
+  passed, alongside accepted PR #8 source/layout preservation, E1–E42 preservation,
+  source/review lock matching and read-only workflow structure. The dashboard is
+  regenerated from the approved sequencing/progress records; freshness and Git
+  whitespace checks are required with the final records.
+
+Raw local runs, downloads, captured source hashes and diagnostics remain in the
+original checkout's ignored `outputs/single-table-2026-10-15/`, with the final run
+in `browser-final-reviewed/`. An initial static-file keyword error was fixed
+before UI review. An early browser snapshot raced server draft acknowledgement;
+the harness now awaits the draft state. Expanded help checks initially lacked a
+touch-enabled browser context; that harness configuration was corrected. Earlier
+passing runs are retained separately; the final run includes the completed Home
+theme and explicit rule-editor checks. None of those failed attempts is counted
+as final passing evidence.
+
+The accepted PR #8 repair was published separately as
+`cce10944339f6c857129fba9832d49d10e70a66d`. Both published source blobs match E42;
+PR #8 merged at `d7d42f8bd183fd4bb3e7b9005ac7324b7a3d0b90`, and original local
+main is synchronized. [Batch issue #9](https://github.com/Maks1m-Se/ravel/issues/9)
+tracks the completed generator stages and joint code review. E46 records the
+maintainer's current-app acceptance separately from automated verification.
+The generator PR remains draft and unmerged. The maintainer grants a timing
+exception for this publication batch only; normal Berlin restrictions remain
+for subsequent work. Source implementation, checks, captures and documentation
+were AI-assisted with Codex. Hosted core CI results remain pending execution;
+no native installation, new server socket/DNS guard, physical disconnection,
+native chooser/touch-device, screen-reader, other-platform UI, clinical or
+binary-distribution validation is claimed.
 
 ## Workbook experiment
 
@@ -1434,3 +1608,48 @@ work, and a live Berlin clock is checked immediately before every commit or
 GitHub write. E42 and its accepted source hashes remain unchanged. This timing
 authorization and maintainer report are distinct from automated verification;
 no broader native, installation or release acceptance is implied.
+
+### Single-table maintainer acceptance (16 October 2026)
+
+The maintainer reports testing the current app and that everything works fine.
+E46 records acceptance against the saved local generator version: all 15 files
+in the 09:34 tested-source manifest still match, with runtime source hashes
+recorded in that evidence. No generator runtime source changed for acceptance.
+This report is separate from the automated E44/E45 results and does not claim
+specific native chooser, every-theme/viewport, installation or clean-machine
+checks beyond what the maintainer reported. The new PR remains draft and
+unmerged for joint code review. PR #8/E42 acceptance stays separate.
+
+An additional dependency-free CPython 3.14.8 x64 environment (no pip or NiceGUI)
+passed all 41 tests and dashboard freshness. An initial attempt encountered
+sandbox temporary-folder permissions; a task-local writable temporary directory
+resolved that environment problem. Five literal-category edit/Apply/save-reload
+checks preserved CR, LF, CRLF, quotes, commas and Unicode. No product change was
+required. Hosted core CI remains pending execution, and this local check is not
+native installation evidence. M0/full M1 and release gates remain incomplete.
+
+### Recipe-size and focus repair (17 October 2026)
+
+E49 records the saved-size boundary repair: canonical UTF-8 recipes must fit
+within the same 1 MiB bound before Apply/load accepts them. A compact recipe
+that expands beyond that size now fails clearly while preserving current state.
+Two new regression methods reproduce direct/upload/save and atomic duplication
+failures; the suite now has 43 tests. The earlier E46 human acceptance remains
+attached to its recorded sources and does not silently accept later changes.
+
+Visual checking caught a screenshot race; capture now awaits actual Preview.
+Further final runs exposed premature keyboard navigation and an actual focus
+loss during rule refresh. Selector blur is awaited and the target control is
+not blurred before focus. The maintained browser checks explicitly await the
+documented post-action focus. The final 17 October run passes all four themes/
+laptop cases, with no page errors or external browser HTTP/WebSocket attempts.
+Actual Dark fields and Light generated captures were inspected. Earlier failed
+runs remain retained separately; no arbitrary delay or weakened assertion was
+used. Fichte CSS, layout JavaScript and headless generation are unchanged.
+
+Hosted push/PR core runs at `709966be3503ea5c39edc9f13a117feea4138c8c` each
+passed 41 tests, dashboard freshness and whitespace on Windows/Linux/macOS
+(E48). These precede E49; no hosted result is claimed for an unpushed repair.
+PR #10 remains draft and unmerged. The normal Berlin publication rule applies
+to the newly authorized sequential issue #11 queue; no new merge or binary
+publication is authorized. M0/full M1 and release gates remain incomplete.
