@@ -63,7 +63,7 @@ def generate_table(page):
 
 
 def preview_cells(page):
-    return page.locator('.preview-table tbody tr').evaluate_all('(rows) => rows.map(r => [...r.children].map(c => c.textContent))')
+    return page.locator('.preview-view .preview-table tbody tr').evaluate_all('(rows) => rows.map(r => [...r.children].map(c => c.textContent))')
 
 
 def state_snapshot(page):
@@ -333,6 +333,8 @@ def main():
     parser.add_argument('--base-url', default='http://127.0.0.1:8090')
     parser.add_argument('--output', type=Path, default=ROOT / 'outputs/generator-browser')
     parser.add_argument('--channel', default='chrome')
+    parser.add_argument('--workflow', choices=['rules', 'sample', 'all'], default='rules')
+    parser.add_argument('--smoke', action='store_true', help='One Light laptop case instead of the full theme/viewport matrix.')
     args = parser.parse_args()
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -343,8 +345,8 @@ def main():
         with sync_playwright() as p:
             browser = p.chromium.launch(channel=args.channel, headless=True)
             results['browser'] = browser.version
-            for width, height in [(1366,657), (1280,800)]:
-                for theme in ['Light','Dark']:
+            for width, height in ([(1366,657)] if args.smoke else [(1366,657), (1280,800)]):
+                for theme in (['Light'] if args.smoke else ['Light','Dark']):
                     viewport = dict(width=width, height=height)
                     context = browser.new_context(viewport=viewport, accept_downloads=True, has_touch=True)
                     def route(r):
@@ -364,7 +366,11 @@ def main():
                     page = context.new_page()
                     page.on('pageerror', lambda e: results['page_errors'].append(str(e)))
                     try:
-                        results['cases'].append(exercise(page, args.base_url, out, viewport, theme))
+                        if args.workflow in {'rules','all'}:
+                            results['cases'].append(exercise(page, args.base_url, out, viewport, theme))
+                        if args.workflow in {'sample','all'}:
+                            from scripts.sample_browser import exercise as sample_exercise
+                            results['cases'].append(sample_exercise(page, args.base_url, out, viewport, theme))
                     except Exception:
                         page.screenshot(path=out / 'failure.png')
                         raise

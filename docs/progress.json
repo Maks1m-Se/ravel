@@ -260,7 +260,8 @@
         "E46",
         "E47",
         "E48",
-        "E49"
+        "E49",
+        "E50"
       ],
       "blockers": []
     },
@@ -283,7 +284,8 @@
         "E46",
         "E47",
         "E48",
-        "E49"
+        "E49",
+        "E50"
       ],
       "blockers": []
     },
@@ -348,7 +350,9 @@
         "R2",
         "R4"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E50"
+      ],
       "blockers": []
     },
     {
@@ -363,7 +367,9 @@
         "R2",
         "R4"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E50"
+      ],
       "blockers": []
     },
     {
@@ -391,7 +397,9 @@
       "release_gate_ids": [
         "R9"
       ],
-      "evidence_refs": [],
+      "evidence_refs": [
+        "E50"
+      ],
       "blockers": []
     },
     {
@@ -786,10 +794,15 @@
       "id": "E49",
       "reference": "16-17 October 2026 canonical recipe-size and keyboard focus repair; docs/single-table.md; docs/development.md#recipe-size-and-focus-repair-17-october-2026; https://github.com/Maks1m-Se/ravel/issues/9",
       "scope": "Reproduced a 1,034,386-byte compact valid recipe whose saved canonical representation expanded to 1,146,740 bytes and could not reload under the 1 MiB limit. Validation now checks canonical UTF-8 size before accepting direct, compact-upload or edited recipes; atomic failed duplication preserves the current table, selection and exportable result. Two regression methods added; their four expected failing assertions reproduced the defect before repair, then all 43 unit tests passed. The screenshot helper now waits for a visible actual preview and 100 rows. The following final attempt failed during a rule-menu transition; a later run exposed typing before selection focus settled, and a new focus assertion reproduced an actual loss of focus to the body. The app now awaits selector blur and does not blur the control it is about to focus. Keyboard checks await documented post-add/select/rule focus before subsequent typing. Exactly one final complete 17 October run against the repaired app passes all four Light/Dark 1366x657/1280x800 cases, including compact-too-large rejection with unchanged drafts/state, existing 1000-row/CSV/recipe and Properties/ARIA/window/cancellation regressions. Python 3.14.8, NiceGUI 3.18.0, Playwright 1.58.0, Chrome 155.0.8059.82, Windows 11 build 26300. Browser external HTTP/WebSocket attempts and page errors are zero; actual final captures inspected. Failed/intermediate runs retained and not counted as final evidence. Accepted Fichte CSS, layout JavaScript, engine and PR #8 sources remain unchanged. E46 accepts the earlier tested generator, not these later repairs. New repair awaits joint review. Runtime hashes: ravel/recipe.py=aaeb784f04f9fb229f8eff25a1eb485235f868501f0a64a0fd7f4b9b0bc4bdca; ravel/ui.py=3157f501758f871384c975be4ee877bbe0eddedebda834ec4792137d9d5e8321; scripts/check_generator_browser.py=4e09607f7d526f0802098411285c0aa8f179ae70421dae939d2c091e9ed13cbb. Local repair remains uncommitted under the normal Berlin restriction. No new native/installation, binary or release-gate claim."
+    },
+    {
+      "id": "E50",
+      "reference": "17 October 2026 issue #12 local sample workflow; docs/sample-assisted.md; https://github.com/Maks1m-Se/ravel/issues/12",
+      "scope": "Implemented bounded UTF-8/BOM comma/semicolon/tab CSV profiling, editable marginal assumptions with Sample/Edited/Explicit origins, excluded/explicitly confirmed identifiers, formatted identifiers and collision checks. Version-2 recipes embed exact source text/checksum/original suggestions; canonical saved size is bounded before state replacement. Both 1,000 new and 10 retained+990 modes preserve original decoded cells/order and record row origin. Equal-source total generates zero new rows; smaller totals fail atomically. Eleven new unit methods include the pre-established hand override CSVs, leading zeroes, literal NA/whitespace/Unicode/quoted newlines, probability remainders, malformed source/checksum rejection, independent-field stability, stale state and shared CLI output/no-overwrite. All 54 unit tests pass locally. One final Chrome run passes eight workflow/theme/laptop cases (rules and sample at Light/Dark 1366x657/1280x800), with zero page errors/external HTTP/WebSockets; exact preview/CSV, source retention, recipe/run-record reload, invalid count/import recovery and Properties layout/ARIA regressions pass. An initial new test accidentally included the hidden source table in its preview selector (110 vs100 rows); scoping to the actual preview fixed the test, with no changed expectations. Actual captures inspected; import source area is cramped and will be improved in the following UX package. Python 3.14.8, Playwright 1.58.0, Chrome 155.0.8059.82; NiceGUI3.18.0 on the existing Windows development host. Source only, uncommitted on feature/staged-generator-batch under the normal publishing restriction. E46 human acceptance applies to its earlier recorded version, not this addition. Joint review, native/clean-machine/platform checks and release gates remain pending."
     }
   ],
   "blockers": [],
-  "next_action": "Authorized sustained sequential batch #11 (https://github.com/Maks1m-Se/ravel/issues/11), ordered #12, #13, #14, #15, #16, #17. The saved recipe-size/focus repair of PR #10 is complete locally (E49), with 43 unit tests and one final four-case browser run; preserve its separate source snapshot and E46 acceptance of the earlier version. Continue #12 CSV import/editable assumptions/both count modes and reproducible source-bound save/reload using the existing invented fixtures; then proceed through the remaining authorized packages without restarting completed generator stages. Keep one implementation stream on the repaired feature baseline, preserve Fichte appearance and comfortable keyboard interaction, and retain each package for joint review. Respect the normal 08:00-16:30 Europe/Berlin commit/GitHub-write restriction; the prior publication exception does not apply to this feature queue. No merges or public binaries. M0/full M1, clinical numeric acceptance and native/platform/clean-machine/license/distribution/release gates remain incomplete, NiceGUI provisional.",
+  "next_action": "Continue authorized sequential issue #11 after completed local #12 (E50): inspect and improve both workflows in #13, add/invoke the scoped verification skill, then #14 rules, #15 linked tables, #16 clinical numeric/interface preparation, #17 private Windows preview. Preserve the separate completed #10 repair snapshot and frozen manual-review instance repair-E49-ea8f8fa682b2 on port8100; never run automated browser checks there. Keep each local package reviewable, no completed generator reimplementation. Normal live Berlin commit/GitHub-write window applies; no merges/public binaries/final acceptance. Joint maintainer review follows the batch. M0/fullM1, clinical numeric review and native/platform/clean-machine/license/distribution/release gates remain incomplete.",
   "current_task_id": "M1-01",
   "next_task_ids": [
     "M1-02",

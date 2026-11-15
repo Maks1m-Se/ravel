@@ -34,7 +34,16 @@ def _ratio(value):
 def generate(recipe):
     with localcontext() as context:
         context.prec = 40
-        return _generate(validate(recipe))
+        candidate = validate(recipe)
+        if "sample" in candidate:
+            from .sample import compose
+            return compose(candidate, _generate)
+        return _generate(candidate)
+
+
+def environment():
+    return (("ravel", __version__), ("python", platform.python_version()),
+            ("implementation", platform.python_implementation()), ("platform", platform.platform()))
 
 
 def _generate(recipe):
@@ -59,6 +68,8 @@ def _generate(recipe):
         for row in range(table["row_count"]):
             if kind == "id":
                 value = field["start"] + row
+            elif kind == "text_id":
+                value = field["prefix"] + str(field["start"] + row).zfill(field["width"])
             elif kind == "sequence":
                 value = field["start"] + row * field["step"]
             elif kind == "constant":
@@ -73,8 +84,7 @@ def _generate(recipe):
         columns.append(column)
     return Result(dumps(recipe), tuple(f["name"] for f in table["fields"]),
                   tuple(zip(*columns)),
-                  (("ravel", __version__), ("python", platform.python_version()),
-                   ("implementation", platform.python_implementation()), ("platform", platform.platform())))
+                  environment())
 
 
 def cell_text(value):
@@ -96,6 +106,14 @@ def csv_text(result):
 
 
 def run_metadata(result):
-    return dict(environment=dict(result.environment), recipe_sha256=sha256(result.recipe_json.encode()).hexdigest(),
+    record = dict(environment=dict(result.environment), recipe_sha256=sha256(result.recipe_json.encode()).hexdigest(),
                 csv_sha256=sha256(csv_text(result).encode()).hexdigest(), row_count=len(result.rows),
                 column_count=len(result.headers), format="ravel-run/1")
+    recipe = json.loads(result.recipe_json)
+    if "sample" in recipe:
+        from .sample import assumption_origin, context
+        _, _, retained, generated = context(recipe)
+        record.update(source_sha256=recipe["sample"]["sha256"], sample_mode=recipe["sample"]["mode"],
+                      retained_rows=retained, generated_rows=generated,
+                      assumption_origins={f['id']:{key:assumption_origin(recipe,f['id'],key) for key in f} for f in recipe['table']['fields']})
+    return record
