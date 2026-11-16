@@ -115,9 +115,10 @@ def validate(document):
         subject, parameter = row.get('subject'), row.get('parameter')
         scope = dict(record=identities[0]) if identities else {}
         if isinstance(subject, str) and subject in registries.get('subjects', {}) and subject not in ambiguous.get('subjects', set()):
-            scope = dict(subject=subject)
-            if isinstance(parameter, str) and parameter in registries.get('parameters', {}) and parameter not in ambiguous.get('parameters', set()):
-                scope['parameter'] = parameter
+            if row.get('kind') == 'exposure':
+                scope = dict(subject=subject)
+            elif isinstance(parameter, str) and parameter in registries.get('parameters', {}) and parameter not in ambiguous.get('parameters', set()):
+                scope = dict(subject=subject, parameter=parameter)
         failures.append(dict(code=code, check=check, path=path, scope=scope,
                              source_ids=identities, message=message))
 
@@ -224,6 +225,7 @@ def validate(document):
 
     pairs = set()
     pair_failures_before = len(failures)
+    pair_skipped_before = len(skipped)
     for index, row in enumerate(rows['pairs']):
         path = f'pairs.{index}'
         if not fields(row, ('subject', 'parameter', 'provenance'), path):
@@ -237,7 +239,8 @@ def validate(document):
             if pair in pairs:
                 issue('duplicate_pair', path, f'Duplicate declared pair {pair!r}.', row)
             pairs.add(pair)
-    pairs_available = isinstance(document.get('pairs'), list) and len(failures) == pair_failures_before
+    pairs_available = (isinstance(document.get('pairs'), list) and len(failures) == pair_failures_before
+                       and len(skipped) == pair_skipped_before)
 
     record_ids = {}
     for index, row in enumerate(rows['records']):

@@ -2849,3 +2849,51 @@ Raw logs, source/tree comparisons and final CI readbacks remain under
 instances remain preserved. Desktop/source review, secondary R/SAS tolerance,
 native/distribution gaps and all release gates stay open. No Render deployment,
 binary publication or clinical calculation is performed.
+
+### Bounded clinical source review (15 November 2026)
+
+Review started on15November and completed on16November2026.
+
+Review base is actual remote main
+`e8546dbed6f2e2a01441196f7b26a6c3307f7116`, checked before creating the isolated
+`review/clinical-source-boundaries-2026-11-15` branch. Original branches, dirty
+worktrees and fixed review processes on51272/51273/51274 are preserved; no browser
+or HTTP automation targets them. Only the internal source validator changes;
+the review adapter is inspected without another implementation change.
+
+| Confirmed finding | Small reproduction and existing authority | Repair and regression |
+| --- | --- | --- |
+| Unavailable pair prerequisites still permitted membership conclusions | In C1 add two subject or parameter declarations named AMBIGUOUS and point the supplied pair at that ID. The pair reference is NOT_EVALUATED, yet both unchanged measurements receive UNDECLARED_GROUP. Existing unavailable-pair handling requires dependent membership to be skipped. | Include skipped pair-reference checks when determining pair availability. One regression method covers both registries, both source IDs, exact `pair_declarations` prerequisites, independent malformed-value failure and unchanged input. |
+| Incomplete/wrong diagnostic scope | Give C1-M1 an unknown or ambiguous parameter plus a malformed scalar value: its errors use subject-only scope. Add an unsupported known parameter to exposure C1-D1: its diagnostic uses subject/parameter scope. The accepted baseline specification requires record/recipe fallback when the complete measurement scope is unavailable, and subject scope for exposures. | Retain record fallback until both measurement references are unambiguous; explicit exposure kind keeps subject scope. One regression method covers the three red-before-green subcases, source IDs and input preservation. |
+
+Two new regression methods fail before their respective repairs and pass after;
+19 focused source tests and132 full tests pass. Both source-reference commands
+cover all12 requirements, with `clinical_policy: not_evaluated` and
+`derivation: not_implemented`. Dashboard generation/freshness, affected local
+links and whitespace pass. Run the standard commands above, or start with:
+
+```powershell
+python -m unittest discover -s tests -p test_clinical_source.py -v
+python scripts/check_clinical_review.py
+python scripts/check_clinical_scenarios.py
+```
+
+The raw bounded review matrix passes104 checks: required fields/null/malformed
+values, exact tokens including negative zero/exponents/5000 digits, Unicode,
+size/depth, duplicate keys, adapter shapes/pointer escaping, input/output
+independence, deterministic diagnostics and generic-loader isolation. These are
+Windows pinned-environment checks, not numeric-policy or clinical validation.
+Parser-supported10,000-depth malformed discriminators fail controllably;
+25,000/50,000/100,000 array/object probes are rejected by SourceParseError on
+this host. No portable depth budget is inferred or newly imposed. An initial
+matrix assertion expected only the parent provenance path; corrected expectations
+also allow its required source/pointer child diagnostics. The failed harness log
+is retained and is not a product defect or a passing run.
+
+Python3.14.8 and the existing pinned environment are unchanged. Raw probes,
+failed regressions, after results, matrix and source identities are retained in
+`outputs/clinical-source-review-2026-11-15/`. Unchanged generic/UI/helpers/locks
+retain the main candidate's browser evidence at matching hashes; no new browser
+run or acceptance is claimed. E83/E85 acceptance, provisional secondary R/SAS
+tolerance, unknown Edge reset cause and all open review/release gates retain
+their scope. No arithmetic, clinical-policy enforcement, merge or deployment.

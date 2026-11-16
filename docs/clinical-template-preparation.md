@@ -219,6 +219,17 @@ No fixed nesting cap is adopted: the pinned JSON parser's supported inputs must
 round-trip, and parser failures remain SourceParseError. A portable explicit
 depth budget is a future resource-policy decision, not a clinical rule.
 
+The bounded 15 November technical review also treats a skipped declaration
+reference as an unavailable prerequisite for the pair collection. Measurements
+then report pair membership as NOT_EVALUATED with `pair_declarations`, rather
+than claiming UNDECLARED_GROUP from a partially evaluated declaration set.
+Independent field failures remain evaluable. Diagnostic scopes follow the
+accepted baseline specification: exposures use a known subject, measurements
+need both known/unambiguous subject and parameter; otherwise retain record or
+recipe scope. An unsupported parameter field cannot turn an exposure diagnostic
+into a measurement-pair diagnostic. These are structural diagnostic repairs,
+not numeric, timestamp, unit or clinical-status validation.
+
 ## Twelve-scenario reference coverage
 
 [scenario-coverage.json](../examples/clinical-review/scenario-coverage.json)

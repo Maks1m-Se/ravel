@@ -178,6 +178,31 @@ class ClinicalSourceTests(unittest.TestCase):
         self.assertEqual(len(document['pairs']), 2)
         self.assertEqual(report['clinical_policy'], 'not_evaluated')
 
+    def test_diagnostic_scope_requires_a_complete_measurement_pair_and_respects_exposure_kind(self):
+        for parameter in ['unknown', 'ambiguous']:
+            with self.subTest(parameter=parameter):
+                document = fixture('C1')
+                document['records'][0]['value'] = 'independent-malformed'
+                if parameter == 'unknown':
+                    document['records'][0]['parameter'] = 'UNKNOWN'
+                else:
+                    document['parameters'].append(deepcopy(document['parameters'][0]))
+                before = source.dumps(document)
+                report = source.validate(document)
+                failures = [item for item in report['failures'] if item['path'].startswith('records.0.')]
+                self.assertTrue(failures)
+                self.assertTrue(all(item['scope'] == dict(record='C1-M1') for item in failures))
+                self.assertTrue(all(item['source_ids'] == ['C1-M1'] for item in failures))
+                self.assertEqual(source.dumps(document), before)
+
+        document = fixture('C1')
+        document['records'][1]['parameter'] = 'BX-1'
+        before = source.dumps(document)
+        failure, = source.validate(document)['failures']
+        self.assertEqual((failure['check'], failure['path'], failure['scope'], failure['source_ids']),
+                         ('unsupported_field', 'records.1.parameter', dict(subject='S-C1'), ['C1-D1']))
+        self.assertEqual(source.dumps(document), before)
+
     def test_empty_collections_unequal_schedules_and_explicit_groups_are_preserved(self):
         one, two = fixture('C1'), fixture('C2')
         document = deepcopy(one)
@@ -240,6 +265,25 @@ class ClinicalSourceTests(unittest.TestCase):
                 self.assertNotIn('UNDECLARED_GROUP', [failure['code'] for failure in report['failures']])
                 for skipped in report['not_evaluated']:
                     self.assertEqual(skipped['prerequisites'], ['pair_declarations'])
+
+    def test_ambiguous_pair_reference_blocks_membership_but_keeps_independent_failures(self):
+        for collection, field in [('subjects', 'subject'), ('parameters', 'parameter')]:
+            with self.subTest(collection=collection):
+                document = fixture('C1')
+                declaration = deepcopy(document[collection][0])
+                declaration['id'] = 'AMBIGUOUS'
+                document[collection].extend([declaration, deepcopy(declaration)])
+                document['pairs'][0][field] = 'AMBIGUOUS'
+                document['records'][0]['value'] = 'malformed-independent-field'
+                before = source.dumps(document)
+                report = source.validate(document)
+                self.assertEqual([item['check'] for item in report['failures']], ['duplicate_id', 'value_type'])
+                reference, = [item for item in report['not_evaluated'] if item['path'] == 'pairs.0.' + field]
+                self.assertEqual(reference['prerequisites'], [collection + '.identity_unique'])
+                membership = [item for item in report['not_evaluated'] if item['check'] == 'pair_membership']
+                self.assertEqual([item['source_ids'] for item in membership], [['C1-M1'], ['C1-M2']])
+                self.assertTrue(all(item['prerequisites'] == ['pair_declarations'] for item in membership))
+                self.assertEqual(source.dumps(document), before)
 
     def test_kinds_missing_identity_and_independent_required_fields_have_source_diagnostics(self):
         document = fixture()
